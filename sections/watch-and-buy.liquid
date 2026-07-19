@@ -615,7 +615,7 @@
             {% endif %}
           </div>
           
-          <a href="{{ product.url | default: '#' }}" class="watch-buy-product-info">
+          <div class="watch-buy-product-info" onclick="openWatchBuyModal('{{ block.id }}')" style="cursor: pointer;">
             {% if product != empty %}
               <img class="watch-buy-product-thumb" src="{{ product.featured_image | img_url: '100x100', crop: 'center' }}" alt="{{ product.title }}">
               <div class="watch-buy-details">
@@ -649,7 +649,7 @@
                 </div>
               </div>
             {% endif %}
-          </a>
+          </div>
         </div>
       {% endfor %}
     </div>
@@ -668,8 +668,8 @@
       <div class="watch-buy-modal-video-pane">
         <video id="watch-buy-modal-video" autoplay loop muted playsinline controls style="width:100%; height:100%; object-fit:cover;"></video>
         <div class="watch-buy-modal-mobile-overlay-actions">
-          <button class="watch-buy-mob-btn watch-buy-mob-atc" id="watch-buy-modal-mob-atc-btn">Add to Cart</button>
-          <a class="watch-buy-mob-btn watch-buy-mob-details" id="watch-buy-modal-mob-details-btn" href="#">View Details</a>
+          <button class="watch-buy-mob-btn watch-buy-mob-atc" id="watch-buy-modal-mob-atc-btn" style="width: 100%;">Add to Cart</button>
+          <a class="watch-buy-mob-btn watch-buy-mob-details" id="watch-buy-modal-mob-details-btn" href="#" style="display: none !important;">View Details</a>
         </div>
       </div>
       <div class="watch-buy-modal-product-pane">
@@ -689,7 +689,7 @@
           <input type="hidden" name="id" id="watch-buy-modal-variant-id" value="">
           <input type="hidden" name="quantity" value="1">
           <button type="submit" id="watch-buy-modal-submit" class="watch-buy-modal-add-to-cart">Add to Cart</button>
-          <a id="watch-buy-modal-view-product" href="#" class="watch-buy-modal-view-details">View Details</a>
+          <a id="watch-buy-modal-view-product" href="#" class="watch-buy-modal-view-details" style="display: none !important;">View Details</a>
         </form>
         <div id="watch-buy-modal-success" class="watch-buy-modal-success-msg">✓ Item added to cart!</div>
       </div>
@@ -856,7 +856,7 @@
     if (data.productExists) {
       titleEl.innerText = data.title;
       document.getElementById('watch-buy-modal-view-product').href = `/products/${data.handle}`;
-      document.getElementById('watch-buy-modal-view-product').style.display = 'block';
+      document.getElementById('watch-buy-modal-view-product').style.display = 'none';
       
       // Setup variants
       variantsContainer.innerHTML = '';
