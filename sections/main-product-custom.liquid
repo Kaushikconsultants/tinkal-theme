@@ -754,61 +754,7 @@
 </product-info>
 
 
-<!-- INGREDIENTS -->
-{% if product.metafields.custom.ingredients.value != blank %}
-<style>
-.ingredients-section { text-align: center; margin-top: 20px; position: relative; max-width: 100%; padding: 40px 0; }
-.ingredients-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
-.ingredients-scroll-wrapper { position: relative; overflow: hidden; max-width: 1240px; margin: 0 auto; }
-.ingredients-scroll-container { display: flex; overflow-x: auto; scroll-behavior: smooth; padding: 5px 10px; gap: 10px; -webkit-overflow-scrolling: touch; }
-.ingredients-scroll-container::-webkit-scrollbar { height: 6px; }
-.ingredients-scroll-container::-webkit-scrollbar-track { background: #f1f1f1; }
-.ingredients-scroll-container::-webkit-scrollbar-thumb { background: #777; border-radius: 10px; }
-.ingredients-item { flex: 0 0 auto; width: 110px; text-align: center; }
-.ingredients-item img { width: 75px; height: 75px; border-radius: 10px; object-fit: cover; aspect-ratio: 1 / 1; display: block; margin: 0 auto; }
-.ingredients-item p { margin-top: 6px; font-weight: 600; font-size: 13px; line-height: 1.2; color: #000; }
-.scroll-arrow { position: absolute; top: 50%; transform: translateY(-50%); font-size: 24px; color: #444; background-color: rgba(255,255,255,0.85); border-radius: 50%; width: 30px; height: 30px; line-height: 30px; text-align: center; cursor: pointer; z-index: 1; user-select: none; box-shadow: 0 0 4px rgba(0,0,0,0.15); }
-.scroll-arrow.left { left: 5px; }
-.scroll-arrow.right { right: 5px; }
-@media (max-width: 600px) { .scroll-arrow { display: none; } }
-</style>
 
-<section class="ingredients-section" id="ingredients">
-  <div class="ingredients-title">Ingredients Behind the Fragrance</div>
-  <div class="ingredients-scroll-wrapper">
-    <div class="scroll-arrow left" onclick="scrollIngredientsLeft()">‹</div>
-    <div class="scroll-arrow right" onclick="scrollIngredientsRight()">›</div>
-
-    <div class="ingredients-scroll-container" id="ingredients-scroll-container">
-      {% for ingredient in product.metafields.custom.ingredients.value %}
-      <div class="ingredients-item">
-        {%- assign ing_img = ingredient.image.value | default: ingredient.image -%}
-        {%- assign ing_name = ingredient.name.value | default: ingredient.name -%}
-        {% if ing_img != blank %}
-          {% if ing_img.src or ing_img.url or ing_img.media_type %}
-            <img loading="lazy" src="{{ ing_img | image_url: width: 150 }}" width="75" height="75" alt="{{ ing_name | escape }}">
-          {% else %}
-            <img loading="lazy" src="{{ ing_img }}" width="75" height="75" alt="{{ ing_name | escape }}">
-          {% endif %}
-        {% else %}
-          <div style="width:75px;height:75px;border-radius:10px;background:#eee;margin:0 auto;display:flex;align-items:center;justify-content:center;">🌿</div>
-        {% endif %}
-        <p>{{ ing_name }}</p>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<script>
-function scrollIngredientsLeft() {
-  document.getElementById("ingredients-scroll-container").scrollBy({ left: -180, behavior: "smooth" });
-}
-function scrollIngredientsRight() {
-  document.getElementById("ingredients-scroll-container").scrollBy({ left: 180, behavior: "smooth" });
-}
-</script>
-{% endif %}
 
 {% schema %}
 {
