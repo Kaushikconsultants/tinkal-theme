@@ -55,9 +55,22 @@
     margin-bottom: 5px;
     text-transform: uppercase;
   }
+  .custom-product-slider__price-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
   .custom-product-slider__price {
-    font-size: 13px;
-    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+  }
+  .custom-product-slider__compare-price {
+    font-size: 12px;
+    text-decoration: line-through;
+    color: #888;
   }
   
   @media screen and (max-width: 990px) {
@@ -80,7 +93,7 @@
   }
 </style>
 
-<div class="custom-product-slider--{{ section.id }}">
+<div class="custom-product-slider--{{ section.id }}" id="slider-{{ section.id }}" data-speed="{{ section.settings.speed | times: 1000 }}">
   {%- if section.settings.title != blank -%}
     <div class="custom-product-slider__title">{{ section.settings.title }}</div>
   {%- endif -%}
@@ -99,7 +112,12 @@
               {%- endif -%}
             </div>
             <div class="custom-product-slider__product-title">{{ product.title }}</div>
-            <div class="custom-product-slider__price">{{ product.price | money }}</div>
+            <div class="custom-product-slider__price-wrapper">
+              <span class="custom-product-slider__price">{{ product.price | money }}</span>
+              {%- if product.compare_at_price > product.price -%}
+                <span class="custom-product-slider__compare-price">{{ product.compare_at_price | money }}</span>
+              {%- endif -%}
+            </div>
           </a>
         {%- endfor -%}
       {%- else -%}
@@ -109,7 +127,10 @@
               {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
             </div>
             <div class="custom-product-slider__product-title">Sample Product</div>
-            <div class="custom-product-slider__price">$19.99</div>
+            <div class="custom-product-slider__price-wrapper">
+              <span class="custom-product-slider__price">$19.99</span>
+              <span class="custom-product-slider__compare-price">$29.99</span>
+            </div>
           </div>
         {%- endfor -%}
       {%- endif -%}
@@ -117,9 +138,40 @@
   </div>
 </div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.getElementById('slider-{{ section.id }}');
+    if (!section) return;
+    const track = section.querySelector('.custom-product-slider__track');
+    const speed = parseInt(section.getAttribute('data-speed')) || 0;
+    
+    if (speed > 0) {
+      let interval;
+      
+      function startScroll() {
+        interval = setInterval(() => {
+          if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
+            track.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            const itemWidth = track.querySelector('.custom-product-slider__item').clientWidth + 15;
+            track.scrollBy({ left: itemWidth, behavior: 'smooth' });
+          }
+        }, speed);
+      }
+      
+      startScroll();
+      
+      section.addEventListener('mouseenter', () => clearInterval(interval));
+      section.addEventListener('mouseleave', startScroll);
+      track.addEventListener('touchstart', () => clearInterval(interval), {passive: true});
+      track.addEventListener('touchend', startScroll, {passive: true});
+    }
+  });
+</script>
+
 {% schema %}
 {
-  "name": "Couture Collection",
+  "name": "Custom Product Slider",
   "tag": "section",
   "class": "section",
   "settings": [
@@ -174,11 +226,21 @@
       "unit": "px",
       "label": "Top/Bottom Padding",
       "default": 40
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Auto-scroll Speed (0 to disable)",
+      "default": 3
     }
   ],
   "presets": [
     {
-      "name": "Couture Collection"
+      "name": "Custom Product Slider"
     }
   ]
 }
