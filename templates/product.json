@@ -57,11 +57,9 @@
             "custom_liquid": "<style>.prod-actions{display:flex;gap:10px;margin:8px 0 4px;align-items:center}.prod-actions a,.prod-actions button{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.2s ease;border:1.5px solid currentColor}.prod-share-btn{color:rgb(var(--color-foreground));background:transparent}.prod-share-btn:hover{background:rgb(var(--color-foreground));color:rgb(var(--color-background))}.prod-wish-btn{color:rgb(var(--color-foreground));background:transparent}.prod-wish-btn:hover{background:#fee;color:#c00;border-color:#c00}.prod-wish-btn svg,.prod-share-btn svg{width:15px;height:15px;flex-shrink:0}</style><div class=\"prod-actions\"><button class=\"prod-share-btn\" onclick=\"if(navigator.share){navigator.share({title:document.title,url:window.location.href})}else{navigator.clipboard.writeText(window.location.href);this.textContent='Link copied!';setTimeout(()=>this.innerHTML='<svg viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><circle cx=\\'18\\' cy=\\'5\\' r=\\'3\\'></circle><circle cx=\\'6\\' cy=\\'12\\' r=\\'3\\'></circle><circle cx=\\'18\\' cy=\\'19\\' r=\\'3\\'></circle><line x1=\\'8.59\\' y1=\\'13.51\\' x2=\\'15.42\\' y2=\\'17.49\\'></line><line x1=\\'15.41\\' y1=\\'6.51\\' x2=\\'8.59\\' y2=\\'10.49\\'></line></svg> Share',2500)}\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"18\" cy=\"5\" r=\"3\"></circle><circle cx=\"6\" cy=\"12\" r=\"3\"></circle><circle cx=\"18\" cy=\"19\" r=\"3\"></circle><line x1=\"8.59\" y1=\"13.51\" x2=\"15.42\" y2=\"17.49\"></line><line x1=\"15.41\" y1=\"6.51\" x2=\"8.59\" y2=\"10.49\"></line></svg> Share</button><button class=\"prod-wish-btn\" onclick=\"this.classList.toggle('wished');var s=this.querySelector('svg');if(this.classList.contains('wished')){s.setAttribute('fill','#c00');s.setAttribute('stroke','#c00');this.style.background='#fee';this.style.color='#c00';this.style.borderColor='#c00'}else{s.setAttribute('fill','none');s.setAttribute('stroke','currentColor');this.style.background='';this.style.color='';this.style.borderColor=''}\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z\"></path></svg> Wishlist</button></div>"
           }
         },
-        "description_accordion": {
-          "type": "custom_liquid",
-          "settings": {
-            "custom_liquid": "{%- if product.description != blank -%}<style>.prod-desc-acc{margin:12px 0 4px;border:1px solid rgba(var(--color-foreground),0.15);border-radius:10px;overflow:hidden}.prod-desc-acc summary{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;list-style:none;user-select:none}.prod-desc-acc summary::-webkit-details-marker{display:none}.prod-desc-acc summary svg{width:16px;height:16px;transition:transform 0.25s ease;flex-shrink:0}.prod-desc-acc[open] summary svg{transform:rotate(180deg)}.prod-desc-acc .desc-body{padding:0 16px 16px;font-size:13px;line-height:1.7;color:rgb(var(--color-foreground))}.prod-desc-acc .desc-body p{margin:0 0 8px}.prod-desc-acc .desc-body p:last-child{margin:0}</style><details class=\"prod-desc-acc\"><summary>Description <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><polyline points=\"6 9 12 15 18 9\"></polyline></svg></summary><div class=\"desc-body rte\">{{ product.description }}</div></details>{%- endif -%}"
-          }
+        "description": {
+          "type": "description",
+          "settings": {}
         },
         "gallery_carousel": {
           "type": "custom_liquid",
@@ -80,7 +78,7 @@
         "quantity_selector",
         "buy_buttons",
         "share_wishlist",
-        "description_accordion"
+        "description"
       ],
       "settings": {
         "enable_sticky_info": true,
