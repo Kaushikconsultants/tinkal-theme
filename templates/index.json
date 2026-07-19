@@ -1,5 +1,98 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
+    "custom_hero_1": {
+      "type": "custom-hero",
+      "blocks": {
+        "slide_KLMGjc": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/p-1.webp",
+            "image_mobile": "shopify://shop_images/m-1.webp",
+            "link": "shopify://collections"
+          }
+        }
+      },
+      "block_order": [
+        "slide_KLMGjc"
+      ],
+      "settings": {
+        "speed": 5
+      }
+    },
+    "custom_brand_slider_1": {
+      "type": "custom-brand-slider",
+      "blocks": {
+        "brand_1": {
+          "type": "brand",
+          "settings": {
+            "image": "shopify://shop_images/1_2.webp",
+            "title": "",
+            "link": ""
+          }
+        },
+        "brand_2": {
+          "type": "brand",
+          "settings": {
+            "image": "shopify://shop_images/2_85119307-24ea-40bc-9c28-185c7e367869.webp",
+            "title": "",
+            "link": ""
+          }
+        },
+        "brand_3": {
+          "type": "brand",
+          "settings": {
+            "image": "shopify://shop_images/3_2c02eb27-8f7e-46ff-a663-47a9ac4f630b.webp",
+            "title": "",
+            "link": ""
+          }
+        },
+        "brand_4": {
+          "type": "brand",
+          "settings": {
+            "image": "shopify://shop_images/4_427e3543-2559-4aac-af84-8af6905aa7ec.webp",
+            "title": "",
+            "link": ""
+          }
+        },
+        "brand_5": {
+          "type": "brand",
+          "settings": {
+            "image": "shopify://shop_images/4_e4f6e736-39c9-42c9-a0a2-b4fc9c0040ef.webp",
+            "title": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "brand_1",
+        "brand_2",
+        "brand_3",
+        "brand_4",
+        "brand_5"
+      ],
+      "settings": {
+        "title": "Our Brands",
+        "title_color": "#000000",
+        "title_size": 30,
+        "bg_color": "rgba(0,0,0,0)",
+        "text_color": "#333333",
+        "image_width": 150,
+        "gap": 30,
+        "speed": 20,
+        "padding_y": 20,
+        "mg_top": 0,
+        "mg_bottom": 0
+      }
+    },
     "marquee_HeTqbn": {
       "type": "11fit-marquee1",
       "blocks": {
@@ -49,35 +142,30 @@
         "watchbuy_excel_0": {
           "type": "video_product",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/o/v/b39f1d045f5e4fddb1ef5ba61e8749d6.mp4",
             "product": "nawab-oud-perfume"
           }
         },
         "watchbuy_excel_1": {
           "type": "video_product",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/o/v/4b29f9771acd4c5f91334617faf8f60c.mp4",
             "product": "pistachio-pop-perfume"
           }
         },
         "watchbuy_excel_2": {
           "type": "video_product",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/o/v/97d0d6c2c04246879f494d14a62d20f9.mp4",
             "product": "lush-candy-perfume"
           }
         },
         "watchbuy_excel_3": {
           "type": "video_product",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/o/v/b4c89e2b4b7c416b8b80ca5fcf646f38.mp4",
             "product": "vanilla-kiss-perfume"
           }
         },
         "watchbuy_excel_4": {
           "type": "video_product",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/o/v/6bb2c162ed0e4cd8be57c335769c1ce4.mp4",
             "product": "smoky-rum"
           }
         }
@@ -213,79 +301,18 @@
     "featured_blog_iKWhTj": {
       "type": "featured-blog",
       "settings": {
-        "container": "container",
-        "padding_full_width": 0,
-        "mg_minus_desktop": 0,
-        "mg_top_desktop": 30,
-        "mg_top_tablet": 30,
-        "mg_top_mobile": 30,
-        "mg_bottom_desktop": 30,
-        "mg_bottom_tablet": 30,
-        "mg_bottom_mobile": 30,
-        "blog_bg": "#ffffff",
-        "blog_bg_gradient": "",
-        "featured_blog_title": "Behind the Bottle",
-        "margin_bottom_heading": 10,
-        "enable_border_title": false,
-        "custom_width_title": 420,
-        "border_color_title": "#232323",
-        "color_title": "#232323",
-        "fontsize_title": 30,
-        "fontsize_title_mb": 20,
-        "featured_blog_des": "",
-        "margin_bottom_desheading": 0,
-        "color_des": "#3c3c3c",
-        "fontsize_des": 16,
-        "title_align": "center",
-        "view_all": "",
-        "view_all_align": "center",
-        "font_weight_view_all": "400",
-        "mg_top_view": 0,
-        "mg_bottom_view": 30,
-        "enable_border_view_all": true,
-        "link_view_all": "",
-        "color_view_all": "#3c3c3c",
-        "icon_view_all": "",
-        "color_view_all_icon": "#eb492f",
-        "view_all_pos": "under_title",
-        "blog_posts": "news",
-        "blog_results_per_row": "3",
-        "item_distance": 15,
+        "blog": "",
         "post_limit": 3,
-        "limit_content_des": 22,
-        "text_by": "",
-        "text_on": "",
-        "blog_show_author": false,
-        "blog_show_date": false,
-        "blog_show_des": false,
-        "show_more_pos": "under_content",
-        "blog_show_more_icon": "none",
-        "blog_date_format": "short_month",
-        "blog_item_bg": "#ffffff",
-        "border_radius_item": 0,
-        "margin_bottom_image": 0,
-        "margin_bottom_title": 0,
-        "margin_bottom_info": 13,
-        "margin_bottom_des": 6,
-        "block_item_style": "style_1",
-        "block_item_align": "left",
-        "block_button_text_transform": "none",
-        "block_button_fw": "400",
-        "enable_border_box": true,
-        "color_border_box": "#dbdbdb",
-        "color_title_item": "#232323",
-        "color_date_item": "#999999",
-        "color_des_item": "#3c3c3c",
-        "enable_blog_button": false,
-        "color_button_item": "#3c3c3c",
-        "color_button_item_border": "#1e1e1e",
-        "color_button_item_bg": "#1e1e1e",
-        "color_button_item_hover": "#000000",
-        "color_button_item_border_hover": "#ffffff",
-        "color_button_item_bg_hover": "#ffffff",
-        "content_on_image": false,
-        "content_bg": "",
-        "content_gradient": ""
+        "heading": "Blog posts",
+        "heading_size": "h1",
+        "columns_desktop": 3,
+        "show_view_all": true,
+        "show_image": true,
+        "show_date": true,
+        "show_author": false,
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "custom_liquid_YEFt3e": {
@@ -296,110 +323,20 @@
         "@media (max-width: 767px) {.availability-slider .instamart-logo {min-width: 120px; height: 40px; } .availability-slider .instamart-logo span {font-size: 21px; }}"
       ],
       "settings": {
-        "custom_liquid": "<section class=\"availability-section\">\n  <h2>NOW ALSO AVAILABLE</h2>\n  <p>Shop our premium products online with ease. Fast delivery & exclusive deals await!</p>\n\n  <div class=\"scroll-hint\">\n    ← Swipe / Scroll →\n  </div>\n\n  <div class=\"availability-slider\">\n\n    <a href=\"https://www.amazon.in/Marino-Collection-occasions-valentine-Boyfriend/dp/B0DTLGQC24\" target=\"_blank\" rel=\"noopener\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/amazon-ombrebliss.svg?v=1782286302\" alt=\"Amazon\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://www.flipkart.com/search?q=Ombre+bliss&marketplace=FLIPKART&as-show=on&pageUID=1740047749140\" target=\"_blank\" rel=\"noopener\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/Flipkart-ombrebliss.svg?v=1782286302\" alt=\"Flipkart\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://www.myntra.com/ombre-bliss?rawQuery=ombre%20bliss\" target=\"_blank\" rel=\"noopener\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/myntra-ombrebliss.svg?v=1782286302\" alt=\"Myntra\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://www.ajio.com/search/?text=ombre%20bliss\" target=\"_blank\" rel=\"noopener\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/ajio-logo-brandlogos.net_vzrwvgzda.svg?v=1782286302\" alt=\"AJIO\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://blinkit.com/prn/ombre-bliss-marino-eau-de-parfum-ozonic/prid/652393?srsltid=AfmBOoopwOqI1wJl4KuB7uW3x4N4HwAy9j5lh15UdBqlxw0OR53BpzZy\" target=\"_blank\" rel=\"noopener\" class=\"marketplace-logo\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/blinkit-logo-app-icon-transparent-background-free-png_1.webp?v=1782286303\" alt=\"Blinkit\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://www.firstcry.com/search?q=ombre%20bliss%20perfume&ref2=q_ombre%20bliss%20perfume\" target=\"_blank\" rel=\"noopener\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/firstcry.webp?v=1782286302\" alt=\"FirstCry\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://www.swiggy.com/stores/instamart/collection-listing?collectionId=106463&custom_back=true&brand=Ombre%20Bliss\" target=\"_blank\" rel=\"noopener\" class=\"marketplace-logo\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/instamart_logo.jpg?v=1782286302\" alt=\"Instamart\" loading=\"lazy\">\n    </a>\n\n  </div>\n</section>\n\n<style>\n  .availability-section {\n    text-align: center;\n    margin: 60px auto;\n    overflow: hidden;\n    width: 100%;\n  }\n\n  .availability-section h2 {\n    font-size: 28px;\n    font-weight: 700;\n    margin: 0;\n  }\n\n  .availability-section p {\n    margin-top: 10px;\n    color: #666;\n    font-size: 15px;\n  }\n\n  .scroll-hint {\n    margin-top: 22px;\n    font-size: 14px;\n    color: #888;\n    font-weight: 500;\n    animation: swipeAnim 1.5s infinite;\n  }\n\n  @keyframes swipeAnim {\n    0% { transform: translateX(0px); }\n    50% { transform: translateX(8px); }\n    100% { transform: translateX(0px); }\n  }\n\n  .availability-slider {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    gap: 50px;\n    padding: 38px 30px 15px;\n    max-width: 1200px;\n    margin: 0 auto;\n    overflow-x: visible;\n    scrollbar-width: none;\n  }\n\n  .availability-slider::-webkit-scrollbar {\n    display: none;\n  }\n\n  .availability-slider a {\n    width: 130px;\n    height: 55px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    flex-shrink: 0;\n  }\n\n  .availability-slider img {\n    max-width: 130px;\n    max-height: 55px;\n    width: auto;\n    height: auto;\n    object-fit: contain;\n    display: block;\n    transition: transform 0.3s ease;\n  }\n\n  .availability-slider .marketplace-logo {\n    width: 150px;\n    height: 60px;\n  }\n\n  .availability-slider .marketplace-logo img {\n    max-width: 150px;\n    max-height: 60px;\n  }\n\n  .availability-slider a:hover img {\n    transform: scale(1.06);\n  }\n\n  @media (max-width: 1024px) {\n    .availability-slider {\n      justify-content: flex-start;\n      overflow-x: auto;\n      gap: 40px;\n      padding-left: 24px;\n      padding-right: 24px;\n    }\n  }\n\n  @media (max-width: 767px) {\n    .availability-section {\n      margin: 45px auto;\n    }\n\n    .availability-section h2 {\n      font-size: 22px;\n    }\n\n    .availability-section p {\n      font-size: 13px;\n      padding: 0 18px;\n    }\n\n    .scroll-hint {\n      font-size: 12px;\n      margin-top: 16px;\n    }\n\n    .availability-slider {\n      justify-content: flex-start;\n      overflow-x: auto;\n      gap: 28px;\n      padding: 28px 16px 12px;\n    }\n\n    .availability-slider a {\n      width: 105px;\n      height: 42px;\n    }\n\n    .availability-slider img {\n      max-width: 105px;\n      max-height: 42px;\n    }\n\n    .availability-slider .marketplace-logo {\n      width: 125px;\n      height: 50px;\n    }\n\n    .availability-slider .marketplace-logo img {\n      max-width: 125px;\n      max-height: 50px;\n    }\n  }\n</style>"
-      }
-    },
-    "custom_hero_1": {
-      "type": "custom-hero",
-      "blocks": {
-        "slide_1": {
-          "type": "slide",
-          "settings": {
-            "image_desktop": "shopify://shop_images/p-1_c0192e44-d835-430c-8431-15582fcd627a.webp",
-            "image_mobile": "shopify://shop_images/m-1_69ce1efc-a69f-4f24-be57-f67825d1052f.webp",
-            "link": "shopify://collections/premium-collection"
-          }
-        },
-        "slide_2": {
-          "type": "slide",
-          "settings": {
-            "image_desktop": "shopify://shop_images/p-2_8a2d5e71-464a-4316-bc06-3af48356f17e.webp",
-            "image_mobile": "shopify://shop_images/m-2_d96f9a56-42fc-4b5b-af86-090c2f2d9c0f.webp",
-            "link": "shopify://collections/premium-collection"
-          }
-        }
-      },
-      "block_order": [
-        "slide_1",
-        "slide_2"
-      ],
-      "settings": {
-        "speed": 5
-      }
-    },
-    "custom_product_slider_1": {
-      "type": "custom-product-slider",
-      "settings": {
-        "title": "DISCOVER OMBRE BLISS - COUTURE COLLECTION",
-        "title_size": 24,
-        "limit": 8
-      }
-    },
-    "custom_essence_grid_1": {
-      "type": "custom-essence-grid",
-      "blocks": {
-        "grid_1": {
-          "type": "grid_item",
-          "settings": {
-            "title": "CLEAN FRAGRANCE",
-            "text": "100% non-toxic, safe-for-skin premium formulations."
-          }
-        },
-        "grid_2": {
-          "type": "grid_item",
-          "settings": {
-            "title": "HONEST PERFUMERY",
-            "text": "Transparent ingredient sourcing and artisanal production."
-          }
-        },
-        "grid_3": {
-          "type": "grid_item",
-          "settings": {
-            "title": "TRANSPARENT PRICING",
-            "text": "Luxury scents accessible directly without retail markup."
-          }
-        },
-        "grid_4": {
-          "type": "grid_item",
-          "settings": {
-            "title": "ETHICAL SCENTS",
-            "text": "Cruelty-free, vegan, and environmentally conscious."
-          }
-        },
-        "grid_5": {
-          "type": "grid_item",
-          "settings": {
-            "title": "MINIMAL LUXURY",
-            "text": "Sustainable packaging paired with elegant aesthetics."
-          }
-        },
-        "grid_6": {
-          "type": "grid_item",
-          "settings": {
-            "title": "PURE INGREDIENTS",
-            "text": "Sourced from the finest natural essence fields globally."
-          }
-        }
-      },
-      "block_order": [
-        "grid_1",
-        "grid_2",
-        "grid_3",
-        "grid_4",
-        "grid_5",
-        "grid_6"
-      ],
-      "settings": {
-        "title": "The Essence of Our Brand",
-        "title_size": 32
+        "custom_liquid": "<section class=\"availability-section\">\n  <h2>NOW ALSO AVAILABLE</h2>\n  <p>Shop our premium products online with ease. Fast delivery & exclusive deals await!</p>\n\n  <div class=\"scroll-hint\">\n    ← Swipe / Scroll →\n  </div>\n\n  <div class=\"availability-slider\">\n\n    <a href=\"https://www.amazon.in/Marino-Collection-occasions-valentine-Boyfriend/dp/B0DTLGQC24\" target=\"_blank\" rel=\"noopener\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/amazon-ombrebliss.svg?v=1782286302\" alt=\"Amazon\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://www.flipkart.com/search?q=Ombre+bliss&marketplace=FLIPKART&as-show=on&pageUID=1740047749140\" target=\"_blank\" rel=\"noopener\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/Flipkart-ombrebliss.svg?v=1782286302\" alt=\"Flipkart\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://www.myntra.com/ombre-bliss?rawQuery=ombre%20bliss\" target=\"_blank\" rel=\"noopener\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/myntra-ombrebliss.svg?v=1782286302\" alt=\"Myntra\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://www.ajio.com/search/?text=ombre%20bliss\" target=\"_blank\" rel=\"noopener\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/ajio-logo-brandlogos.net_vzrwvgzda.svg?v=1782286302\" alt=\"AJIO\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://blinkit.com/prn/ombre-bliss-marino-eau-de-parfum-ozonic/prid/652393?srsltid=AfmBOoopwOqI1wJl4KuB7uW3x4N4HwAy9j5lh15UdBqlxw0OR53BpzZy\" target=\"_blank\" rel=\"noopener\" class=\"marketplace-logo\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/blinkit-logo-app-icon-transparent-background-free-png_1.webp?v=1782286303\" alt=\"Blinkit\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://www.firstcry.com/search?q=ombre%20bliss%20perfume&ref2=q_ombre%20bliss%20perfume\" target=\"_blank\" rel=\"noopener\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/firstcry.webp?v=1782286302\" alt=\"FirstCry\" loading=\"lazy\">\n    </a>\n\n    <a href=\"https://www.swiggy.com/stores/instamart/collection-listing?collectionId=106463&custom_back=true&brand=Ombre%20Bliss\" target=\"_blank\" rel=\"noopener\" class=\"marketplace-logo\">\n      <img src=\"https://cdn.shopify.com/s/files/1/0694/0478/6914/files/instamart_logo.jpg?v=1782286302\" alt=\"Instamart\" loading=\"lazy\">\n    </a>\n\n  </div>\n</section>\n\n<style>\n  .availability-section {\n    text-align: center;\n    margin: 60px auto;\n    overflow: hidden;\n    width: 100%;\n  }\n\n  .availability-section h2 {\n    font-size: 28px;\n    font-weight: 700;\n    margin: 0;\n  }\n\n  .availability-section p {\n    margin-top: 10px;\n    color: #666;\n    font-size: 15px;\n  }\n\n  .scroll-hint {\n    margin-top: 22px;\n    font-size: 14px;\n    color: #888;\n    font-weight: 500;\n    animation: swipeAnim 1.5s infinite;\n  }\n\n  @keyframes swipeAnim {\n    0% { transform: translateX(0px); }\n    50% { transform: translateX(8px); }\n    100% { transform: translateX(0px); }\n  }\n\n  .availability-slider {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    gap: 50px;\n    padding: 38px 30px 15px;\n    max-width: 1200px;\n    margin: 0 auto;\n    overflow-x: visible;\n    scrollbar-width: none;\n  }\n\n  .availability-slider::-webkit-scrollbar {\n    display: none;\n  }\n\n  .availability-slider a {\n    width: 130px;\n    height: 55px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    flex-shrink: 0;\n  }\n\n  .availability-slider img {\n    max-width: 130px;\n    max-height: 55px;\n    width: auto;\n    height: auto;\n    object-fit: contain;\n    display: block;\n    transition: transform 0.3s ease;\n  }\n\n  .availability-slider .marketplace-logo {\n    width: 150px;\n    height: 60px;\n  }\n\n  .availability-slider .marketplace-logo img {\n    max-width: 150px;\n    max-height: 60px;\n  }\n\n  .availability-slider a:hover img {\n    transform: scale(1.06);\n  }\n\n  @media (max-width: 1024px) {\n    .availability-slider {\n      justify-content: flex-start;\n      overflow-x: auto;\n      gap: 40px;\n      padding-left: 24px;\n      padding-right: 24px;\n    }\n  }\n\n  @media (max-width: 767px) {\n    .availability-section {\n      margin: 45px auto;\n    }\n\n    .availability-section h2 {\n      font-size: 22px;\n    }\n\n    .availability-section p {\n      font-size: 13px;\n      padding: 0 18px;\n    }\n\n    .scroll-hint {\n      font-size: 12px;\n      margin-top: 16px;\n    }\n\n    .availability-slider {\n      justify-content: flex-start;\n      overflow-x: auto;\n      gap: 28px;\n      padding: 28px 16px 12px;\n    }\n\n    .availability-slider a {\n      width: 105px;\n      height: 42px;\n    }\n\n    .availability-slider img {\n      max-width: 105px;\n      max-height: 42px;\n    }\n\n    .availability-slider .marketplace-logo {\n      width: 125px;\n      height: 50px;\n    }\n\n    .availability-slider .marketplace-logo img {\n      max-width: 125px;\n      max-height: 50px;\n    }\n  }\n</style>",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
       }
     }
   },
   "order": [
     "custom_hero_1",
-    "custom_product_slider_1",
-    "custom_essence_grid_1",
+    "custom_brand_slider_1",
     "marquee_HeTqbn",
-    "watch_and_buy"
+    "watch_and_buy",
+    "product_tab_block_mAVk8f",
+    "featured_blog_iKWhTj",
+    "custom_liquid_YEFt3e"
   ]
 }
