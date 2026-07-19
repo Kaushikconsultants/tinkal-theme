@@ -1,0 +1,193 @@
+{{ 'ob-header.css' | asset_url | stylesheet_tag }}
+
+<style>
+  #shopify-section-ob-header {
+    background: {{ section.settings.bg_color }};
+  }
+</style>
+
+<sticky-header class="ob-header-wrapper {% if section.settings.enable_sticky %}is-sticky{% endif %}" style="--ob-header-bg: {{ section.settings.bg_color }}; --ob-header-text: {{ section.settings.text_color }};">
+  <div class="ob-header">
+    
+    <!-- Mobile Menu Button -->
+    <button type="button" class="ob-header__menu-btn" aria-label="Menu" onclick="document.getElementById('ob-drawer').classList.add('is-open'); document.getElementById('ob-drawer-overlay').classList.add('is-open');">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+
+    <!-- Logo -->
+    <a href="{{ routes.root_url }}" class="ob-header__logo">
+      {%- if section.settings.logo_url != blank -%}
+        <img src="{{ section.settings.logo_url }}" alt="{{ shop.name | escape }}" style="max-height: 50px; width: auto; object-fit: contain;" loading="eager">
+      {%- elsif section.settings.logo != blank -%}
+        <img src="{{ section.settings.logo | img_url: '400x' }}" alt="{{ shop.name | escape }}" width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}" loading="eager">
+      {%- else -%}
+        <span style="font-size:24px;font-weight:bold;color:var(--ob-header-text);">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="ob-header__nav-desktop">
+      <ul class="ob-nav-list">
+        {%- for link in linklists[section.settings.menu].links -%}
+          <li>
+            <a href="{{ link.url }}" class="ob-nav-link">
+              {{ link.title }}
+              {%- if link.links != blank -%}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              {%- endif -%}
+            </a>
+            {%- if link.links != blank -%}
+              <ul class="ob-nav-dropdown">
+                {%- for childlink in link.links -%}
+                  <li><a href="{{ childlink.url }}">{{ childlink.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <!-- Icons -->
+    <div class="ob-header__icons">
+      <!-- Search Icon -->
+      <details-modal class="header__search desktop-only">
+        <details>
+          <summary class="ob-header__icon" aria-haspopup="dialog" aria-label="Search">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" fill="none"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </summary>
+          <div class="header__search-modal" role="dialog" aria-modal="true">
+            <form action="{{ routes.search_url }}" method="get" role="search" style="position:absolute;top:100%;right:0;background:#fff;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.1);z-index:99;display:flex;gap:10px;">
+              <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search..." style="padding:10px;border:1px solid #ccc;min-width:250px;">
+              <button type="submit" style="padding:10px 20px;background:#000;color:#fff;border:none;cursor:pointer;">Search</button>
+            </form>
+          </div>
+        </details>
+      </details-modal>
+
+      <!-- Account Icon -->
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="ob-header__icon ob-header__profile-icon desktop-only">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" fill="none"></path><circle cx="12" cy="7" r="4" fill="none"></circle></svg>
+        </a>
+      {%- endif -%}
+
+      <!-- Wishlist Icon -->
+      <a href="{% if settings.link_wishlist != blank %}{{ settings.link_wishlist }}{% else %}{{ pages['wish-list'].url }}{% endif %}" class="ob-header__icon desktop-only">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none"></path></svg>
+      </a>
+
+      <!-- Cart Icon (GoKwik trigger) -->
+      <a href="{{ routes.cart_url }}" class="ob-header__icon header__icon header__icon--cart link link--text focus-inset cart-icon-bubble" id="cart-icon-bubble" data-cart-sidebar>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h12l1 14H5L6 6z" fill="none"></path><path d="M9 6V4a3 3 0 0 1 6 0v2" fill="none"></path></svg>
+        {%- if cart.item_count > 0 -%}
+          <div class="ob-header__cart-count">{{ cart.item_count }}</div>
+        {%- endif -%}
+      </a>
+
+    </div>
+
+  </div>
+</sticky-header>
+
+<!-- Mobile Drawer -->
+<div class="ob-drawer-overlay" id="ob-drawer-overlay" onclick="document.getElementById('ob-drawer').classList.remove('is-open'); this.classList.remove('is-open');"></div>
+<div class="ob-mobile-drawer" id="ob-drawer">
+  <div class="ob-drawer-header">
+    <span style="font-weight:bold;font-size:18px;">MENU</span>
+    <button type="button" class="ob-drawer-close" onclick="document.getElementById('ob-drawer').classList.remove('is-open'); document.getElementById('ob-drawer-overlay').classList.remove('is-open');">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+  <ul class="ob-drawer-nav">
+    {%- for link in linklists[section.settings.menu].links -%}
+      {%- if link.links != blank -%}
+        <li class="ob-drawer-has-sub">
+          <details>
+            <summary>
+              {{ link.title }}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </summary>
+            <ul class="ob-drawer-sub">
+              {%- for childlink in link.links -%}
+                <li><a href="{{ childlink.url }}">{{ childlink.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </details>
+        </li>
+      {%- else -%}
+        <li>
+          <a href="{{ link.url }}" class="ob-drawer-link">{{ link.title }}</a>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+    <li>
+      <a href="{{ routes.search_url }}" class="ob-drawer-link" style="display:flex;align-items:center;gap:10px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" fill="none"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <span>Search</span>
+      </a>
+    </li>
+    {%- if shop.customer_accounts_enabled -%}
+      <li>
+        <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="ob-drawer-link" style="display:flex;align-items:center;gap:10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" fill="none"></path><circle cx="12" cy="7" r="4" fill="none"></circle></svg>
+          <span>Sign In</span>
+        </a>
+      </li>
+    {%- endif -%}
+    <li>
+      <a href="{% if settings.link_wishlist != blank %}{{ settings.link_wishlist }}{% else %}{{ pages['wish-list'].url }}{% endif %}" class="ob-drawer-link" style="display:flex;align-items:center;gap:10px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none"></path></svg>
+        <span>My Wish List</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+{% schema %}
+{
+  "name": "OB Custom Header",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Enable Sticky Header",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f3e6da"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "logo_url",
+      "label": "App Uploaded Logo URL",
+      "info": "Paste a permanent URL to bypass Shopify upload errors"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ],
+  "presets": [
+    {
+      "name": "OB Custom Header"
+    }
+  ]
+}
+{% endschema %}
