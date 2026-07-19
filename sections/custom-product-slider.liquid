@@ -2,32 +2,25 @@
   .custom-product-slider--{{ section.id }} {
     padding: {{ section.settings.padding_y }}px 0;
     background-color: {{ section.settings.bg_color }};
-  }
-  .custom-product-slider__title {
-    text-align: center;
-    font-size: {{ section.settings.title_size }}px;
-    color: {{ section.settings.title_color }};
-    margin-bottom: 20px;
-    font-weight: 600;
+    overflow: hidden;
   }
   .custom-product-slider__track-wrapper {
-    width: 100%;
-    overflow: hidden;
+    display: flex;
   }
   .custom-product-slider__track {
     display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
     gap: 15px;
     padding: 10px 20px;
-    scrollbar-width: none; /* Firefox */
+    align-items: center;
+    /* CSS animation for endless scroll */
+    animation: product-marquee {{ section.settings.speed }}s linear infinite;
   }
-  .custom-product-slider__track::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+  .custom-product-slider__track:hover {
+    animation-play-state: paused;
   }
   .custom-product-slider__item {
-    flex: 0 0 calc(25% - 15px); /* 4 items on desktop */
-    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 250px; /* Fixed width for marquee items */
     text-align: center;
     text-decoration: none;
   }
@@ -48,13 +41,6 @@
   .custom-product-slider__item:hover img {
     transform: scale(1.05);
   }
-  .custom-product-slider__product-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-  }
   .custom-product-slider__price-wrapper {
     display: flex;
     justify-content: center;
@@ -73,101 +59,63 @@
     color: #888;
   }
   
-  @media screen and (max-width: 990px) {
-    .custom-product-slider__item {
-      flex: 0 0 calc(33.333% - 15px);
-    }
+  @keyframes product-marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-100% - 15px)); }
   }
+
   @media screen and (max-width: 750px) {
     .custom-product-slider__item {
-      flex: 0 0 calc(50% - 15px);
-    }
-    .custom-product-slider__title {
-      font-size: {{ section.settings.title_size | divided_by: 1.5 }}px;
+      width: 180px;
     }
   }
   @media screen and (max-width: 480px) {
     .custom-product-slider__item {
-      flex: 0 0 calc(70% - 15px);
+      width: 150px;
     }
   }
 </style>
 
-<div class="custom-product-slider--{{ section.id }}" id="slider-{{ section.id }}" data-speed="{{ section.settings.speed | times: 1000 }}">
-  {%- if section.settings.title != blank -%}
-    <div class="custom-product-slider__title">{{ section.settings.title }}</div>
-  {%- endif -%}
-
+<div class="custom-product-slider--{{ section.id }}">
   <div class="custom-product-slider__track-wrapper">
-    <div class="custom-product-slider__track">
-      {%- assign collection = collections[section.settings.collection] -%}
-      {%- if collection != blank -%}
-        {%- for product in collection.products limit: section.settings.limit -%}
-          <a href="{{ product.url }}" class="custom-product-slider__item">
-            <div class="custom-product-slider__image-wrapper">
-              {%- if product.featured_image != blank -%}
-                {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy' }}
-              {%- else -%}
+    {%- assign products = collections['all'].products -%}
+    {%- for i in (1..3) -%}
+      <div class="custom-product-slider__track" {% if i > 1 %}aria-hidden="true"{% endif %} style="padding-right: 15px;">
+        {%- if products.size > 0 -%}
+          {%- for product in products limit: section.settings.limit -%}
+            <a href="{{ product.url }}" class="custom-product-slider__item">
+              <div class="custom-product-slider__image-wrapper">
+                {%- if product.featured_image != blank -%}
+                  {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy' }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+              <div class="custom-product-slider__price-wrapper">
+                <span class="custom-product-slider__price">{{ product.price | money }}</span>
+                {%- if product.compare_at_price > product.price -%}
+                  <span class="custom-product-slider__compare-price">{{ product.compare_at_price | money }}</span>
+                {%- endif -%}
+              </div>
+            </a>
+          {%- endfor -%}
+        {%- else -%}
+          {%- for j in (1..6) -%}
+            <div class="custom-product-slider__item">
+              <div class="custom-product-slider__image-wrapper">
                 {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-              {%- endif -%}
+              </div>
+              <div class="custom-product-slider__price-wrapper">
+                <span class="custom-product-slider__price">$19.99</span>
+                <span class="custom-product-slider__compare-price">$29.99</span>
+              </div>
             </div>
-            <div class="custom-product-slider__product-title">{{ product.title }}</div>
-            <div class="custom-product-slider__price-wrapper">
-              <span class="custom-product-slider__price">{{ product.price | money }}</span>
-              {%- if product.compare_at_price > product.price -%}
-                <span class="custom-product-slider__compare-price">{{ product.compare_at_price | money }}</span>
-              {%- endif -%}
-            </div>
-          </a>
-        {%- endfor -%}
-      {%- else -%}
-        {%- for i in (1..6) -%}
-          <div class="custom-product-slider__item">
-            <div class="custom-product-slider__image-wrapper">
-              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-            </div>
-            <div class="custom-product-slider__product-title">Sample Product</div>
-            <div class="custom-product-slider__price-wrapper">
-              <span class="custom-product-slider__price">$19.99</span>
-              <span class="custom-product-slider__compare-price">$29.99</span>
-            </div>
-          </div>
-        {%- endfor -%}
-      {%- endif -%}
-    </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
   </div>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const section = document.getElementById('slider-{{ section.id }}');
-    if (!section) return;
-    const track = section.querySelector('.custom-product-slider__track');
-    const speed = parseInt(section.getAttribute('data-speed')) || 0;
-    
-    if (speed > 0) {
-      let interval;
-      
-      function startScroll() {
-        interval = setInterval(() => {
-          if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
-            track.scrollTo({ left: 0, behavior: 'smooth' });
-          } else {
-            const itemWidth = track.querySelector('.custom-product-slider__item').clientWidth + 15;
-            track.scrollBy({ left: itemWidth, behavior: 'smooth' });
-          }
-        }, speed);
-      }
-      
-      startScroll();
-      
-      section.addEventListener('mouseenter', () => clearInterval(interval));
-      section.addEventListener('mouseleave', startScroll);
-      track.addEventListener('touchstart', () => clearInterval(interval), {passive: true});
-      track.addEventListener('touchend', startScroll, {passive: true});
-    }
-  });
-</script>
 
 {% schema %}
 {
@@ -176,46 +124,19 @@
   "class": "section",
   "settings": [
     {
-      "type": "text",
-      "id": "title",
-      "label": "Heading",
-      "default": "DISCOVER OMBRE BLISS - COUTURE COLLECTION"
-    },
-    {
-      "type": "range",
-      "id": "title_size",
-      "min": 16,
-      "max": 60,
-      "step": 1,
-      "unit": "px",
-      "label": "Heading Size",
-      "default": 24
-    },
-    {
-      "type": "color",
-      "id": "title_color",
-      "label": "Heading Color",
-      "default": "#333333"
-    },
-    {
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
       "default": "#ffffff"
     },
     {
-      "type": "collection",
-      "id": "collection",
-      "label": "Collection"
-    },
-    {
       "type": "range",
       "id": "limit",
       "min": 4,
-      "max": 16,
+      "max": 30,
       "step": 1,
       "label": "Maximum products to show",
-      "default": 8
+      "default": 10
     },
     {
       "type": "range",
@@ -230,12 +151,12 @@
     {
       "type": "range",
       "id": "speed",
-      "min": 0,
-      "max": 10,
-      "step": 1,
+      "min": 10,
+      "max": 100,
+      "step": 5,
       "unit": "s",
-      "label": "Auto-scroll Speed (0 to disable)",
-      "default": 3
+      "label": "Scroll Speed",
+      "default": 30
     }
   ],
   "presets": [
