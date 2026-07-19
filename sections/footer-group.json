@@ -2,45 +2,35 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "footer": {
-      "type": "footer",
-      "settings": {
-        "color_scheme": "scheme-1",
-        "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
-        "enable_follow_on_shop": true,
-        "show_social": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "payment_enable": true,
-        "show_policy": true,
-        "margin_top": 0,
-        "padding_top": 36,
-        "padding_bottom": 36
-      },
+    "custom_footer": {
+      "type": "custom-footer",
       "blocks": {
-        "link_list_1": {
+        "menu_1": {
           "type": "link_list",
           "settings": {
-            "heading": "Quick links",
-            "menu": "footer"
+            "heading": "SHOP"
           }
         },
-        "text_1": {
-          "type": "text",
+        "menu_2": {
+          "type": "link_list",
           "settings": {
-            "heading": "About Us",
-            "subtext": "<p>Discover the essence of our brand.</p>"
+            "heading": "QUICK LINKS"
           }
         }
       },
       "block_order": [
-        "link_list_1",
-        "text_1"
-      ]
+        "menu_1",
+        "menu_2"
+      ],
+      "settings": {
+        "bg_color": "#f1e9df",
+        "text_color": "#333333",
+        "newsletter_heading": "NEWSLETTER SIGN UP",
+        "newsletter_subtext": "Sign up for exclusive updates, new arrivals & insider only discounts"
+      }
     }
   },
   "order": [
-    "footer"
+    "custom_footer"
   ]
 }
