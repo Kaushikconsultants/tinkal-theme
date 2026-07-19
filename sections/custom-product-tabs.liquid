@@ -23,6 +23,16 @@
       "unit": "px",
       "label": "Top/Bottom Padding",
       "default": 40
+    },
+    {
+      "type": "range",
+      "id": "swipe_speed",
+      "min": 1,
+      "max": 10,
+      "step": 0.5,
+      "unit": "s",
+      "label": "Auto-Swipe Speed",
+      "default": 1.5
     }
   ],
   "blocks": [
@@ -384,7 +394,7 @@
             }
           }
         }
-      }, 3500); // scroll or switch every 3.5 seconds
+      }, {{ section.settings.swipe_speed | default: 1.5 | times: 1000 }}); // dynamic scroll speed
     }
     
     // Initial start
