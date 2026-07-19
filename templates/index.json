@@ -37,6 +37,20 @@
         "speed": 1
       }
     },
+    "custom_product_slider_Y7m6Xy": {
+      "type": "custom-product-slider",
+      "name": "Custom Product Slider",
+      "settings": {
+        "title": "",
+        "title_size": 24,
+        "title_color": "#333333",
+        "bg_color": "#ffffff",
+        "collection": "all",
+        "limit": 16,
+        "padding_y": 0,
+        "speed": 1
+      }
+    },
     "marquee_HeTqbn": {
       "type": "11fit-marquee1",
       "blocks": {
@@ -126,20 +140,6 @@
         "bg_color": "#ffffff",
         "padding_top": 40,
         "padding_bottom": 40
-      }
-    },
-    "custom_product_slider_Y7m6Xy": {
-      "type": "custom-product-slider",
-      "name": "Custom Product Slider",
-      "settings": {
-        "title": "DISCOVER OMBRE BLISS - COUTURE COLLECTION",
-        "title_size": 24,
-        "title_color": "#333333",
-        "bg_color": "#ffffff",
-        "collection": "all",
-        "limit": 8,
-        "padding_y": 40,
-        "speed": 1
       }
     }
   },
