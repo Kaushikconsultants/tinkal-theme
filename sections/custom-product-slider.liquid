@@ -116,29 +116,28 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  (function() {
     const section = document.getElementById('product-slider-{{ section.id }}');
     if (!section) return;
     const wrapper = section.querySelector('.custom-product-slider__track-wrapper');
     if (!wrapper) return;
     
-    // section.settings.speed is e.g. 30
     const speed = parseInt(wrapper.getAttribute('data-speed')) || 30; 
     const increment = speed / 30; 
     
     let isHovered = false;
     let isTouching = false;
     let animationId;
-    let currentScroll = 0;
+    let currentScroll = wrapper.scrollLeft;
 
     function autoScroll() {
       if (!isHovered && !isTouching) {
         currentScroll += increment;
         const singleTrackWidth = wrapper.scrollWidth / 3;
         
-        if (wrapper.scrollLeft >= singleTrackWidth) {
-           wrapper.scrollLeft -= singleTrackWidth;
-           currentScroll = wrapper.scrollLeft;
+        if (currentScroll >= singleTrackWidth) {
+           currentScroll -= singleTrackWidth;
+           wrapper.scrollLeft = currentScroll;
         } else {
            wrapper.scrollLeft = currentScroll;
         }
@@ -163,7 +162,7 @@
     }, {passive: true});
     
     animationId = requestAnimationFrame(autoScroll);
-  });
+  })();
 </script>
 
 {% schema %}
