@@ -79,7 +79,9 @@
     {%- for block in section.blocks -%}
       <div class="custom-essence-grid__item" {{ block.shopify_attributes }}>
         <div class="custom-essence-grid__icon">
-          {%- if block.settings.icon != blank -%}
+          {%- if block.settings.custom_svg != blank -%}
+            {{ block.settings.custom_svg }}
+          {%- elsif block.settings.icon != blank -%}
             {{ block.settings.icon | image_url: width: 100 | image_tag: loading: 'lazy' }}
           {%- else -%}
             {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -146,6 +148,12 @@
       "type": "grid_item",
       "name": "Essence Item",
       "settings": [
+        {
+          "type": "textarea",
+          "id": "custom_svg",
+          "label": "Custom SVG Code",
+          "info": "Overrides the image picker. Recommended width/height: 28px."
+        },
         {
           "type": "image_picker",
           "id": "icon",
