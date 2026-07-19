@@ -359,13 +359,36 @@
     function resetInterval() {
       clearInterval(autoSwitchInterval);
       autoSwitchInterval = setInterval(() => {
-        currentTabIndex = (currentTabIndex + 1) % btns.length;
-        switchTab(currentTabIndex);
-      }, 7000); // switch tab every 7 seconds
+        const activeContent = contents[currentTabIndex];
+        if (!activeContent) return;
+        
+        const slider = activeContent.querySelector('.custom-tabs-slider');
+        if (slider) {
+          const maxScroll = slider.scrollWidth - slider.clientWidth;
+          
+          if (slider.scrollLeft < maxScroll - 10) {
+            // Can scroll further right, scroll one item
+            const product = slider.querySelector('.custom-tabs-product');
+            const scrollAmount = product ? product.clientWidth + 20 : 300; // 20 is the gap
+            slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+          } else {
+            // Reached the end, switch tab
+            currentTabIndex = (currentTabIndex + 1) % btns.length;
+            switchTab(currentTabIndex);
+            
+            // Reset the new tab's scroll position back to the start
+            const newContent = contents[currentTabIndex];
+            if (newContent) {
+              const newSlider = newContent.querySelector('.custom-tabs-slider');
+              if (newSlider) newSlider.scrollLeft = 0;
+            }
+          }
+        }
+      }, 3500); // scroll or switch every 3.5 seconds
     }
     
     // Initial start
-    if (btns.length > 1) {
+    if (btns.length > 0) {
       resetInterval();
     }
   });
