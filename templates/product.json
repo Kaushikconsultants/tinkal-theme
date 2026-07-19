@@ -1,1 +1,127 @@
-{"sections":{"main":{"type":"main-product-custom","blocks":{"vendor":{"type":"text","settings":{"text":"{{ product.vendor }}","text_style":"uppercase"}},"title":{"type":"title","settings":{}},"price":{"type":"price","settings":{}},"variant_picker":{"type":"variant_picker","settings":{"picker_type":"button","swatch_shape":"circle"}},"quantity_selector":{"type":"quantity_selector","settings":{}},"buy_buttons":{"type":"buy_buttons","settings":{"show_dynamic_checkout":true,"show_gift_card_recipient":true}},"description":{"type":"description","settings":{}},"share":{"type":"share","settings":{"share_label":"Share"}}},"block_order":["vendor","title","price","variant_picker","quantity_selector","buy_buttons","description","share"],"settings":{"enable_sticky_info":true,"color_scheme":"scheme-1","media_size":"large","constrain_to_viewport":true,"media_fit":"contain","gallery_layout":"stacked","mobile_thumbnails":"hide","media_position":"left","image_zoom":"lightbox","hide_variants":true,"enable_video_looping":false,"padding_top":36,"padding_bottom":12}},"disclosures":{"type":"disclosures","settings":{"padding_top":36,"padding_bottom":0}},"related-products":{"type":"related-products","settings":{"heading":"You may also like","heading_size":"h2","products_to_show":4,"columns_desktop":4,"columns_mobile":"2","color_scheme":"scheme-1","image_ratio":"square","image_shape":"default","show_secondary_image":true,"show_vendor":false,"show_rating":false,"padding_top":36,"padding_bottom":28}}},"order":["main","disclosures","related-products"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "custom_liquid_jV64nT": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{%- if product.metafields.custom.ingredients != blank -%}\n  <style>\n    .ingredients-section { text-align: center; margin-top: 20px; position: relative; max-width: 100%; padding: 40px 0; }\n    .ingredients-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; }\n    .ingredients-scroll-wrapper { position: relative; overflow: hidden; max-width: 1240px; margin: 0 auto; }\n    .ingredients-scroll-container { display: flex; overflow-x: auto; scroll-behavior: smooth; padding: 5px 10px; gap: 10px; -webkit-overflow-scrolling: touch; }\n    .ingredients-scroll-container::-webkit-scrollbar { height: 6px; }\n    .ingredients-scroll-container::-webkit-scrollbar-track { background: #f1f1f1; }\n    .ingredients-scroll-container::-webkit-scrollbar-thumb { background: #777; border-radius: 10px; }\n    .ingredients-item { flex: 0 0 auto; width: 110px; text-align: center; }\n    .ingredients-item img { width: 75px; height: 75px; border-radius: 10px; object-fit: cover; aspect-ratio: 1 / 1; display: block; margin: 0 auto; }\n    .ingredients-item p { margin-top: 6px; font-weight: 600; font-size: 13px; line-height: 1.2; color: #000; }\n    .scroll-arrow { position: absolute; top: 50%; transform: translateY(-50%); font-size: 24px; color: #444; background-color: rgba(255,255,255,0.85); border-radius: 50%; width: 30px; height: 30px; line-height: 30px; text-align: center; cursor: pointer; z-index: 1; user-select: none; box-shadow: 0 0 4px rgba(0,0,0,0.15); }\n    .scroll-arrow.left { left: 5px; }\n    .scroll-arrow.right { right: 5px; }\n    @media (max-width: 600px) { .scroll-arrow { display: none; } }\n  </style>\n\n  <section class=\"ingredients-section\" id=\"ingredients\">\n    <div class=\"ingredients-title\">Ingredients Behind the Fragrance</div>\n    <div class=\"ingredients-scroll-wrapper\">\n      <div class=\"scroll-arrow left\" onclick=\"scrollIngredientsLeft()\">‹</div>\n      <div class=\"scroll-arrow right\" onclick=\"scrollIngredientsRight()\">›</div>\n\n      <div class=\"ingredients-scroll-container\" id=\"ingredients-scroll-container\">\n        {%- for ingredient in product.metafields.custom.ingredients.value -%}\n          <div class=\"ingredients-item\">\n            \n            {%- comment -%} Safely extract the name and image regardless of Metaobject structure {%- endcomment -%}\n            {%- assign ing_name = ingredient.name.value | default: ingredient.name -%}\n            {%- assign ing_img = ingredient.image.value | default: ingredient.image -%}\n            \n            {%- if ing_img != blank -%}\n              {%- if ing_img.media_type or ing_img.src -%}\n                <img loading=\"lazy\" src=\"{{ ing_img | image_url: width: 150 }}\" width=\"75\" height=\"75\" alt=\"{{ ing_name | escape }}\">\n              {%- else -%}\n                <img loading=\"lazy\" src=\"{{ ing_img }}\" width=\"75\" height=\"75\" alt=\"{{ ing_name | escape }}\">\n              {%- endif -%}\n            {%- else -%}\n              <div style=\"width:75px;height:75px;border-radius:10px;background:#eee;margin:0 auto;display:flex;align-items:center;justify-content:center;\">🌿</div>\n            {%- endif -%}\n\n            <p>{{ ing_name }}</p>\n          </div>\n        {%- endfor -%}\n      </div>\n    </div>\n  </section>\n\n  <script>\n    function scrollIngredientsLeft() {\n      document.getElementById(\"ingredients-scroll-container\").scrollBy({ left: -180, behavior: \"smooth\" });\n    }\n    function scrollIngredientsRight() {\n      document.getElementById(\"ingredients-scroll-container\").scrollBy({ left: 180, behavior: \"smooth\" });\n    }\n  </script>\n{%- endif -%}"
+          }
+        },
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "custom_liquid_jV64nT",
+        "vendor",
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
+    },
+    "disclosures": {
+      "type": "disclosures",
+      "settings": {
+        "heading": "Disclosures",
+        "heading_size": "h2",
+        "open_by_default": false,
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 0
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    }
+  },
+  "order": [
+    "main",
+    "disclosures",
+    "related-products"
+  ]
+}
