@@ -1,0 +1,80 @@
+<style>
+  .custom-hero--{{ section.id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  .custom-hero__image-desktop {
+    display: none;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  .custom-hero__image-mobile {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  @media screen and (min-width: 750px) {
+    .custom-hero__image-desktop { display: block; }
+    .custom-hero__image-mobile { display: none; }
+  }
+  .custom-hero__link {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 2;
+  }
+</style>
+
+<div class="custom-hero--{{ section.id }}">
+  {%- if section.settings.link != blank -%}
+    <a href="{{ section.settings.link }}" class="custom-hero__link" aria-label="{{ section.settings.image_desktop.alt | escape | default: 'Hero image' }}"></a>
+  {%- endif -%}
+
+  {%- if section.settings.image_desktop != blank -%}
+    {{ section.settings.image_desktop | image_url: width: 3840 | image_tag: class: 'custom-hero__image-desktop', loading: 'eager', fetchpriority: 'high' }}
+  {%- else -%}
+    {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg custom-hero__image-desktop' }}
+  {%- endif -%}
+
+  {%- if section.settings.image_mobile != blank -%}
+    {{ section.settings.image_mobile | image_url: width: 1500 | image_tag: class: 'custom-hero__image-mobile', loading: 'eager', fetchpriority: 'high' }}
+  {%- else -%}
+    {%- if section.settings.image_desktop != blank -%}
+      {{ section.settings.image_desktop | image_url: width: 1500 | image_tag: class: 'custom-hero__image-mobile', loading: 'eager', fetchpriority: 'high' }}
+    {%- else -%}
+      {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg custom-hero__image-mobile' }}
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Custom Clean Hero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile Image (Optional)"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Banner Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Clean Hero"
+    }
+  ]
+}
+{% endschema %}
