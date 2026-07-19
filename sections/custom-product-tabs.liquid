@@ -1,0 +1,372 @@
+{% schema %}
+{
+  "name": "Custom Product Tabs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Trending Now"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#fafafa"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top/Bottom Padding",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Product Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab Title",
+          "default": "UNISEX"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product Tabs",
+      "blocks": [
+        { "type": "tab", "settings": { "title": "UNISEX" } },
+        { "type": "tab", "settings": { "title": "FOR HER" } },
+        { "type": "tab", "settings": { "title": "FOR HIM" } },
+        { "type": "tab", "settings": { "title": "GIFT SETS" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .custom-tabs-section {
+    padding: {{ section.settings.padding_y }}px 0;
+    background: {{ section.settings.bg_color }};
+    font-family: inherit;
+  }
+  .custom-tabs-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .custom-tabs-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .custom-tabs-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #000;
+    text-transform: uppercase;
+  }
+  .custom-tabs-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  .custom-tabs-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: color 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .custom-tabs-btn.active {
+    color: #000;
+    font-weight: 700;
+  }
+  .custom-tabs-separator {
+    color: #ccc;
+    font-weight: 300;
+  }
+  .custom-tabs-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .custom-tabs-content.active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .custom-tabs-slider {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 20px;
+  }
+  .custom-tabs-slider::-webkit-scrollbar {
+    display: none;
+  }
+  .custom-tabs-product {
+    flex: 0 0 280px;
+    scroll-snap-align: start;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .custom-tabs-product:hover .custom-tabs-img {
+    transform: scale(1.05);
+  }
+  .custom-tabs-img-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* 1:1 aspect ratio */
+    overflow: hidden;
+    background: #f5f5f5;
+  }
+  .custom-tabs-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .custom-tabs-wishlist {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #fff;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 2;
+  }
+  .custom-tabs-wishlist svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: #000;
+    stroke-width: 2;
+  }
+  .custom-tabs-info {
+    padding: 15px 10px;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .custom-tabs-product-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: #333;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .custom-tabs-pricing {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+  .custom-tabs-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #000;
+  }
+  .custom-tabs-compare {
+    font-size: 12px;
+    text-decoration: line-through;
+    color: #999;
+  }
+  .custom-tabs-btn-add {
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #000;
+    color: #000;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+  }
+  .custom-tabs-btn-add:hover {
+    background: #000;
+    color: #fff;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .custom-tabs-product {
+      flex: 0 0 220px;
+    }
+    .custom-tabs-nav {
+      gap: 10px;
+    }
+    .custom-tabs-btn {
+      font-size: 14px;
+      padding: 5px;
+    }
+  }
+</style>
+
+<div class="custom-tabs-section" id="custom-tabs-{{ section.id }}">
+  <div class="custom-tabs-container">
+    {%- if section.settings.title != blank -%}
+      <div class="custom-tabs-header">
+        <div class="custom-tabs-title">{{ section.settings.title }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="custom-tabs-nav">
+        {%- for block in section.blocks -%}
+          <button class="custom-tabs-btn {% if forloop.first %}active{% endif %}" data-target="tab-{{ section.id }}-{{ forloop.index }}">
+            {{ block.settings.title }}
+          </button>
+          {%- if forloop.last == false -%}
+            <span class="custom-tabs-separator">|</span>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="custom-tabs-panels" style="margin-top: 30px;">
+        {%- for block in section.blocks -%}
+          <div class="custom-tabs-content {% if forloop.first %}active{% endif %}" id="tab-{{ section.id }}-{{ forloop.index }}">
+            <div class="custom-tabs-slider">
+              {%- assign collection = collections[block.settings.collection] -%}
+              {%- if collection != blank and collection.products_count > 0 -%}
+                {%- for product in collection.products limit: 12 -%}
+                  <a href="{{ product.url }}" class="custom-tabs-product">
+                    <div class="custom-tabs-img-wrapper">
+                      <div class="custom-tabs-wishlist">
+                        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                      </div>
+                      {%- if product.featured_image != blank -%}
+                        {{ product.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', class: 'custom-tabs-img' }}
+                      {%- else -%}
+                        {{ 'product-1' | placeholder_svg_tag: 'custom-tabs-img' }}
+                      {%- endif -%}
+                    </div>
+                    <div class="custom-tabs-info">
+                      <div class="custom-tabs-product-title">{{ product.title }}</div>
+                      <div class="custom-tabs-pricing">
+                        {%- if product.compare_at_price > product.price -%}
+                          <span class="custom-tabs-compare">{{ product.compare_at_price | money }}</span>
+                          <span class="custom-tabs-price" style="color: #c5a880;">{{ product.price | money }}</span>
+                        {%- else -%}
+                          <span class="custom-tabs-price">{{ product.price | money }}</span>
+                        {%- endif -%}
+                      </div>
+                      <button class="custom-tabs-btn-add" onclick="event.preventDefault(); window.location.href='{{ product.url }}'">Quick Add</button>
+                    </div>
+                  </a>
+                {%- endfor -%}
+              {%- else -%}
+                {%- for i in (1..5) -%}
+                  <div class="custom-tabs-product">
+                    <div class="custom-tabs-img-wrapper">
+                      {{ 'product-' | append: i | placeholder_svg_tag: 'custom-tabs-img' }}
+                    </div>
+                    <div class="custom-tabs-info">
+                      <div class="custom-tabs-product-title">Sample Product Title</div>
+                      <div class="custom-tabs-pricing">
+                        <span class="custom-tabs-compare">$49.99</span>
+                        <span class="custom-tabs-price" style="color: #c5a880;">$39.99</span>
+                      </div>
+                      <button class="custom-tabs-btn-add">Quick Add</button>
+                    </div>
+                  </div>
+                {%- endfor -%}
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sectionId = 'custom-tabs-{{ section.id }}';
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+
+    const btns = section.querySelectorAll('.custom-tabs-btn');
+    const contents = section.querySelectorAll('.custom-tabs-content');
+
+    let currentTabIndex = 0;
+    let autoSwitchInterval;
+
+    function switchTab(index) {
+      btns.forEach(b => b.classList.remove('active'));
+      contents.forEach(c => c.classList.remove('active'));
+      
+      if (btns[index]) btns[index].classList.add('active');
+      if (contents[index]) contents[index].classList.add('active');
+    }
+
+    btns.forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        currentTabIndex = index;
+        switchTab(index);
+        resetInterval();
+      });
+    });
+
+    function resetInterval() {
+      clearInterval(autoSwitchInterval);
+      autoSwitchInterval = setInterval(() => {
+        currentTabIndex = (currentTabIndex + 1) % btns.length;
+        switchTab(currentTabIndex);
+      }, 7000); // switch tab every 7 seconds
+    }
+    
+    // Initial start
+    if (btns.length > 1) {
+      resetInterval();
+    }
+  });
+</script>

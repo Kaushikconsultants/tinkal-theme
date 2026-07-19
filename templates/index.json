@@ -191,32 +191,32 @@
         "padding_y": 60
       }
     },
-    "product_tab_block_1": {
-      "type": "product-tab-block",
+    "custom_product_tabs_1": {
+      "type": "custom-product-tabs",
       "blocks": {
         "tab_1": {
-          "type": "ProductTabs",
+          "type": "tab",
           "settings": {
             "title": "UNISEX",
             "collection": "all"
           }
         },
         "tab_2": {
-          "type": "ProductTabs",
+          "type": "tab",
           "settings": {
             "title": "FOR HER",
             "collection": "all"
           }
         },
         "tab_3": {
-          "type": "ProductTabs",
+          "type": "tab",
           "settings": {
             "title": "FOR HIM",
             "collection": "all"
           }
         },
         "tab_4": {
-          "type": "ProductTabs",
+          "type": "tab",
           "settings": {
             "title": "GIFT SETS",
             "collection": "all"
@@ -230,9 +230,7 @@
         "tab_4"
       ],
       "settings": {
-        "product_block_title": "Trending Now",
-        "product_block_layout": "slider",
-        "product_block_limit": 8
+        "title": "Trending Now"
       }
     }
   },
@@ -242,6 +240,6 @@
     "custom_essence_grid_1",
     "marquee_HeTqbn",
     "watch_and_buy",
-    "product_tab_block_1"
+    "custom_product_tabs_1"
   ]
 }
