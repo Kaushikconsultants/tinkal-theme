@@ -232,6 +232,18 @@
       "settings": {
         "title": "Trending Now"
       }
+    },
+    "featured_blog_1": {
+      "type": "featured-blog",
+      "settings": {
+        "heading": "BEHIND THE BOTTLE",
+        "post_limit": 2,
+        "show_view_all": false,
+        "show_image": true,
+        "show_date": false,
+        "show_author": false,
+        "blog": "news"
+      }
     }
   },
   "order": [
@@ -240,6 +252,7 @@
     "custom_essence_grid_1",
     "marquee_HeTqbn",
     "watch_and_buy",
-    "custom_product_tabs_1"
+    "custom_product_tabs_1",
+    "featured_blog_1"
   ]
 }
