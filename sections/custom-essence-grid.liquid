@@ -62,7 +62,20 @@
   }
   @media screen and (max-width: 750px) {
     .custom-essence-grid__container {
-      grid-template-columns: 1fr;
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 15px;
+      padding-bottom: 10px;
+    }
+    .custom-essence-grid__container::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-essence-grid__item {
+      flex: 0 0 85%;
+      scroll-snap-align: center;
     }
     .custom-essence-grid__title {
       font-size: {{ section.settings.title_size | divided_by: 1.5 }}px;

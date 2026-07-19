@@ -190,6 +190,45 @@
         "bg_color": "#fafafa",
         "padding_y": 60
       }
+    },
+    "product_tab_block_1": {
+      "type": "product-tab-block",
+      "blocks": {
+        "tab_1": {
+          "type": "ProductTabs",
+          "settings": {
+            "title": "UNISEX"
+          }
+        },
+        "tab_2": {
+          "type": "ProductTabs",
+          "settings": {
+            "title": "FOR HER"
+          }
+        },
+        "tab_3": {
+          "type": "ProductTabs",
+          "settings": {
+            "title": "FOR HIM"
+          }
+        },
+        "tab_4": {
+          "type": "ProductTabs",
+          "settings": {
+            "title": "GIFT SETS"
+          }
+        }
+      },
+      "block_order": [
+        "tab_1",
+        "tab_2",
+        "tab_3",
+        "tab_4"
+      ],
+      "settings": {
+        "product_block_layout": "grid",
+        "product_block_limit": 8
+      }
     }
   },
   "order": [
@@ -197,6 +236,7 @@
     "custom_product_slider_Y7m6Xy",
     "custom_essence_grid_1",
     "marquee_HeTqbn",
-    "watch_and_buy"
+    "watch_and_buy",
+    "product_tab_block_1"
   ]
 }
