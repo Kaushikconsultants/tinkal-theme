@@ -1,543 +1,758 @@
+<product-info
+  id="MainProduct-{{ section.id }}"
+  class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}"
+  data-section="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-update-url="true"
+  data-url="{{ product.url }}"
+  {% if section.settings.image_zoom == 'hover' %}
+    data-zoom-on-hover
+  {% endif %}
+>
+  {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
+  {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
+  {{ 'component-price.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+  {{ 'component-rating.css' | asset_url | stylesheet_tag }}
+  {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
 
+  {% unless product.has_only_default_variant %}
+    {{ 'component-product-variant-picker.css' | asset_url | stylesheet_tag }}
+    {{ 'component-swatch-input.css' | asset_url | stylesheet_tag }}
+    {{ 'component-swatch.css' | asset_url | stylesheet_tag }}
+  {% endunless %}
+  {%- if product.quantity_price_breaks_configured? -%}
+    {{ 'component-volume-pricing.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
 
+  {%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
 
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+  {%- endstyle -%}
 
+  <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  {%- if product.quantity_price_breaks_configured? -%}
+    <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
 
+  {% if section.settings.image_zoom == 'hover' %}
+    <script id="EnableZoomOnHover-main" src="{{ 'magnify.js' | asset_url }}" defer="defer"></script>
+  {% endif %}
+  {%- if request.design_mode -%}
+    <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
 
+  {%- assign first_3d_model = product.media | where: 'media_type', 'model' | first -%}
+  {%- if first_3d_model -%}
+    {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
+    <link
+      id="ModelViewerStyle"
+      rel="stylesheet"
+      href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
+      media="print"
+      onload="this.media='all'"
+    >
+    <link
+      id="ModelViewerOverride"
+      rel="stylesheet"
+      href="{{ 'component-model-viewer-ui.css' | asset_url }}"
+      media="print"
+      onload="this.media='all'"
+    >
+  {%- endif -%}
 
-
-
-<style>
-:root{
-  --ink:rgb(var(--color-foreground)); --ink-2:rgba(var(--color-foreground), 0.8); --ink-3:rgba(var(--color-foreground), 0.6);
-  --porcelain:rgb(var(--color-background)); --paper:rgba(var(--color-foreground), 0.04); --line:rgba(var(--color-foreground), 0.08); --line-2:rgba(var(--color-foreground), 0.2);
-  --accent:rgb(var(--color-button, var(--color-foreground))); --accent-soft:rgba(var(--color-button, var(--color-foreground)), 0.1);
-  --good:#2F6B4F; --good-soft:#E8F1EC;
-  --max:1240px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:var(--font-body-family);background:var(--porcelain);color:var(--ink);font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}
-img{max-width:100%;display:block}
-button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-input,select{font-family:inherit}
-.eyebrow{font-family:var(--font-body-family);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
-
-.ticker{background:var(--ink);color:var(--porcelain);font-family:var(--font-body-family);font-size:10px;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:9px 16px}
-.ticker b{color:#E8C79A;font-weight:400}
-header{position:sticky;top:0;z-index:60;background:rgba(252,251,249,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav{max-width:var(--max);margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.logo{font-family:var(--font-heading-family);font-size:22px;letter-spacing:.22em;text-transform:uppercase}
-.nav-links{display:flex;gap:26px;font-size:13px;color:var(--ink-2)}
-.nav-links span{cursor:pointer}.nav-links span:hover{color:var(--accent)}
-.nav-icons{display:flex;gap:18px;font-size:13px;letter-spacing:.06em}
-@media(max-width:900px){.nav-links{display:none}}
-
-.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
-.pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;padding:44px 0 64px}
-@media(max-width:980px){.pdp{grid-template-columns:1fr;gap:34px;padding:24px 0 40px}}
-
-/* gallery */
-.gallery{position:sticky;top:78px;align-self:start}
-@media(max-width:980px){.gallery{position:static}}
-.hero-frame{position:relative;aspect-ratio:4/5;border:1px solid var(--line);background:var(--accent-soft);display:flex;align-items:flex-end;justify-content:center;overflow:hidden;transition:background .7s ease;padding-bottom:10%}
-.hero-frame::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 105%,rgba(0,0,0,.10),transparent 60%);pointer-events:none}
-.bottle{position:relative;filter:drop-shadow(0 26px 36px rgba(0,0,0,.22));transition:width .6s cubic-bezier(.2,.8,.2,1),transform .6s}
-.bottle.big{width:42%;aspect-ratio:.62}
-.bottle.small{width:24%;aspect-ratio:.55}
-.hero-frame:hover .bottle{transform:translateY(-8px)}
-.bottle-cap{position:absolute;top:0;left:32%;width:36%;height:16%;background:var(--ink);border-radius:1px}
-.bottle-neck{position:absolute;top:15%;left:40%;width:20%;height:7%;background:#C9BCA8}
-.bottle-body{position:absolute;top:21%;left:0;width:100%;height:79%;background:linear-gradient(105deg,rgba(255,255,255,.55),rgba(255,255,255,.05) 38%,rgba(0,0,0,.10));border-radius:2px}
-.bottle-liquid{position:absolute;bottom:0;left:0;width:100%;height:66%;background:var(--accent);opacity:.88;transition:background .7s ease}
-.bottle-label{position:absolute;top:34%;left:12%;width:76%;background:rgba(252,251,249,.94);padding:10px 6px;text-align:center;border:.5px solid rgba(0,0,0,.08)}
-.bottle-label .bn{font-family:var(--font-heading-family);font-size:10px;letter-spacing:.18em;text-transform:uppercase;line-height:1.4}
-.bottle-label .bs{font-family:var(--font-body-family);font-size:6px;letter-spacing:.12em;color:var(--ink-3);margin-top:3px}
-.bottle.small .bottle-label{top:32%;padding:7px 4px}
-.bottle.small .bottle-label .bn{font-size:7px}
-.bottle.small .bottle-label .bs{font-size:5px}
-.gal-tag{position:absolute;top:14px;left:14px;z-index:2;background:var(--porcelain);border:1px solid var(--line);padding:5px 10px;font-family:var(--font-body-family);font-size:9px;letter-spacing:.14em;text-transform:uppercase}
-.scale-note{position:absolute;bottom:14px;right:14px;z-index:2;font-family:var(--font-body-family);font-size:9px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
-.thumbs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:8px}
-.thumb{aspect-ratio:1;border:1px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;font-family:var(--font-body-family);font-size:8px;color:var(--ink-3);text-align:center;line-height:1.3;padding:4px;cursor:pointer;transition:.2s}
-.thumb:hover{border-color:var(--accent);color:var(--accent)}
-.thumb.on{border-color:var(--ink);color:var(--ink)}
-
-/* buy */
-.title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-h1{font-family:var(--font-heading-family);font-weight:400;font-size:46px;line-height:1.05}
-@media(max-width:600px){h1{font-size:34px}}
-.conc{font-family:var(--font-body-family);font-size:9px;letter-spacing:.16em;text-transform:uppercase;border:1px solid var(--line-2);padding:5px 8px;white-space:nowrap;margin-top:6px}
-.oneline{font-size:16px;color:var(--ink-2);margin-top:10px;max-width:44ch}
-.stars{display:flex;align-items:center;gap:9px;margin-top:14px;font-size:13px;color:var(--ink-2);flex-wrap:wrap}
-.stars .s{color:var(--accent);letter-spacing:2px;font-size:14px}
-.stars a{color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.vbadge{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-body-family);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--good);border:1px solid #CBE0D4;background:var(--good-soft);padding:3px 8px}
-.sec{margin-top:30px}
-.sec-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;gap:12px}
-
-/* sizes */
-.sizes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.size{position:relative;border:1px solid var(--line);padding:16px 14px;text-align:left;background:var(--porcelain);transition:.18s}
-.size:hover{border-color:var(--line-2)}
-.size.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
-.size .sz-t{font-family:var(--font-heading-family);font-size:22px;line-height:1.1}
-.size .sz-r{font-size:12px;color:var(--ink-3);margin-top:2px}
-.size .sz-p{font-family:var(--font-body-family);font-size:13px;margin-top:12px}
-.size .sz-ml{font-family:var(--font-body-family);font-size:9px;color:var(--ink-3);margin-top:4px}
-.size .sz-ml.win{color:var(--good)}
-.size .badge{position:absolute;top:-9px;right:10px;background:var(--good);color:#fff;font-family:var(--font-body-family);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px}
-.size-hint{font-family:var(--font-body-family);font-size:10px;color:var(--ink-3);margin-top:10px;line-height:1.7}
-.size-hint b{color:var(--accent);font-weight:400;cursor:pointer;border-bottom:1px solid currentColor}
-
-.scents{display:flex;flex-wrap:wrap;gap:7px}
-.chip{display:flex;align-items:center;gap:7px;border:1px solid var(--line);padding:7px 11px 7px 8px;font-size:13px;transition:.18s;background:var(--porcelain)}
-.chip .dot{width:9px;height:9px;border-radius:50%;flex:none}
-.chip:hover{border-color:var(--line-2)}
-.chip.on{border-color:var(--ink);background:var(--ink);color:var(--porcelain)}
-
-.tier{position:relative;display:grid;grid-template-columns:22px 1fr auto;gap:14px;align-items:center;border:1px solid var(--line);padding:16px;margin-bottom:8px;transition:.18s;background:var(--porcelain);text-align:left;width:100%}
-.tier:hover{border-color:var(--line-2)}
-.tier.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
-.radio{width:16px;height:16px;border:1px solid var(--line-2);border-radius:50%;position:relative}
-.tier.on .radio{border-color:var(--ink)}
-.tier.on .radio::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--ink)}
-.tier-name{font-size:16px}
-.tier-sub{font-family:var(--font-body-family);font-size:10px;color:var(--ink-3);margin-top:3px;display:block}
-.tier-price{text-align:right}
-.tier-price .p{font-size:18px}
-.tier-price .strike{font-size:12px;color:var(--ink-3);text-decoration:line-through}
-.badge{position:absolute;top:-9px;right:12px;background:var(--ink);color:var(--porcelain);font-family:var(--font-body-family);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px}
-.badge.g{background:var(--good)}
-
-.picker{border:1px solid var(--line);border-top:none;padding:16px;background:var(--paper);margin-top:-8px;margin-bottom:8px}
-.pick-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.pick-n{font-family:var(--font-body-family);font-size:10px;color:var(--ink-3);width:60px}
-.pick-row select{flex:1;border:1px solid var(--line-2);background:var(--porcelain);padding:9px 10px;font-size:14px;border-radius:0;color:var(--ink)}
-.pick-tip{font-family:var(--font-body-family);font-size:9px;color:var(--good);margin-top:10px;line-height:1.7}
-
-.savings{display:flex;justify-content:space-between;align-items:center;background:var(--good-soft);border:1px solid #CBE0D4;padding:11px 14px;margin-bottom:14px;font-size:14px;color:var(--good)}
-.savings b{font-weight:500}
-
-.addon{display:flex;align-items:center;gap:12px;border:1px solid var(--line);padding:12px 14px;margin-bottom:8px;font-size:14px;background:var(--porcelain);width:100%;text-align:left}
-.addon.on{border-color:var(--ink)}
-.box{width:16px;height:16px;border:1px solid var(--line-2);flex:none;position:relative}
-.addon.on .box{background:var(--ink);border-color:var(--ink)}
-.addon.on .box::after{content:"";position:absolute;left:5px;top:1px;width:4px;height:9px;border:solid var(--porcelain);border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
-.addon .ad-t{flex:1}
-.addon .ad-p{font-family:var(--font-body-family);font-size:12px}
-.addon .ad-s{font-size:12px;color:var(--ink-3);display:block;margin-top:1px}
-
-.total{display:flex;align-items:baseline;justify-content:space-between;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:20px 0 16px}
-.total .tl{font-size:14px;color:var(--ink-2)}
-.total .tr{display:flex;align-items:baseline;gap:10px}
-.total .amt{font-family:var(--font-heading-family);font-size:32px}
-.total .was{font-size:14px;color:var(--ink-3);text-decoration:line-through}
-.ctas{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.cta{width:100%;background:var(--porcelain);color:var(--ink);border:1px solid var(--ink);padding:19px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;transition:.2s}
-.cta:hover{background:var(--paper)}
-.cta.buy{background:var(--ink);color:var(--porcelain);border-color:var(--ink)}
-.cta.buy:hover{background:var(--accent);border-color:var(--accent)}
-.cta-note{text-align:center;font-family:var(--font-body-family);font-size:10px;color:var(--ink-3);margin-top:10px;line-height:1.7}
-@media(max-width:400px){.ctas{grid-template-columns:1fr}}
-
-/* ---- BULK BOX ---- */
-.bulk{border:1px solid var(--line);background:var(--paper);margin-top:8px}
-.bulk-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;width:100%;text-align:left;cursor:pointer}
-.bulk-h .bh-t{font-size:15px}
-.bulk-h .bh-s{font-family:var(--font-body-family);font-size:10px;color:var(--ink-3);margin-top:3px;display:block}
-.bulk-h .pm{font-family:var(--font-body-family);font-size:16px;color:var(--ink-3);transition:.2s}
-.bulk.open .bulk-h .pm{transform:rotate(45deg)}
-.bulk-b{max-height:0;overflow:hidden;transition:max-height .4s ease}
-.bulk.open .bulk-b{max-height:520px}
-.bulk-in{padding:0 16px 18px}
-.ladder{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-bottom:14px}
-.rung{border:1px solid var(--line-2);background:var(--porcelain);padding:9px 2px;text-align:center;transition:.15s}
-.rung:hover{border-color:var(--ink)}
-.rung .rq{font-family:var(--font-heading-family);font-size:15px;line-height:1}
-.rung .ro{font-family:var(--font-body-family);font-size:7px;color:var(--ink-3);margin-top:4px;letter-spacing:.02em}
-.rung.on{background:var(--ink);border-color:var(--ink);color:var(--porcelain)}
-.rung.on .ro{color:#B7ADA1}
-.rung.reached{border-color:var(--good);color:var(--good)}
-.rung.reached .ro{color:var(--good)}
-.rung.on.reached{background:var(--good);border-color:var(--good);color:#fff}
-.rung.on.reached .ro{color:#D3E7DB}
-.step{display:flex;align-items:center;gap:14px;border:1px solid var(--line-2);background:var(--porcelain);padding:8px 10px;margin-bottom:12px}
-.step button{width:34px;height:34px;border:1px solid var(--line-2);font-family:var(--font-body-family);font-size:15px;transition:.15s}
-.step button:hover{border-color:var(--ink);background:var(--ink);color:var(--porcelain)}
-.step .sv{flex:1;text-align:center}
-.step .sv b{font-family:var(--font-heading-family);font-size:22px;font-weight:400}
-.step .sv span{font-family:var(--font-body-family);font-size:10px;color:var(--ink-3);display:block;margin-top:2px}
-.step .sp{text-align:right}
-.step .sp b{font-size:17px;font-weight:400}
-.step .sp span{font-family:var(--font-body-family);font-size:9px;color:var(--good);display:block;margin-top:2px}
-.nudge{background:var(--good-soft);border:1px solid #CBE0D4;padding:10px 12px;font-family:var(--font-body-family);font-size:10px;color:var(--good);line-height:1.7;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.nudge button{border-bottom:1px solid currentColor;font-family:var(--font-body-family);font-size:10px;color:var(--good);white-space:nowrap;text-transform:uppercase;letter-spacing:.08em}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media(max-width:520px){.grid2{grid-template-columns:1fr}.ladder{grid-template-columns:repeat(5,1fr)}}
-
-/* ---- TRUST BADGES ---- */
-.secure{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:16px;font-family:var(--font-body-family);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
-.secure svg{width:12px;height:12px;stroke:var(--good);fill:none;stroke-width:1.6}
-.pays{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:10px}
-.pay-badge{border:1px solid var(--line);background:var(--porcelain);padding:5px 9px;font-family:var(--font-body-family);font-size:8px;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase}
-.ship-bar{margin-top:20px}
-.ship-track{height:3px;background:var(--line)}
-.ship-fill{height:100%;background:var(--good);width:0;transition:width .5s cubic-bezier(.2,.8,.2,1)}
-.ship-txt{font-family:var(--font-body-family);font-size:10px;color:var(--ink-3);margin-top:7px}
-.ship-txt.done{color:var(--good)}
-
-.pin{margin-top:22px;border:1px solid var(--line);padding:16px}
-.pin-in{display:flex;gap:8px}
-.pin-in input{flex:1;border:1px solid var(--line-2);background:var(--porcelain);padding:11px 12px;font-size:14px;border-radius:0;letter-spacing:.06em}
-.pin-in input:focus{outline:none;border-color:var(--ink)}
-.pin-in button{border:1px solid var(--ink);background:var(--ink);color:var(--porcelain);padding:0 20px;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
-.pin-out{margin-top:12px;font-size:13px;display:none}
-.pin-out.show{display:block}
-.pin-line{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;color:var(--ink-2)}
-.pin-line .ic{font-family:var(--font-body-family);font-size:11px;color:var(--good)}
-
-.trust{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:22px}
-.trust-i{background:var(--porcelain);padding:16px 8px;text-align:center;font-size:11px;line-height:1.45;color:var(--ink-3)}
-.trust-i svg{width:20px;height:20px;stroke:var(--ink);fill:none;stroke-width:1.3;margin:0 auto 8px}
-.trust-i b{display:block;font-family:var(--font-body-family);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-weight:400;margin-bottom:3px}
-@media(max-width:600px){.trust{grid-template-columns:repeat(2,1fr)}}
-
-/* bands */
-.band{border-top:1px solid var(--line);padding:72px 0}
-.band.dark{background:var(--ink);color:var(--porcelain);border-top:none}
-.band.dark .eyebrow{color:#8E8479}
-.band-h{font-family:var(--font-heading-family);font-weight:400;font-size:36px;margin-top:10px;line-height:1.15}
-.band-sub{font-size:16px;color:var(--ink-3);margin-top:12px;max-width:58ch}
-.band.dark .band-sub{color:#8E8479}
-@media(max-width:600px){.band-h{font-size:27px}.band{padding:48px 0}}
-.seg{display:inline-flex;border:1px solid var(--line);background:var(--porcelain)}
-.band.dark .seg{border-color:#3A332C;background:transparent}
-.seg button{padding:9px 16px;font-family:var(--font-body-family);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);transition:.18s}
-.seg button.on{background:var(--ink);color:var(--porcelain)}
-.band.dark .seg button.on{background:var(--porcelain);color:var(--ink)}
-
-/* ---- CREDENTIAL BAR ---- */
-.creds{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line-2);border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
-.cred{background:var(--porcelain);padding:26px 12px;text-align:center}
-.cred svg{width:26px;height:26px;stroke:var(--ink);fill:none;stroke-width:1.1;margin:0 auto 10px}
-.cred .ct{font-family:var(--font-body-family);font-size:9px;letter-spacing:.1em;text-transform:uppercase;line-height:1.6}
-.cred .cs{font-size:11px;color:var(--ink-3);margin-top:5px;line-height:1.5}
-@media(max-width:900px){.creds{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:560px){.creds{grid-template-columns:repeat(2,1fr)}}
-
-/* ---- INGREDIENTS ---- */
-.ing-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
-.ing-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:36px}
-@media(max-width:1000px){.ing-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:600px){.ing-grid{grid-template-columns:repeat(2,1fr)}}
-.ing{border:1px solid var(--line);background:var(--porcelain);overflow:hidden}
-.ing-img{aspect-ratio:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.ing-img img{width:100%;height:100%;object-fit:cover}
-.ing-img svg{width:64%;height:64%}
-.ing-layer{position:absolute;top:8px;left:8px;font-family:var(--font-body-family);font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:rgba(252,251,249,.92);padding:3px 6px;color:var(--ink-2)}
-.ing-b{padding:14px}
-.ing-n{font-family:var(--font-heading-family);font-size:17px;line-height:1.25}
-.ing-d{font-size:12px;color:var(--ink-3);margin-top:5px;line-height:1.55}
-.ing-src{font-family:var(--font-body-family);font-size:8px;letter-spacing:.08em;color:var(--line-2);margin-top:9px;text-transform:uppercase}
-
-/* drydown */
-.dd{display:grid;grid-template-columns:1fr 1.15fr;gap:60px;align-items:center;margin-top:40px}
-@media(max-width:900px){.dd{grid-template-columns:1fr;gap:34px}}
-.dd-stage{font-family:var(--font-heading-family);font-size:44px;line-height:1.1;margin-bottom:14px}
-.dd-time{font-family:var(--font-body-family);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8E8479}
-.dd-desc{font-size:16px;color:#C9C0B6;max-width:38ch;margin-top:14px;min-height:78px}
-.dd-notes{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px}
-.dd-note{border:1px solid #3A332C;padding:6px 11px;font-size:13px;color:#8E8479;transition:.4s}
-.dd-note.lit{border-color:var(--accent);color:#fff;background:var(--accent)}
-.dd-viz{position:relative;height:230px}
-.dd-curve{position:absolute;inset:0}
-.dd-slider{width:100%;margin-top:26px;-webkit-appearance:none;background:transparent}
-.dd-slider::-webkit-slider-runnable-track{height:2px;background:#3A332C}
-.dd-slider::-moz-range-track{height:2px;background:#3A332C}
-.dd-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--porcelain);margin-top:-8px;cursor:grab;border:3px solid var(--accent)}
-.dd-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--porcelain);cursor:grab;border:3px solid var(--accent)}
-.dd-ticks{display:flex;justify-content:space-between;margin-top:10px;font-family:var(--font-body-family);font-size:9px;letter-spacing:.1em;color:#6E655C}
-
-.two{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:40px}
-@media(max-width:900px){.two{grid-template-columns:1fr;gap:44px}}
-.pyr-row{border-top:1px solid var(--line);padding:18px 0;display:grid;grid-template-columns:96px 1fr;gap:20px}
-.pyr-row:last-child{border-bottom:1px solid var(--line)}
-.pyr-lab{font-family:var(--font-body-family);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding-top:4px;line-height:1.7}
-.pyr-notes{font-family:var(--font-heading-family);font-size:21px;line-height:1.45}
-.meter{margin-bottom:22px}
-.meter-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;color:var(--ink-2)}
-.meter-top .v{font-family:var(--font-body-family);font-size:11px;color:var(--ink)}
-.meter-track{height:2px;background:var(--line)}
-.meter-fill{height:100%;background:var(--accent);transition:width .6s cubic-bezier(.2,.8,.2,1)}
-.pips{display:flex;gap:5px}
-.pip{width:7px;height:7px;border-radius:50%;border:1px solid var(--line-2)}
-.pip.on{background:var(--accent);border-color:var(--accent)}
-.season{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:9px 0;border-bottom:1px solid var(--line);color:var(--ink-2)}
-.pers{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:36px}
-.pers div{background:var(--porcelain);padding:28px 22px}
-.pers .pk{font-family:var(--font-body-family);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
-.pers .pv{font-family:var(--font-heading-family);font-size:19px;line-height:1.4}
-@media(max-width:800px){.pers{grid-template-columns:1fr}}
-
-/* layering */
-.lab{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:44px;align-items:start}
-@media(max-width:900px){.lab{grid-template-columns:1fr;gap:36px}}
-.lab-pick{margin-bottom:26px}
-.lab-lab{font-family:var(--font-body-family);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8E8479;margin-bottom:10px}
-.lab-grid{display:flex;flex-wrap:wrap;gap:6px}
-.lab-chip{display:flex;align-items:center;gap:6px;border:1px solid #3A332C;padding:6px 10px 6px 7px;font-size:12px;color:#C9C0B6;transition:.18s}
-.lab-chip .dot{width:8px;height:8px;border-radius:50%}
-.lab-chip:hover{border-color:#6E655C}
-.lab-chip.on{background:var(--porcelain);color:var(--ink);border-color:var(--porcelain)}
-.mix{border:1px solid #3A332C;padding:32px}
-.mix-name{font-family:var(--font-heading-family);font-size:34px;line-height:1.15}
-.mix-score{display:flex;align-items:center;gap:12px;margin-top:16px}
-.mix-track{flex:1;height:2px;background:#3A332C}
-.mix-fill{height:100%;width:0;transition:width .5s}
-.mix-num{font-family:var(--font-body-family);font-size:11px}
-.mix-desc{font-size:15px;color:#C9C0B6;margin-top:20px;line-height:1.7;min-height:84px}
-.mix-how{font-family:var(--font-body-family);font-size:10px;color:#8E8479;margin-top:18px;padding-top:18px;border-top:1px solid #3A332C;line-height:1.9}
-.mix-how b{color:#E8C79A;font-weight:400}
-.mix-buy{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
-.mix-btn{border:1px solid var(--porcelain);background:var(--porcelain);color:var(--ink);padding:14px 22px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;transition:.2s}
-.mix-btn:hover{background:transparent;color:var(--porcelain)}
-.mix-btn.ghost{background:transparent;color:#8E8479;border-color:#3A332C}
-.mix-btn.ghost:hover{color:var(--porcelain);border-color:var(--porcelain)}
-.presets{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:44px}
-@media(max-width:900px){.presets{grid-template-columns:repeat(2,1fr)}}
-.preset{border:1px solid #3A332C;padding:18px;text-align:left;transition:.18s}
-.preset:hover{border-color:var(--porcelain)}
-.preset .pdots{display:flex;gap:4px;margin-bottom:12px}
-.preset .pdots i{width:22px;height:5px}
-.preset .pn{font-family:var(--font-heading-family);font-size:18px;color:var(--porcelain)}
-.preset .pp{font-family:var(--font-body-family);font-size:9px;color:#8E8479;margin-top:6px;line-height:1.7}
-
-/* sets */
-.combos{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}
-@media(max-width:900px){.combos{grid-template-columns:1fr}}
-.combo{border:1px solid var(--line);background:var(--porcelain);display:flex;flex-direction:column}
-.combo-top{padding:28px 24px;display:flex;gap:8px;justify-content:center;align-items:flex-end;height:154px}
-.mini{position:relative;border-radius:1px}
-.mini.big{width:26px;height:80px}
-.mini.small{width:19px;height:48px}
-.mini i{position:absolute;bottom:0;left:0;right:0;height:64%}
-.mini::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:11px;height:7px;background:var(--ink)}
-.combo-body{padding:22px 24px 24px;border-top:1px solid var(--line);flex:1;display:flex;flex-direction:column}
-.combo-n{font-family:var(--font-heading-family);font-size:24px}
-.combo-d{font-size:13px;color:var(--ink-3);margin:7px 0 16px;flex:1}
-.combo-p{display:flex;align-items:baseline;gap:9px;margin-bottom:6px}
-.combo-p .a{font-size:19px}
-.combo-p .b{font-size:13px;color:var(--ink-3);text-decoration:line-through}
-.combo-p .c{font-family:var(--font-body-family);font-size:10px;color:var(--good)}
-.combo-ml{font-family:var(--font-body-family);font-size:9px;color:var(--ink-3);margin-bottom:14px}
-.combo-btn{border:1px solid var(--ink);padding:12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;transition:.2s;width:100%}
-.combo-btn:hover{background:var(--ink);color:var(--porcelain)}
-.combo-perk{font-family:var(--font-body-family);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--good);margin-top:9px;text-align:center}
-
-/* reviews */
-.rev-head{display:grid;grid-template-columns:200px 1fr;gap:50px;margin-top:36px;align-items:center}
-@media(max-width:800px){.rev-head{grid-template-columns:1fr;gap:28px}}
-.rev-score{font-family:var(--font-heading-family);font-size:64px;line-height:1}
-.rev-bars{display:flex;flex-direction:column;gap:7px}
-.rev-bar{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--ink-3)}
-.rev-bar .t{flex:1;height:2px;background:var(--line)}
-.rev-bar .t i{display:block;height:100%;background:var(--ink)}
-.rev-stat{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:30px}
-.rev-stat div{background:var(--porcelain);padding:20px;text-align:center}
-.rev-stat .n{font-family:var(--font-heading-family);font-size:28px}
-.rev-stat .l{font-family:var(--font-body-family);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:5px}
-.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:30px}
-@media(max-width:900px){.rev-grid{grid-template-columns:1fr}}
-.rev{border:1px solid var(--line);padding:22px;background:var(--porcelain)}
-.rev .rs{color:var(--accent);letter-spacing:2px;font-size:13px}
-.rev .rt{font-size:15px;margin:10px 0 8px;line-height:1.55}
-.rev .rm{font-family:var(--font-body-family);font-size:10px;color:var(--ink-3);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.rev .rv{margin-top:14px;aspect-ratio:16/9;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--font-body-family);font-size:9px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
-
-.faq{max-width:760px;margin-top:32px}
-.q{border-bottom:1px solid var(--line);padding:20px 0;cursor:pointer}
-.q-t{display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:16px}
-.q-t .pm{font-family:var(--font-body-family);font-size:16px;color:var(--ink-3);transition:.2s}
-.q.open .pm{transform:rotate(45deg)}
-.q-a{max-height:0;overflow:hidden;transition:max-height .35s ease,margin .35s ease;font-size:15px;color:var(--ink-2)}
-.q.open .q-a{max-height:280px;margin-top:12px}
-
-.sticky{position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(252,251,249,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:11px 16px;display:none;align-items:center;gap:12px;transform:translateY(110%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
-.sticky.up{transform:translateY(0)}
-.sticky .sw{width:36px;height:46px;position:relative;flex:none;border:1px solid var(--line)}
-.sticky .sw i{position:absolute;bottom:0;left:0;right:0;height:62%}
-.sticky .si{flex:1;min-width:0}
-.sticky .sn{font-family:var(--font-heading-family);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sticky .sp{font-family:var(--font-body-family);font-size:11px;color:var(--ink-3)}
-.sticky .sbtns{display:flex;gap:6px;flex:none}
-.sticky button{background:var(--porcelain);color:var(--ink);border:1px solid var(--ink);padding:13px 13px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
-.sticky button.buy{background:var(--ink);color:var(--porcelain)}
-@media(max-width:980px){.sticky{display:flex}body{padding-bottom:76px}}
-
-.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,140%);background:var(--ink);color:var(--porcelain);padding:14px 22px;z-index:90;font-family:var(--font-body-family);font-size:11px;transition:transform .4s cubic-bezier(.2,.8,.2,1);max-width:88vw;text-align:center}
-.toast.up{transform:translate(-50%,0)}
-@media(max-width:980px){.toast{bottom:92px}}
-
-footer{background:var(--ink);color:#8E8479;padding:44px 0;font-size:12px}
-.foot-badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding-bottom:28px;border-bottom:1px solid #2A241E;margin-bottom:24px}
-.fb{border:1px solid #3A332C;padding:7px 12px;font-family:var(--font-body-family);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8E8479}
-.foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
-
-
-
-
-
-
-
-<main class="wrap">
-<section class="pdp">
-
-  <div class="gallery">
-    <div class="hero-frame" id="heroFrame" style="padding:0; background:var(--porcelain);">
-      {%- if product.featured_media -%}
-        <img src="{{ product.featured_media | image_url: width: 1000 }}" 
-             alt="{{ product.title | escape }}" 
-             id="bottleImg" 
-             style="width: 100%; height: 100%; object-fit: contain;">
-      {%- else -%}
-        <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--ink-3);">No Image</div>
-      {%- endif -%}
-    </div>
-    <div class="thumbs" id="thumbs" style="display:flex; flex-wrap:wrap; gap:8px;">
-      {%- for media in product.media -%}
-        <div class="thumb {% if forloop.first %}on{% endif %}" data-src="{{ media | image_url: width: 1000 }}" style="padding:0; overflow:hidden; border-radius:4px;">
-          <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" style="width:100%; height:100%; object-fit:cover;">
+  {% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
+  <product-component view-event-payload="{{ product | standard_event_data: 'view', context: 'page' | escape }}">
+    <div class="page-width">
+      <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
+        <div class="grid__item product__media-wrapper">
+          {% render 'product-media-gallery', variant_images: variant_images %}
         </div>
-      {%- endfor -%}
-    </div>
-  </div>
+        <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+          <section
+            id="ProductInfo-{{ section.id }}"
+            class="product__info-container{% if section.settings.enable_sticky_info %} product__column-sticky{% endif %}"
+          >
+            {%- assign product_form_id = 'product-form-' | append: section.id -%}
 
-  <div class="buy">
-    {%- form 'product', product, id: 'product-form', class: 'product-form' -%}
-      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="variantId">
-      
-      <div class="title-row">
-        <div>
-          <div class="eyebrow">{{ product.vendor | default: 'OmbreBliss' }}</div>
-          <h1 id="pName">{{ product.title }}</h1>
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when '@app' -%}
+                  {% render block %}
+                {%- when 'text' -%}
+                  <p
+                    class="product__text inline-richtext{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {{- block.settings.text -}}
+                  </p>
+                {%- when 'title' -%}
+                  <div class="product__title" {{ block.shopify_attributes }}>
+                    <h1>{{ product.title | escape }}</h1>
+                    <a href="{{ product.url }}" class="product__title">
+                      <h2 class="h1">
+                        {{ product.title | escape }}
+                      </h2>
+                    </a>
+                  </div>
+                {%- when 'price' -%}
+                  <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
+                    {%- render 'price',
+                      product: product,
+                      use_variant: true,
+                      show_badges: true,
+                      price_class: 'price--large'
+                    -%}
+                  </div>
+                  {%- if product.quantity_price_breaks_configured? -%}
+                    <div class="volume-pricing-note" id="Volume-Note-{{ section.id }}">
+                      <span>{{ 'products.product.volume_pricing.note' | t }}</span>
+                    </div>
+                  {%- endif -%}
+                  {%- if cart.taxes_included or cart.duties_included or shop.shipping_policy.body != blank -%}
+                    <div class="product__tax caption rte">
+                      {%- if cart.duties_included and cart.taxes_included -%}
+                        {{ 'products.product.duties_and_taxes_included' | t }}
+                      {%- elsif cart.taxes_included -%}
+                        {{ 'products.product.taxes_included' | t }}
+                      {%- elsif cart.duties_included -%}
+                        {{ 'products.product.duties_included' | t }}
+                      {%- endif -%}
+                      {%- if shop.shipping_policy.body != blank -%}
+                        {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                  <div {{ block.shopify_attributes }}>
+                    {%- assign product_form_installment_id = 'product-form-installment-' | append: section.id -%}
+                    {%- form 'product', product, id: product_form_installment_id, class: 'installment caption-large' -%}
+                      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                      {{ form | payment_terms }}
+                    {%- endform -%}
+                  </div>
+                {%- when 'inventory' -%}
+                  <p
+                    class="product__inventory{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.inventory_management != 'shopify' %} visibility-hidden{% endif %}"
+                    {{ block.shopify_attributes }}
+                    id="Inventory-{{ section.id }}"
+                    role="status"
+                  >
+                    {%- if product.selected_or_first_available_variant.inventory_management == 'shopify' -%}
+                      {%- if product.selected_or_first_available_variant.inventory_quantity > 0 -%}
+                        {%- if product.selected_or_first_available_variant.inventory_quantity
+                            <= block.settings.inventory_threshold
+                        -%}
+                          <span class="svg-wrapper" style="color: rgb(238, 148, 65)">
+                            {{- 'icon-inventory-status.svg' | inline_asset_content -}}
+                          </span>
+                          {%- if block.settings.show_inventory_quantity -%}
+                            {{-
+                              'products.product.inventory_low_stock_show_count'
+                              | t: quantity: product.selected_or_first_available_variant.inventory_quantity
+                            -}}
+                          {%- else -%}
+                            {{- 'products.product.inventory_low_stock' | t -}}
+                          {%- endif -%}
+                        {%- else -%}
+                          <span class="svg-wrapper" style="color: rgb(62, 214, 96)">
+                            {{- 'icon-inventory-status.svg' | inline_asset_content -}}
+                          </span>
+                          {%- if block.settings.show_inventory_quantity -%}
+                            {{-
+                              'products.product.inventory_in_stock_show_count'
+                              | t: quantity: product.selected_or_first_available_variant.inventory_quantity
+                            -}}
+                          {%- else -%}
+                            {{- 'products.product.inventory_in_stock' | t -}}
+                          {%- endif -%}
+                        {%- endif -%}
+                      {%- else -%}
+                        {%- if product.selected_or_first_available_variant.inventory_policy == 'continue' -%}
+                          <span class="svg-wrapper" style="color: rgb(62, 214, 96)">
+                            {{- 'icon-inventory-status.svg' | inline_asset_content -}}
+                          </span>
+                          {{- 'products.product.inventory_out_of_stock_continue_selling' | t -}}
+                        {%- else -%}
+                          <span class="svg-wrapper" style="color: rgb(200, 200, 200)">
+                            {{- 'icon-inventory-status.svg' | inline_asset_content -}}
+                          </span>
+                          {{- 'products.product.inventory_out_of_stock' | t -}}
+                        {%- endif -%}
+                      {%- endif -%}
+                    {%- endif -%}
+                  </p>
+                {%- when 'description' -%}
+                  {%- if product.description != blank -%}
+                    <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
+                      {{ product.description }}
+                    </div>
+                  {%- endif -%}
+                {%- when 'sku' -%}
+                  <p
+                    class="product__sku{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.sku.size == 0 %} visibility-hidden{% endif %}"
+                    id="Sku-{{ section.id }}"
+                    role="status"
+                    {{ block.shopify_attributes }}
+                  >
+                    <span class="visually-hidden">{{ 'products.product.sku' | t }}:</span>
+                    {{- product.selected_or_first_available_variant.sku -}}
+                  </p>
+                {%- when 'custom_liquid' -%}
+                  {{ block.settings.custom_liquid }}
+                {%- when 'collapsible_tab' -%}
+                  <div class="product__accordion accordion quick-add-hidden" {{ block.shopify_attributes }}>
+                    <details id="Details-{{ block.id }}-{{ section.id }}">
+                      <summary>
+                        <div class="summary__title">
+                          {% render 'icon-accordion', icon: block.settings.icon %}
+                          <h2 class="h4 accordion__title inline-richtext">
+                            {{ block.settings.heading | default: block.settings.page.title | escape }}
+                          </h2>
+                        </div>
+                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                      </summary>
+                      <div class="accordion__content rte" id="ProductAccordion-{{ block.id }}-{{ section.id }}">
+                        {{ block.settings.content }}
+                        {{ block.settings.page.content }}
+                      </div>
+                    </details>
+                  </div>
+                {%- when 'quantity_selector' -%}
+                  <div
+                    id="Quantity-Form-{{ section.id }}"
+                    class="product-form__input product-form__quantity{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} product-form__quantity-top{% endif %}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {% comment %} TODO: enable theme-check once `item_count_for_variant` is accepted as valid filter {% endcomment %}
+                    {% # theme-check-disable %}
+                    {%- assign cart_qty = cart
+                      | item_count_for_variant: product.selected_or_first_available_variant.id
+                    -%}
+                    {% # theme-check-enable %}
+                    <span class="visually-hidden" id="quantity-label-{{ section.id }}">
+                      {%- if cart_qty > 0 -%}
+                        {{- 'products.product.quantity.in_cart_aria_label' | t: quantity: cart_qty -}}
+                      {%- else -%}
+                        {{- 'products.product.quantity.label' | t -}}
+                      {%- endif -%}
+                    </span>
+                    <label
+                      class="quantity__label form__label"
+                      for="Quantity-{{ section.id }}"
+                      aria-labelledby="quantity-label-{{ section.id }}"
+                    >
+                      <span aria-hidden="true">{{ 'products.product.quantity.label' | t }}</span>
+                      <span class="quantity__rules-cart{% if cart_qty == 0 %} hidden{% endif %}" aria-hidden="true">
+                        {%- render 'loading-spinner' -%}
+                        <span
+                          >(
+                          {{- 'products.product.quantity.in_cart_html' | t: quantity: cart_qty -}}
+                          )</span
+                        >
+                      </span>
+                    </label>
+                    <div class="price-per-item__container">
+                      <quantity-input class="quantity" data-url="{{ product.url }}" data-section="{{ section.id }}">
+                        <button class="quantity__button" name="minus" type="button">
+                          <span class="visually-hidden">
+                            {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+                          </span>
+                          <span class="svg-wrapper">
+                            {{- 'icon-minus.svg' | inline_asset_content -}}
+                          </span>
+                        </button>
+                        <input
+                          class="quantity__input"
+                          type="number"
+                          name="quantity"
+                          id="Quantity-{{ section.id }}"
+                          data-cart-quantity="{{ cart_qty }}"
+                          data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                          min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                          {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
+                            data-max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                            max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                          {% endif %}
+                          step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+                          value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                          form="{{ product_form_id }}"
+                        >
+                        <button class="quantity__button" name="plus" type="button">
+                          <span class="visually-hidden">
+                            {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
+                          </span>
+                          <span class="svg-wrapper">
+                            {{- 'icon-plus.svg' | inline_asset_content -}}
+                          </span>
+                        </button>
+                      </quantity-input>
+                      {%- liquid
+                        assign volume_pricing_array = product.selected_or_first_available_variant.quantity_price_breaks | sort: 'quantity' | reverse
+                        assign current_qty_for_volume_pricing = cart_qty | plus: product.selected_or_first_available_variant.quantity_rule.min
+                        if cart_qty > 0
+                          assign current_qty_for_volume_pricing = cart_qty | plus: product.selected_or_first_available_variant.quantity_rule.increment
+                        endif
+                      -%}
+                      {%- if product.quantity_price_breaks_configured? -%}
+                        <price-per-item
+                          id="Price-Per-Item-{{ section.id }}"
+                          data-section-id="{{ section.id }}"
+                          data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                        >
+                          {%- if product.selected_or_first_available_variant.quantity_price_breaks.size > 0 -%}
+                            {%- assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price -%}
+                            <div class="price-per-item">
+                              {%- if variant_price_compare -%}
+                                <dl class="price-per-item--current">
+                                  <dt class="visually-hidden">
+                                    {{ 'products.product.price.regular_price' | t }}
+                                  </dt>
+                                  <dd>
+                                    <s class="variant-item__old-price">
+                                      {{ variant_price_compare | money_with_currency }}
+                                    </s>
+                                  </dd>
+                                </dl>
+                              {%- endif -%}
+                              {%- if current_qty_for_volume_pricing < volume_pricing_array.last.minimum_quantity -%}
+                                {%- assign variant_price = product.selected_or_first_available_variant.price
+                                  | money_with_currency
+                                -%}
+                                <span class="price-per-item--current">
+                                  {{- 'products.product.volume_pricing.price_at_each_html' | t: price: variant_price -}}
+                                </span>
+                              {%- else -%}
+                                {%- for price_break in volume_pricing_array -%}
+                                  {%- if current_qty_for_volume_pricing >= price_break.minimum_quantity -%}
+                                    {%- assign price_break_price = price_break.price | money_with_currency -%}
+                                    <span class="price-per-item--current">
+                                      {{-
+                                        'products.product.volume_pricing.price_at_each_html'
+                                        | t: price: price_break_price
+                                      -}}
+                                    </span>
+                                    {%- break -%}
+                                  {%- endif -%}
+                                {%- endfor -%}
+                              {%- endif -%}
+                            </div>
+                          {%- else -%}
+                            {%- assign variant_price = product.selected_or_first_available_variant.price
+                              | money_with_currency
+                            -%}
+                            {%- assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price -%}
+                            <div class="price-per-item">
+                              {%- if variant_price_compare -%}
+                                <dl class="price-per-item--current">
+                                  <dt class="visually-hidden">
+                                    {{ 'products.product.price.regular_price' | t }}
+                                  </dt>
+                                  <dd>
+                                    <s class="variant-item__old-price">
+                                      {{ variant_price_compare | money_with_currency }}
+                                    </s>
+                                  </dd>
+                                  <dt class="visually-hidden">
+                                    {{ 'products.product.price.sale_price' | t }}
+                                  </dt>
+                                  <dd>
+                                    <span class="price-per-item--current">
+                                      {{-
+                                        'products.product.volume_pricing.price_at_each_html'
+                                        | t: price: variant_price
+                                      -}}
+                                    </span>
+                                  </dd>
+                                </dl>
+                              {%- else -%}
+                                <span class="price-per-item--current">
+                                  {{- 'products.product.volume_pricing.price_at_each_html' | t: price: variant_price -}}
+                                </span>
+                              {%- endif -%}
+                            </div>
+                          {%- endif -%}
+                        </price-per-item>
+                      {%- endif -%}
+                    </div>
+                    <div class="quantity__rules caption" id="Quantity-Rules-{{ section.id }}">
+                      {%- if product.selected_or_first_available_variant.quantity_rule.increment > 1 -%}
+                        <span class="divider">
+                          {{-
+                            'products.product.quantity.multiples_of'
+                            | t: quantity: product.selected_or_first_available_variant.quantity_rule.increment
+                          -}}
+                        </span>
+                      {%- endif -%}
+                      {%- if product.selected_or_first_available_variant.quantity_rule.min > 1 -%}
+                        <span class="divider">
+                          {{-
+                            'products.product.quantity.minimum_of'
+                            | t: quantity: product.selected_or_first_available_variant.quantity_rule.min
+                          -}}
+                        </span>
+                      {%- endif -%}
+                      {%- if product.selected_or_first_available_variant.quantity_rule.max != null -%}
+                        <span class="divider">
+                          {{-
+                            'products.product.quantity.maximum_of'
+                            | t: quantity: product.selected_or_first_available_variant.quantity_rule.max
+                          -}}
+                        </span>
+                      {%- endif -%}
+                    </div>
+                    {%- if product.quantity_price_breaks_configured? -%}
+                      <volume-pricing class="parent-display" id="Volume-{{ section.id }}">
+                        {%- if product.selected_or_first_available_variant.quantity_price_breaks.size > 0 -%}
+                          <span class="caption-large">{{ 'products.product.volume_pricing.title' | t }}</span>
+                          <ul class="list-unstyled">
+                            <li>
+                              <span>{{ product.selected_or_first_available_variant.quantity_rule.min }}+</span>
+                              {%- assign price = product.selected_or_first_available_variant.price
+                                | money_with_currency
+                              -%}
+                              <span data-text="{{ 'products.product.volume_pricing.price_at_each_html' | t: price: variant_price }}">
+                                {{- 'sections.quick_order_list.each' | t: money: price -}}
+                              </span>
+                            </li>
+                            {%- for price_break in product.selected_or_first_available_variant.quantity_price_breaks -%}
+                              {%- assign price_break_price = price_break.price | money_with_currency -%}
+                              <li class="{%- if forloop.index >= 3 -%}show-more-item hidden{%- endif -%}">
+                                <span>
+                                  {{- price_break.minimum_quantity -}}
+                                  <span aria-hidden="true">+</span></span
+                                >
+                                <span data-text="{{ 'products.product.volume_pricing.price_at_each_html' | t: price: price_break_price }}">
+                                  {{- 'sections.quick_order_list.each' | t: money: price_break_price -}}
+                                </span>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                          {%- if product.selected_or_first_available_variant.quantity_price_breaks.size >= 3 -%}
+                            <show-more-button>
+                              <button
+                                class="button-show-more link underlined-link"
+                                id="Show-More-{{ section.id }}"
+                                type="button"
+                              >
+                                <span class="label-show-more label-text"
+                                  ><span aria-hidden="true">+ </span>{{ 'products.facets.show_more' | t }}
+                                </span>
+                              </button>
+                            </show-more-button>
+                          {%- endif -%}
+                        {%- endif -%}
+                      </volume-pricing>
+                    {%- endif -%}
+                  </div>
+                {%- when 'popup' -%}
+                  <modal-opener
+                    class="product-popup-modal__opener quick-add-hidden"
+                    data-modal="#PopupModal-{{ block.id }}"
+                    {{ block.shopify_attributes }}
+                  >
+                    <button
+                      id="ProductPopup-{{ block.id }}"
+                      class="product-popup-modal__button link"
+                      type="button"
+                      aria-haspopup="dialog"
+                    >
+                      {{ block.settings.text | default: block.settings.page.title | escape }}
+                    </button>
+                  </modal-opener>
+                {%- when 'share' -%}
+                  {% liquid
+                    assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin
+                    render 'share-button', block: block, share_link: share_url
+                  %}
+
+                {%- when 'disclosures' -%}
+                  {%- render 'product-disclosures',
+                    product: product,
+                    heading: block.settings.heading,
+                    heading_size: block.settings.heading_size,
+                    open_by_default: block.settings.open_by_default,
+                    block: block,
+                    surface: 'product_page'
+                  -%}
+                {%- when 'variant_picker' -%}
+                  {% render 'product-variant-picker',
+                    product: product,
+                    block: block,
+                    product_form_id: product_form_id
+                  %}
+                {%- when 'buy_buttons' -%}
+                  {%- render 'buy-buttons',
+                    block: block,
+                    product: product,
+                    product_form_id: product_form_id,
+                    section_id: section.id,
+                    show_pickup_availability: true
+                  -%}
+                {%- when 'rating' -%}
+                  {%- if product.metafields.reviews.rating.value != blank -%}
+                    <div class="rating-wrapper">
+                      {% liquid
+                        assign rating_decimal = 0
+                        assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1
+                        if decimal >= 0.3 and decimal <= 0.7
+                          assign rating_decimal = 0.5
+                        elsif decimal > 0.7
+                          assign rating_decimal = 1
+                        endif
+                      %}
+                      <div
+                        class="rating"
+                        role="img"
+                        aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}"
+                      >
+                        <span
+                          aria-hidden="true"
+                          class="rating-star"
+                          style="--rating: {{ product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"
+                        ></span>
+                      </div>
+                      <p class="rating-text caption">
+                        <span aria-hidden="true">
+                          {{- product.metafields.reviews.rating.value }} /
+                          {{ product.metafields.reviews.rating.value.scale_max -}}
+                        </span>
+                      </p>
+                      <p class="rating-count caption">
+                        <span aria-hidden="true">({{ product.metafields.reviews.rating_count }})</span>
+                        <span class="visually-hidden">
+                          {{- product.metafields.reviews.rating_count }}
+                          {{ 'accessibility.total_reviews' | t -}}
+                        </span>
+                      </p>
+                    </div>
+                  {%- endif -%}
+                {%- when 'complementary' -%}
+                  <product-recommendations
+                    class="complementary-products quick-add-hidden{% if block.settings.make_collapsible_row %} is-accordion{% endif %}{% if block.settings.enable_quick_add %} complementary-products-contains-quick-add{% endif %}"
+                    data-url="{{ routes.product_recommendations_url }}?limit={{ block.settings.product_list_limit }}&intent=complementary"
+                    data-section-id="{{ section.id }}"
+                    data-product-id="{{ product.id }}"
+                  >
+                    {%- if recommendations.performed and recommendations.products_count > 0 -%}
+                      <aside
+                        aria-label="{{ 'accessibility.complementary_products' | t }}"
+                        {{ block.shopify_attributes -}}
+                        {% if block.settings.make_collapsible_row %}
+                          class="product__accordion accordion"
+                        {% endif %}
+                      >
+                        <div class="complementary-products__container">
+                          {%- if block.settings.make_collapsible_row -%}
+                            <details id="Details-{{ block.id }}-{{ section.id }}" open>
+                              <summary>
+                          {%- endif %}
+                          <div class="summary__title">
+                            {%- if block.settings.make_collapsible_row -%}
+                              {% render 'icon-accordion', icon: block.settings.icon %}
+                              <h2 class="h4 accordion__title">{{ block.settings.block_heading }}</h2>
+                            {%- else -%}
+                              <h2 class="h3 accordion__title">{{ block.settings.block_heading }}</h2>
+                            {%- endif -%}
+                          </div>
+                          {%- if block.settings.make_collapsible_row -%}
+                            {{- 'icon-caret.svg' | inline_asset_content -}}
+                            </summary>
+                          {%- endif -%}
+                          <slideshow-component class="slider-mobile-gutter">
+                            {%- assign number_of_slides = recommendations.products_count
+                              | plus: 0.0
+                              | divided_by: block.settings.products_per_page
+                              | ceil
+                            -%}
+                            <div
+                              id="Slider-{{ block.id }}"
+                              class="contains-card contains-card--product complementary-slider grid grid--1-col slider slider--everywhere"
+                              role="list"
+                              {% if number_of_slides > 1 %}
+                                aria-label="{{ 'general.slider.name' | t }}"
+                              {% endif %}
+                            >
+                              {% assign skip_card_product_styles = false %}
+                              {%- for i in (1..number_of_slides) -%}
+                                <div
+                                  id="Slide-{{ block.id }}-{{ forloop.index }}"
+                                  class="complementary-slide complementary-slide--{{ settings.card_style }} grid__item slider__slide slideshow__slide"
+                                  tabindex="-1"
+                                  role="group"
+                                  {% if number_of_slides > 1 %}
+                                    aria-roledescription="{{ 'sections.slideshow.slide' | t }}"
+                                    aria-label="{{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"
+                                  {% endif %}
+                                >
+                                  <ul class="list-unstyled" role="list">
+                                    {%- for product in recommendations.products
+                                      limit: block.settings.products_per_page
+                                      offset: continue
+                                    -%}
+                                      <li>
+                                        {%- if block.settings.enable_quick_add -%}
+                                          {% assign quick_add = 'standard' %}
+                                        {%- else -%}
+                                          {% assign quick_add = 'none' %}
+                                        {%- endif -%}
+                                        {% render 'card-product',
+                                          card_product: product,
+                                          media_aspect_ratio: block.settings.image_ratio,
+                                          show_secondary_image: false,
+                                          lazy_load: false,
+                                          skip_styles: skip_card_product_styles,
+                                          quick_add: quick_add,
+                                          section_id: section.id,
+                                          horizontal_class: true,
+                                          horizontal_quick_add: true
+                                        %}
+                                      </li>
+                                      {%- assign skip_card_product_styles = true -%}
+                                    {%- endfor -%}
+                                  </ul>
+                                </div>
+                              {%- endfor -%}
+                            </div>
+                            {%- if number_of_slides > 1 -%}
+                              <div class="slider-buttons">
+                                <button
+                                  type="button"
+                                  class="slider-button slider-button--prev"
+                                  name="previous"
+                                  aria-label="{{ 'general.slider.previous_slide' | t }}"
+                                >
+                                  <span class="svg-wrapper">
+                                    {{- 'icon-caret.svg' | inline_asset_content -}}
+                                  </span>
+                                </button>
+                                <div class="slider-counter slider-counter--{{ block.settings.pagination_style }}{% if block.settings.pagination_style == 'counter' or block.settings.pagination_style == 'numbers' %} caption{% endif %}">
+                                  {%- if block.settings.pagination_style == 'counter' -%}
+                                    <span class="slider-counter--current">1</span>
+                                    <span aria-hidden="true"> / </span>
+                                    <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+                                    <span class="slider-counter--total">{{ number_of_slides }}</span>
+                                  {%- else -%}
+                                    <div class="slideshow__control-wrapper">
+                                      {%- for i in (1..number_of_slides) -%}
+                                        <button
+                                          class="slider-counter__link slider-counter__link--{{ block.settings.pagination_style }} link"
+                                          aria-label="{{ 'sections.slideshow.load_slide' | t }} {{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"
+                                          aria-controls="Slider-{{ block.id }}"
+                                        >
+                                          {%- if block.settings.pagination_style == 'numbers' -%}
+                                            {{ forloop.index -}}
+                                          {%- else -%}
+                                            <span class="dot"></span>
+                                          {%- endif -%}
+                                        </button>
+                                      {%- endfor -%}
+                                    </div>
+                                  {%- endif -%}
+                                </div>
+                                <button
+                                  type="button"
+                                  class="slider-button slider-button--next"
+                                  name="next"
+                                  aria-label="{{ 'general.slider.next_slide' | t }}"
+                                >
+                                  <span class="svg-wrapper">
+                                    {{- 'icon-caret.svg' | inline_asset_content -}}
+                                  </span>
+                                </button>
+                              </div>
+                            {%- endif -%}
+                          </slideshow-component>
+                          {%- if block.settings.make_collapsible_row -%}
+                            </details>
+                          {%- endif -%}
+                        </div>
+                      </aside>
+                    {%- endif -%}
+                    {{ 'component-card.css' | asset_url | stylesheet_tag }}
+                    {{ 'component-complementary-products.css' | asset_url | stylesheet_tag }}
+                    {%- if block.settings.enable_quick_add -%}
+                      {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+                      <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+                    {%- endif -%}
+                  </product-recommendations>
+                {%- when 'icon-with-text' -%}
+                  {% render 'icon-with-text', block: block %}
+              {%- endcase -%}
+            {%- endfor -%}
+            <a href="{{ product.url }}" class="link product__view-details animate-arrow">
+              {{ 'products.product.view_full_details' | t }}
+              {{- 'icon-arrow.svg' | inline_asset_content -}}
+            </a>
+          </section>
         </div>
-        <div class="conc">Extrait</div>
       </div>
-      <p class="oneline" id="pLine">{{ product.description | strip_html | truncatewords: 30 }}</p>
-    <div class="stars">
-      <span class="s">â˜…â˜…â˜…â˜…â˜…</span><span>4.7</span><a href="#reviews">1,284 reviews</a>
-      <span class="vbadge">âœ“ 1,142 verified buyers</span>
-    </div>
 
-    <div class="sec">
-      <div class="sec-h"><div class="eyebrow">Choose your size</div></div>
-      <div class="sizes" id="sizes"></div>
-      <div class="size-hint" id="sizeHint"></div>
-    </div>
+      {% render 'product-media-modal', variant_images: variant_images %}
 
-    <div class="sec">
-      <div class="sec-h"><div class="eyebrow">Choose your scent</div><div class="eyebrow" id="famLabel"></div></div>
-      <div class="scents" id="scents"></div>
-    </div>
-
-    <div class="sec">
-      <div class="sec-h"><div class="eyebrow">How many bottles</div><div class="eyebrow">Mix any scents</div></div>
-      <div id="tiers"></div>
-
-      <div class="bulk" id="bulk">
-        <button class="bulk-h" id="bulkH">
-          <span>
-            <span class="bh-t">Build a bigger box â€” up to 10 bottles</span>
-            <span class="bh-s">The more you take, the cheaper each one gets. Up to 40% off.</span>
-          </span>
-          <span class="pm">+</span>
-        </button>
-        <div class="bulk-b">
-          <div class="bulk-in">
-            <div class="ladder" id="ladder"></div>
-            <div class="step">
-              <button id="qMinus">âˆ’</button>
-              <span class="sv"><b id="qVal">4</b><span id="qLab">bottles Â· 100ml</span></span>
-              <span class="sp"><b id="qPrice">â‚¹0</b><span id="qEach">â‚¹0 each</span></span>
-              <button id="qPlus">+</button>
+      {% assign popups = section.blocks | where: 'type', 'popup' %}
+      {%- for block in popups -%}
+        <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" {{ block.shopify_attributes }}>
+          <div
+            role="dialog"
+            aria-label="{{ block.settings.text }}"
+            aria-modal="true"
+            class="product-popup-modal__content"
+            tabindex="-1"
+          >
+            <button
+              id="ModalClose-{{ block.id }}"
+              type="button"
+              class="product-popup-modal__toggle"
+              aria-label="{{ 'accessibility.close' | t }}"
+            >
+              {{- 'icon-close.svg' | inline_asset_content -}}
+            </button>
+            <div class="product-popup-modal__content-info">
+              <h1 class="h2">{{ block.settings.page.title | escape }}</h1>
+              {{ block.settings.page.content }}
             </div>
-            <div class="nudge" id="nudge"></div>
           </div>
-        </div>
-      </div>
+        </modal-dialog>
+      {%- endfor -%}
 
-      <div class="picker" id="picker"></div>
-      <div class="savings" id="savings" style="display:none"><span>You're saving</span><b id="savingsAmt">â‚¹0</b></div>
-    </div>
+      {%- if product.media.size > 0 -%}
+        <script src="{{ 'product-modal.js' | asset_url }}" defer="defer"></script>
+        <script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>
+      {%- endif -%}
 
-    <div class="sec">
-      <div class="eyebrow" style="margin-bottom:12px">Add to your order</div>
-      <div id="addons"></div>
-    </div>
+      {%- if first_3d_model -%}
+        <script type="application/json" id="ProductJSON-{{ product.id }}">
+          {{ product.media | where: 'media_type', 'model' | json }}
+        </script>
+        <script src="{{ 'product-model.js' | asset_url }}" defer></script>
+      {%- endif -%}
 
-    <div class="total">
-      <span class="tl">Total</span>
-      <span class="tr"><span class="was" id="wasAmt">â‚¹0</span><span class="amt" id="totalAmt">â‚¹0</span></span>
-    </div>
+      {%- liquid
+        if product.selected_or_first_available_variant.featured_media
+          assign seo_media = product.selected_or_first_available_variant.featured_media
+        else
+          assign seo_media = product.featured_media
+        endif
+      -%}
 
-    <div class="ctas">
-      <button type="button" class="cta" id="cta">Add to cart</button>
-      <button type="button" class="cta buy" id="ctaBuy">Buy now</button>
+      <script type="application/ld+json">
+        {{ product | structured_data }}
+      </script>
     </div>
-    {%- endform -%}
-    <div class="cta-note" id="ctaNote"></div>
+  </product-component>
+</product-info>
 
-    <div class="secure">
-      <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-      Secure checkout Â· 256-bit SSL Â· Razorpay verified
-    </div>
-    <div class="pays">
-      <span class="pay-badge">UPI</span><span class="pay-badge">GPay</span><span class="pay-badge">PhonePe</span>
-      <span class="pay-badge">Paytm</span><span class="pay-badge">Visa</span><span class="pay-badge">Mastercard</span>
-      <span class="pay-badge">RuPay</span><span class="pay-badge">Net banking</span>
-    </div>
-
-    <div class="ship-bar">
-      <div class="ship-track"><div class="ship-fill" id="shipFill"></div></div>
-      <div class="ship-txt" id="shipTxt"></div>
-    </div>
-
-    <div class="pin">
-      <div class="eyebrow" style="margin-bottom:10px">Delivery</div>
-      <div class="pin-in">
-        <input id="pinIn" maxlength="6" inputmode="numeric" placeholder="Enter your pincode"/>
-        <button id="pinBtn">Check</button>
-      </div>
-      <div class="pin-out" id="pinOut"></div>
-    </div>
-
-    <div class="trust">
-      <div class="trust-i">
-        <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
-        <b>100% authentic</b>Batch-coded. Bottled in our own unit.
-      </div>
-      <div class="trust-i">
-        <svg viewBox="0 0 24 24"><path d="M3 12h4l2-6 3 12 3-9 2 3h4"/></svg>
-        <b>Extrait grade</b>20â€“30% oil. Both sizes, same juice.
-      </div>
-      <div class="trust-i">
-        <svg viewBox="0 0 24 24"><path d="M4 8h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/><path d="M9 13l2 2 4-4"/></svg>
-        <b>7-day exchange</b>Don't love it? Swap the scent.
-      </div>
-      <div class="trust-i">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
-        <b>Ships in 24 hrs</b>Tracked. Delhi to your door.
-      </div>
-    </div>
-  </div>
-</section>
-</main>
-
-<!-- CREDENTIALS -->
-<section class="creds" id="creds"></section>
 
 <!-- INGREDIENTS -->
 {% if product.metafields.custom.ingredients.value != blank %}
@@ -589,839 +804,9 @@ function scrollIngredientsRight() {
 </script>
 {% endif %}
 
-<!-- DRYDOWN -->
-<section class="band dark" id="drydown">
-  <div class="wrap">
-    <div class="eyebrow">The signature</div>
-    <h2 class="band-h">A perfume isn't one smell.<br/>It's four, over ten hours.</h2>
-    <div class="dd">
-      <div>
-        <div class="dd-time" id="ddTime"></div>
-        <div class="dd-stage" id="ddStage"></div>
-        <div class="dd-desc" id="ddDesc"></div>
-        <div class="dd-notes" id="ddNotes"></div>
-      </div>
-      <div>
-        <div class="dd-viz">
-          <svg class="dd-curve" viewBox="0 0 500 230" preserveAspectRatio="none">
-            <path id="cTop" fill="none" stroke="#5DCAA5" stroke-width="1.5" opacity=".5"/>
-            <path id="cMid" fill="none" stroke="#EF9F27" stroke-width="1.5" opacity=".5"/>
-            <path id="cBase" fill="none" stroke="#ED93B1" stroke-width="1.5" opacity=".5"/>
-            <line id="cLine" x1="20" y1="0" x2="20" y2="230" stroke="#FCFBF9" stroke-width="1"/>
-          </svg>
-        </div>
-        <input type="range" class="dd-slider" id="ddSlider" min="0" max="100" value="4" step="1"/>
-        <div class="dd-ticks"><span>Spray</span><span>1 hr</span><span>3 hr</span><span>6 hr</span><span>10 hr</span></div>
-        <div class="dd-ticks" style="margin-top:18px"><span style="color:#5DCAA5">â€” Top</span><span style="color:#EF9F27">â€” Heart</span><span style="color:#ED93B1">â€” Base</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- LAYERING -->
-<section class="band dark" id="layering" style="border-top:1px solid #2A241E">
-  <div class="wrap">
-    <div class="eyebrow">The layering lab Â· Built for 25ml</div>
-    <h2 class="band-h">Two scents. One that nobody else has.</h2>
-    <p class="band-sub">Spray the heavier scent first, let it settle thirty seconds, then the lighter one on top. The base anchors, the top lifts. This is why perfume people own small bottles â€” you can't experiment with a â‚¹1,999 bottle.</p>
-    <div class="lab">
-      <div>
-        <div class="lab-pick"><div class="lab-lab">Base layer â€” spray first</div><div class="lab-grid" id="labA"></div></div>
-        <div class="lab-pick"><div class="lab-lab">Top layer â€” spray second</div><div class="lab-grid" id="labB"></div></div>
-      </div>
-      <div class="mix">
-        <div class="lab-lab" id="mixTag">Your blend</div>
-        <div class="mix-name" id="mixName"></div>
-        <div class="mix-score"><span class="mix-track"><span class="mix-fill" id="mixFill"></span></span><span class="mix-num" id="mixNum"></span></div>
-        <div class="mix-desc" id="mixDesc"></div>
-        <div class="mix-how" id="mixHow"></div>
-        <div class="mix-buy">
-          <button class="mix-btn" id="mixBuy">Add both â€” 25ml</button>
-          <button class="mix-btn ghost" id="mixBuyBig">Add both â€” 100ml</button>
-        </div>
-      </div>
-    </div>
-    <div class="lab-lab" style="margin-top:48px">Blends we've already made for you</div>
-    <div class="presets" id="presets"></div>
-  </div>
-</section>
-
-<!-- BUILD -->
-<section class="band">
-  <div class="wrap">
-    <div class="eyebrow">The pyramid Â· How it performs</div>
-    <h2 class="band-h">The build</h2>
-    <p class="band-sub">Both sizes are the same Extrait concentration. The 25ml isn't watered down â€” it's the same juice in a smaller bottle.</p>
-    <div class="two">
-      <div id="pyramid"></div>
-      <div>
-        <div class="meter">
-          <div class="meter-top"><span>Longevity</span><span class="v" id="mLongV"></span></div>
-          <div class="meter-track"><div class="meter-fill" id="mLong"></div></div>
-        </div>
-        <div class="meter">
-          <div class="meter-top"><span>Sillage â€” how far it travels</span><span class="v" id="mSilV"></span></div>
-          <div class="meter-track"><div class="meter-fill" id="mSil"></div></div>
-        </div>
-        <div class="season"><span>Winter</span><span class="pips" data-s="winter"></span></div>
-        <div class="season"><span>Monsoon</span><span class="pips" data-s="monsoon"></span></div>
-        <div class="season"><span>Summer</span><span class="pips" data-s="summer"></span></div>
-        <div class="season"><span>Night</span><span class="pips" data-s="night"></span></div>
-        <div class="season" style="border-bottom:none"><span>Day</span><span class="pips" data-s="day"></span></div>
-      </div>
-    </div>
-    <div class="pers">
-      <div><div class="pk">Wear this if</div><div class="pv" id="pIf"></div></div>
-      <div><div class="pk">Best for</div><div class="pv" id="pFor"></div></div>
-      <div><div class="pk">Layers beautifully with</div><div class="pv" id="pLike"></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- SETS -->
-<section class="band" style="background:var(--paper)">
-  <div class="wrap">
-    <div class="sec-h" style="align-items:center;flex-wrap:wrap;margin-bottom:0">
-      <div>
-        <div class="eyebrow">Ready-made sets</div>
-        <h2 class="band-h">Boxed, named, done.</h2>
-      </div>
-      <div class="seg" id="setSeg"><button class="on" data-sz="100">100ml sets</button><button data-sz="25">25ml sets</button></div>
-    </div>
-    <div class="combos" id="combos"></div>
-  </div>
-</section>
-
-<!-- REVIEWS -->
-<section class="band" id="reviews">
-  <div class="wrap">
-    <div class="eyebrow">1,284 reviews Â· 1,142 verified purchases</div>
-    <h2 class="band-h">What it did for them</h2>
-    <div class="rev-head">
-      <div><div class="rev-score">4.7</div><div class="stars"><span class="s">â˜…â˜…â˜…â˜…â˜…</span></div></div>
-      <div class="rev-bars">
-        <div class="rev-bar"><span>5</span><span class="t"><i style="width:78%"></i></span><span>78%</span></div>
-        <div class="rev-bar"><span>4</span><span class="t"><i style="width:14%"></i></span><span>14%</span></div>
-        <div class="rev-bar"><span>3</span><span class="t"><i style="width:5%"></i></span><span>5%</span></div>
-        <div class="rev-bar"><span>2</span><span class="t"><i style="width:2%"></i></span><span>2%</span></div>
-        <div class="rev-bar"><span>1</span><span class="t"><i style="width:1%"></i></span><span>1%</span></div>
-      </div>
-    </div>
-    <div class="rev-stat">
-      <div><div class="n">8.4 hrs</div><div class="l">Average longevity reported</div></div>
-      <div><div class="n">91%</div><div class="l">Got a compliment</div></div>
-      <div><div class="n">62%</div><div class="l">Bought a second scent</div></div>
-    </div>
-    <div class="rev-grid">
-      <div class="rev">
-        <div class="rs">â˜…â˜…â˜…â˜…â˜…</div>
-        <div class="rt">Started with the 25ml five-pack because I couldn't decide. Ended up buying Smoky Rum in 100ml two weeks later. Smart of them, honestly.</div>
-        <div class="rm"><span class="vbadge">âœ“ Verified</span> Aditya M. Â· Discovery Five</div>
-        <div class="rv">Customer video</div>
-      </div>
-      <div class="rev">
-        <div class="rs">â˜…â˜…â˜…â˜…â˜…</div>
-        <div class="rt">Layering Nawab Oud under Vanilla Kiss is unreal. Nobody can place what I'm wearing and that's exactly the point.</div>
-        <div class="rm"><span class="vbadge">âœ“ Verified</span> Sneha R. Â· Layering Kit</div>
-        <div class="rv">Customer photo</div>
-      </div>
-      <div class="rev">
-        <div class="rs">â˜…â˜…â˜…â˜…â˜†</div>
-        <div class="rt">The 25ml lives in my bag, the 100ml on my dresser. Same scent, and it actually lasts through a Delhi workday.</div>
-        <div class="rm"><span class="vbadge">âœ“ Verified</span> Karan S. Â· Classic Leather</div>
-        <div class="rv">Customer photo</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="band" style="background:var(--paper)">
-  <div class="wrap">
-    <div class="eyebrow">Before you buy</div>
-    <h2 class="band-h">Questions we get asked</h2>
-    <div class="faq" id="faq"></div>
-  </div>
-</section>
-
-
-
-<div class="sticky" id="sticky">
-  <div class="sw"><i id="swLiquid"></i></div>
-  <div class="si"><div class="sn" id="snName"></div><div class="sp" id="snPrice"></div></div>
-  <div class="sbtns">
-    <button id="stickyCta">Add</button>
-    <button class="buy" id="stickyBuy">Buy now</button>
-  </div>
-</div>
-<div class="toast" id="toast"></div>
-
-<script>
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   1. INGREDIENT PHOTOS â€” paste your Shopify CDN URLs here.
-   Any note left out falls back to the drawn illustration.
-   e.g.  'Tobacco Leaf': 'https://cdn.shopify.com/.../tobacco.jpg',
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-const NOTE_IMAGES = {
-  // 'Pink Pepper': 'https://cdn.shopify.com/s/files/.../pink-pepper.jpg',
-  // 'Rum':         'https://cdn.shopify.com/s/files/.../rum.jpg',
-};
-
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   2. PRICING â€” the full 1-to-10 ladder. Index 0 is unused.
-   Change any number and the whole page recalculates.
-   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-const SIZES = {
-  '100': {
-    ml:100, label:'100ml', role:'Your signature', unit:1999,
-    //     1     2     3     4     5     6     7     8      9      10
-    px:[0, 1999, 3399, 4499, 5599, 6699, 7799, 8899, 9999, 10999, 11999],
-    quick:[
-      {q:1, name:'One bottle',    sub:'Your signature scent'},
-      {q:2, name:'Two bottles',   sub:'One for day, one for night', badge:'Most popular'},
-      {q:3, name:'Three bottles', sub:'A full wardrobe',            badge:'Best value', good:true}
-    ]
-  },
-  '25': {
-    ml:25, label:'25ml', role:'Travel & layering', unit:699,
-    px:[0, 699, 1249, 1799, 2299, 2799, 3249, 3699, 4099, 4499, 4899],
-    quick:[
-      {q:1, name:'One bottle',    sub:'Try before you commit'},
-      {q:3, name:'Three bottles', sub:'Enough to start layering',   badge:'Most popular'},
-      {q:5, name:'Five bottles',  sub:'The full wardrobe, in a bag', badge:'Best value', good:true}
-    ]
-  }
-};
-const FREE_SHIP_MIN = 1499;
-const MAXQ = 10;
-
-const priceFor = (sz,q) => SIZES[sz].px[Math.max(1,Math.min(MAXQ,q))];
-const offFor   = (sz,q) => Math.round((1 - priceFor(sz,q)/(SIZES[sz].unit*q)) * 100);
-const eachFor  = (sz,q) => priceFor(sz,q)/q;
-
-/* â”€â”€ INGREDIENT FAMILIES: illustration + description â”€â”€ */
-const FAM = {
-  citrus:{c:'#E9A93B', bg:'#FBF2E0', d:'Cold-pressed peel. Sharp, sunny, gone in twenty minutes.',
-    g:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="#E9A93B"/><circle cx="50" cy="50" r="27" fill="#F6CE79"/><g stroke="#FBF2E0" stroke-width="2">${[0,45,90,135,180,225,270,315].map(a=>`<line x1="50" y1="50" x2="${50+27*Math.cos(a*Math.PI/180)}" y2="${50+27*Math.sin(a*Math.PI/180)}"/>`).join('')}</g><circle cx="50" cy="50" r="4" fill="#FBF2E0"/></svg>`},
-  pepper:{c:'#B4485C', bg:'#F8ECEE', d:'Dried berries. A dry, prickly heat that opens the nose.',
-    g:`<svg viewBox="0 0 100 100"><circle cx="36" cy="42" r="12" fill="#B4485C"/><circle cx="60" cy="34" r="9" fill="#CE6C7E"/><circle cx="54" cy="60" r="14" fill="#9E3A4D"/><circle cx="32" cy="66" r="8" fill="#CE6C7E"/><circle cx="72" cy="58" r="7" fill="#B4485C"/><circle cx="33" cy="39" r="3" fill="#F8ECEE" opacity=".5"/></svg>`},
-  spice:{c:'#B5762C', bg:'#F8F0E3', d:'Ground bark and pods. Warm, dry, faintly sweet.',
-    g:`<svg viewBox="0 0 100 100"><rect x="24" y="30" width="10" height="46" rx="5" fill="#8E5A1E"/><rect x="38" y="24" width="10" height="52" rx="5" fill="#B5762C"/><rect x="52" y="30" width="10" height="46" rx="5" fill="#8E5A1E"/><rect x="66" y="34" width="10" height="42" rx="5" fill="#C99150"/><ellipse cx="50" cy="24" rx="26" ry="5" fill="#C99150" opacity=".5"/></svg>`},
-  wood:{c:'#7A6A52', bg:'#F1EEE7', d:'Rasped heartwood. Dry, grounding, quietly green.',
-    g:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="#9C8A6E"/><circle cx="50" cy="50" r="27" fill="none" stroke="#7A6A52" stroke-width="3"/><circle cx="50" cy="50" r="19" fill="none" stroke="#7A6A52" stroke-width="3"/><circle cx="50" cy="50" r="11" fill="none" stroke="#7A6A52" stroke-width="3"/><circle cx="50" cy="50" r="4" fill="#5E5140"/></svg>`},
-  oud:{c:'#4B2A2F', bg:'#F1E8E9', d:'Resin-soaked agarwood. Smoky, animalic, worth the price.',
-    g:`<svg viewBox="0 0 100 100"><path d="M28 74 L38 26 L50 46 L60 22 L72 74 Z" fill="#4B2A2F"/><path d="M38 74 L46 40 L54 58 L62 74 Z" fill="#6E4046"/><path d="M28 74 h44" stroke="#2F1A1D" stroke-width="4"/></svg>`},
-  leather:{c:'#6B4B33', bg:'#F2ECE5', d:'Tanned hide. Dry, smoky, slightly smoked-out.',
-    g:`<svg viewBox="0 0 100 100"><rect x="22" y="26" width="56" height="48" rx="4" fill="#6B4B33"/><rect x="28" y="32" width="44" height="36" rx="2" fill="none" stroke="#A0785A" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M22 44 h56 M22 58 h56" stroke="#553B27" stroke-width="1" opacity=".6"/></svg>`},
-  tobacco:{c:'#7C5A22', bg:'#F5F0E3', d:'Cured leaf. Honeyed, dry, a little like an old library.',
-    g:`<svg viewBox="0 0 100 100"><path d="M50 20 C24 34 24 66 50 82 C76 66 76 34 50 20 Z" fill="#7C5A22"/><path d="M50 20 V82" stroke="#A98442" stroke-width="2"/><g stroke="#A98442" stroke-width="1.4" opacity=".8"><path d="M50 34 L34 42"/><path d="M50 34 L66 42"/><path d="M50 48 L32 56"/><path d="M50 48 L68 56"/><path d="M50 62 L38 70"/><path d="M50 62 L62 70"/></g></svg>`},
-  vanilla:{c:'#9A6B3A', bg:'#F8F1E6', d:'Cured pod, split open. Creamy, boozy, never sugary.',
-    g:`<svg viewBox="0 0 100 100"><rect x="30" y="22" width="9" height="58" rx="4.5" fill="#4E3620"/><rect x="45" y="18" width="9" height="64" rx="4.5" fill="#6B4A2C"/><rect x="60" y="24" width="9" height="56" rx="4.5" fill="#4E3620"/><ellipse cx="49.5" cy="18" rx="4.5" ry="2" fill="#9A6B3A"/><g fill="#C6A278" opacity=".8"><circle cx="49" cy="40" r="1.4"/><circle cx="50" cy="52" r="1.4"/><circle cx="48" cy="64" r="1.4"/></g></svg>`},
-  sugar:{c:'#D98CA6', bg:'#FBEFF3', d:'Spun and caramelised. Sweet, sticky, unapologetic.',
-    g:`<svg viewBox="0 0 100 100"><circle cx="50" cy="44" r="26" fill="#E9AEC2"/><circle cx="50" cy="44" r="18" fill="#F5D2DD"/><rect x="47" y="66" width="6" height="18" rx="3" fill="#C9C1B4"/><g fill="#D98CA6"><circle cx="42" cy="38" r="3"/><circle cx="58" cy="42" r="3"/><circle cx="50" cy="52" r="3"/></g></svg>`},
-  nut:{c:'#8CA35C', bg:'#F0F3E7', d:'Shelled and roasted. Green, buttery, faintly milky.',
-    g:`<svg viewBox="0 0 100 100"><ellipse cx="38" cy="52" rx="18" ry="24" fill="#B79A6A" transform="rotate(-14 38 52)"/><ellipse cx="38" cy="52" rx="12" ry="17" fill="#8CA35C" transform="rotate(-14 38 52)"/><ellipse cx="66" cy="44" rx="14" ry="19" fill="#C9AE80" transform="rotate(12 66 44)"/><ellipse cx="66" cy="44" rx="9" ry="13" fill="#A3B876" transform="rotate(12 66 44)"/></svg>`},
-  cacao:{c:'#5A3A26', bg:'#F1EAE4', d:'Roasted nib. Bitter, dusty, dark.',
-    g:`<svg viewBox="0 0 100 100"><rect x="24" y="30" width="52" height="40" rx="3" fill="#5A3A26"/><g stroke="#7E5537" stroke-width="2"><path d="M24 43 h52 M24 57 h52 M41 30 v40 M59 30 v40"/></g><rect x="24" y="30" width="52" height="6" fill="#7E5537" opacity=".5"/></svg>`},
-  rose:{c:'#C2607B', bg:'#FAEDF0', d:'Petals picked at dawn. Fresh, green, honeyed.',
-    g:`<svg viewBox="0 0 100 100"><circle cx="50" cy="46" r="28" fill="#E0A0B4"/><circle cx="50" cy="46" r="21" fill="#C2607B"/><circle cx="50" cy="46" r="13" fill="#A34561"/><circle cx="50" cy="46" r="6" fill="#8A3550"/><path d="M50 74 v14" stroke="#6E8F4E" stroke-width="3"/><path d="M50 80 q-12 -2 -14 -10 q10 0 14 10" fill="#6E8F4E"/></svg>`},
-  floral:{c:'#D8C68B', bg:'#F8F4E7', d:'Night-picked petals. Creamy, heady, a little indolic.',
-    g:`<svg viewBox="0 0 100 100"><g fill="#F2E6BE">${[0,60,120,180,240,300].map(a=>`<ellipse cx="${50+20*Math.cos(a*Math.PI/180)}" cy="${48+20*Math.sin(a*Math.PI/180)}" rx="14" ry="9" transform="rotate(${a} ${50+20*Math.cos(a*Math.PI/180)} ${48+20*Math.sin(a*Math.PI/180)})"/>`).join('')}</g><circle cx="50" cy="48" r="10" fill="#D8C68B"/><circle cx="50" cy="48" r="4" fill="#B5A25F"/></svg>`},
-  amber:{c:'#C08B3A', bg:'#F9F1E2', d:'Fossilised resin. Warm, sweet, glowing.',
-    g:`<svg viewBox="0 0 100 100"><path d="M50 20 C70 26 80 46 76 64 C72 80 56 84 50 84 C44 84 28 80 24 64 C20 46 30 26 50 20 Z" fill="#C08B3A"/><path d="M50 28 C64 34 70 48 68 62 C50 58 46 44 50 28 Z" fill="#E0AF60" opacity=".8"/><circle cx="40" cy="40" r="4" fill="#F2D89C" opacity=".7"/></svg>`},
-  musk:{c:'#C3BDB1', bg:'#F4F2ED', d:'Clean, warm, skin-like. The reason it smells like *you*.',
-    g:`<svg viewBox="0 0 100 100"><circle cx="42" cy="48" r="20" fill="#DAD5CA" opacity=".9"/><circle cx="60" cy="42" r="16" fill="#C3BDB1" opacity=".85"/><circle cx="56" cy="62" r="14" fill="#EAE7E0" opacity=".9"/><circle cx="38" cy="64" r="10" fill="#C3BDB1" opacity=".6"/></svg>`},
-  tea:{c:'#5E6B4A', bg:'#EFF1EA', d:'Dried and smoked leaf. Tannic, dry, faintly bitter.',
-    g:`<svg viewBox="0 0 100 100"><path d="M50 22 C28 36 26 62 44 78 C64 66 70 40 50 22 Z" fill="#5E6B4A"/><path d="M50 22 C48 44 46 62 44 78" stroke="#8B9A72" stroke-width="2" fill="none"/><g stroke="#8B9A72" stroke-width="1.3"><path d="M48 38 L36 44"/><path d="M47 52 L34 58"/><path d="M45 66 L36 72"/></g></svg>`},
-  booze:{c:'#8C5A2B', bg:'#F6EFE5', d:'Aged in oak. Sweet, sharp, warming on contact.',
-    g:`<svg viewBox="0 0 100 100"><path d="M32 22 h36 l-4 46 a14 10 0 0 1 -28 0 Z" fill="none" stroke="#8C5A2B" stroke-width="3"/><path d="M35 42 h30 l-2.5 26 a12 8 0 0 1 -25 0 Z" fill="#B5762C" opacity=".85"/><rect x="44" y="76" width="12" height="4" rx="2" fill="#8C5A2B"/><rect x="36" y="80" width="28" height="4" rx="2" fill="#8C5A2B"/></svg>`},
-  lavender:{c:'#8C86BE', bg:'#F1F0F8', d:'Steam-distilled flower. Herbal, cool, slightly medicinal.',
-    g:`<svg viewBox="0 0 100 100"><path d="M50 84 V44" stroke="#6E8F4E" stroke-width="3"/><g fill="#8C86BE">${[0,1,2,3,4,5].map(i=>`<ellipse cx="${44+(i%2)*12}" cy="${20+i*6}" rx="6" ry="4"/>`).join('')}</g><path d="M50 66 q-11 -2 -13 -10 q9 0 13 10" fill="#6E8F4E"/></svg>`},
-  moss:{c:'#5F7248', bg:'#EFF2EA', d:'Forest floor. Damp, green, mineral.',
-    g:`<svg viewBox="0 0 100 100"><circle cx="34" cy="58" r="14" fill="#5F7248"/><circle cx="56" cy="50" r="18" fill="#7A8F5E"/><circle cx="68" cy="66" r="11" fill="#5F7248"/><circle cx="44" cy="70" r="9" fill="#8FA372"/><circle cx="30" cy="44" r="7" fill="#8FA372"/></svg>`}
-};
-const NOTE_FAM = {
-  'Lemon':'citrus','Citrus':'citrus','Bergamot':'citrus','Sicilian Orange':'citrus','Citron':'citrus',
-  'Pink Pepper':'pepper',
-  'Cardamom':'spice','Ginger':'spice','Cinnamon':'spice','Spice Mix':'spice','Angelica':'spice','Clary Sage':'spice',
-  'Vetiver':'wood','Vetiver Oil':'wood','Sandalwood':'wood','Guaiac Wood':'wood','Cashmeran':'wood','Patchouli':'wood','Galbanum':'wood','Violet Leaves':'wood',
-  'Moss':'moss',
-  'Oud':'oud','Agarwood':'oud','Styrax':'oud',
-  'Leather':'leather',
-  'Tobacco':'tobacco','Tobacco Leaf':'tobacco',
-  'Vanilla':'vanilla','Vanilla Bean':'vanilla','Vanilla Fusion':'vanilla','Vanilla Caviar':'vanilla','Tonka Bean':'vanilla','Tonka Beans':'vanilla',
-  'Brown Sugar':'sugar','White Caramel':'sugar','Rock Sugar':'sugar','Cotton Candy':'sugar','Marshmallow':'sugar','Bubble Gum':'sugar','Candied Pear':'sugar','Gelato':'sugar','Raspberry':'sugar',
-  'Pistachio':'nut','Hazelnut':'nut',
-  'Cacao':'cacao','Cocoa':'cacao',
-  'Rose':'rose','Damask Rose':'rose','Rose Bloom':'rose',
-  'Neroli':'floral','Tunisian Neroli':'floral','Jasmine':'floral','Sambac':'floral','Peony':'floral','Orchid':'floral','Floral':'floral',
-  'Amber':'amber',
-  'White Musk':'musk',
-  'Black Tea':'tea',
-  'Rum':'booze',
-  'Lavender':'lavender'
-};
-
-const SCENTS = [
-  {id:'smoky',name:'Smoky Rum',hex:'#8C3A1E',soft:'#F6EBE6',fam:'Smoky Â· Boozy',weight:8,sweet:4,
-   line:'Dark rum spilled on tobacco leaf. Warm, smoky, and impossible to ignore.',
-   top:['Pink Pepper','Lemon','Neroli'],mid:['Rum','Clary Sage','Vetiver Oil'],base:['Tobacco Leaf','Vanilla Bean','Styrax'],
-   longevity:9,sillage:8,s:{winter:3,monsoon:2,summer:1,night:3,day:2},
-   pIf:"You're the last one to leave, and everyone remembers it.",pFor:'Late dinners, winter weddings, anything after 8pm.'},
-  {id:'leather',name:'Classic Leather',hex:'#5B4636',soft:'#F1EDE8',fam:'Leather Â· Woody',weight:9,sweet:2,
-   line:'Cardamom and cured leather. The scent of a very good jacket.',
-   top:['Cardamom','Leather','Citrus'],mid:['Jasmine','Sambac','Moss'],base:['Vetiver','Patchouli','Amber'],
-   longevity:9,sillage:7,s:{winter:3,monsoon:2,summer:1,night:3,day:2},
-   pIf:'You own one good watch and wear it every single day.',pFor:'Boardrooms, first meetings, evenings that matter.'},
-  {id:'oud',name:'Nawab Oud',hex:'#6B2237',soft:'#F5E9EC',fam:'Oud Â· Oriental',weight:10,sweet:3,
-   line:'Agarwood and rose, the way Lucknow does it. Regal, not loud.',
-   top:['Oud','Bergamot','Neroli'],mid:['Rose','Patchouli','Floral'],base:['Amber','Vanilla Bean','Agarwood'],
-   longevity:10,sillage:9,s:{winter:3,monsoon:3,summer:1,night:3,day:1},
-   pIf:'You walk into a room slowly and it still turns.',pFor:'Sangeets, receptions, Eid, anything with a dress code.'},
-  {id:'pistachio',name:'Pistachio Pop',hex:'#6E8F4E',soft:'#EDF2E7',fam:'Gourmand Â· Nutty',weight:4,sweet:9,
-   line:'Pistachio gelato on a hot afternoon. Sweet, creamy, ridiculously moreish.',
-   top:['Pistachio','Gelato','Hazelnut'],mid:['Peony','Jasmine','Raspberry'],base:['Cotton Candy','Marshmallow','Cacao'],
-   longevity:7,sillage:7,s:{winter:2,monsoon:2,summer:3,night:2,day:3},
-   pIf:"People hug you and then ask what you're wearing.",pFor:'Brunch, dates, college, anywhere you want to be liked.'},
-  {id:'candy',name:'Lush Candy',hex:'#C4527D',soft:'#FAECF1',fam:'Gourmand Â· Sweet',weight:3,sweet:10,
-   line:'Candied pear and bubblegum over warm sandalwood. Playful, then grown-up.',
-   top:['Candied Pear','Violet Leaves'],mid:['Jasmine','Bubble Gum','White Caramel'],base:['Sandalwood','Patchouli','Rock Sugar'],
-   longevity:7,sillage:6,s:{winter:2,monsoon:2,summer:3,night:2,day:3},
-   pIf:'Your laugh is the loudest thing in the room and you like it that way.',pFor:'Birthdays, house parties, day-outs.'},
-  {id:'blu',name:'Ombre Blu',hex:'#2C5A8C',soft:'#E9EFF6',fam:'Fresh Â· Spicy',weight:3,sweet:3,
-   line:'Sicilian citrus with a warm spine of ginger and black tea. Clean, never boring.',
-   top:['Bergamot','Sicilian Orange','Citron'],mid:['Tunisian Neroli','Ginger','Cinnamon'],base:['Black Tea','Guaiac Wood','Amber'],
-   longevity:7,sillage:6,s:{winter:2,monsoon:3,summer:3,night:2,day:3},
-   pIf:'You show up early and everything about you is ironed.',pFor:'Office, daytime, Indian summers.'},
-  {id:'tobacco',name:'Royale Tobacco',hex:'#7A4A1F',soft:'#F4EDE4',fam:'Spicy Â· Tobacco',weight:9,sweet:5,
-   line:'Cinnamon and pipe tobacco wrapped in tonka. Old money, no logo.',
-   top:['Cinnamon','Tobacco','Cardamom'],mid:['Sandalwood','Patchouli','Floral'],base:['Spice Mix','Vanilla','Tonka Bean'],
-   longevity:9,sillage:8,s:{winter:3,monsoon:2,summer:1,night:3,day:2},
-   pIf:"You'd rather be underestimated than announced.",pFor:'Winter evenings, long dinners, cold weather travel.'},
-  {id:'vanilla',name:'Vanilla Kiss',hex:'#B98A4E',soft:'#F8F1E7',fam:'Vanilla Â· Boozy',weight:6,sweet:9,
-   line:'Vanilla with rum and brown sugar, grounded by oud. Soft, then addictive.',
-   top:['Vanilla','Orchid','Jasmine'],mid:['Brown Sugar','Rum','Tonka Beans'],base:['Oud','Patchouli','Amber'],
-   longevity:8,sillage:7,s:{winter:3,monsoon:2,summer:2,night:3,day:2},
-   pIf:'People remember your hug before your face.',pFor:'Dates, winters, anything close-range.'},
-  {id:'amberrose',name:'Amber Rose',hex:'#A8546A',soft:'#F8EDF0',fam:'Rose Â· Amber',weight:6,sweet:6,
-   line:'Damask rose with pink pepper and cashmere musk. Romantic, with an edge.',
-   top:['Bergamot','Galbanum','Pink Pepper'],mid:['Damask Rose','Angelica','Amber'],base:['White Musk','Cashmeran','Rose Bloom'],
-   longevity:8,sillage:7,s:{winter:3,monsoon:2,summer:2,night:3,day:3},
-   pIf:'Soft on the outside, absolutely not on the inside.',pFor:'Dates, weddings, evenings out.'},
-  {id:'angel',name:'Angel',hex:'#7A6BA8',soft:'#F0EEF7',fam:'Gourmand Â· Oriental',weight:8,sweet:8,
-   line:'Lavender and cocoa over vanilla caviar. Sweet, strange, unforgettable.',
-   top:['Vanilla Fusion','Lavender','Cocoa'],mid:['Ginger','Vanilla Caviar','Tonka Beans'],base:['Spice Mix','Sandalwood','Amber'],
-   longevity:9,sillage:9,s:{winter:3,monsoon:2,summer:1,night:3,day:2},
-   pIf:"You don't follow the trend, you predate it.",pFor:'Nights out, statement moments.'}
-];
-
-const PAIRS = [
-  {a:'smoky',b:'vanilla',n:'Rum & Cream',score:96,d:'Smoky Rum lays down tobacco and rum. Vanilla Kiss pours cream over it. The smoke stops being harsh and starts being dessert â€” and it lasts even longer than either bottle alone.'},
-  {a:'leather',b:'oud',n:"The Nawab's Jacket",score:94,d:'Leather underneath, agarwood on top. Two heavyweights that share an amber base, so instead of fighting, they stack. Wear this once a month and only after dark.'},
-  {a:'oud',b:'amberrose',n:'Oud Rose',score:95,d:'The oldest pairing in perfumery, and still the best. Nawab Oud gives the depth, Amber Rose gives the bloom. Rose sits on oud the way it was designed to.'},
-  {a:'tobacco',b:'pistachio',n:'Halwa',score:92,d:'Spiced tobacco under pistachio gelato. Sounds mad, smells like the best mithai shop in the city. Cold weather only.'},
-  {a:'vanilla',b:'candy',n:'Double Sweet',score:88,d:'For people who want to be smelled from the next room. Vanilla anchors, Lush Candy sparkles on top. Go easy â€” one spray each.'},
-  {a:'leather',b:'blu',n:'Weekday Armour',score:90,d:"Leather is too heavy for a Monday alone. Ombre Blu's citrus opens it up and makes it office-safe, without losing the backbone."},
-  {a:'angel',b:'blu',n:'Cold Front',score:87,d:"Angel's cocoa-lavender is loud. Blu's bergamot cools it down and makes it wearable in daylight. An unexpected fix."},
-  {a:'tobacco',b:'vanilla',n:'The Cigar Lounge',score:93,d:'Cinnamon and pipe tobacco, softened with brown sugar and rum. If Royale Tobacco is too dry for you, this is the answer.'}
-];
-
-const STAGES = [
-  {t:'0 â€” 15 minutes',s:'The opening',k:'top',d:s=>`Sharp and bright. ${s.top.slice(0,2).join(' and ')} hit first${s.top[2]?', with a lift of '+s.top[2].toLowerCase():''}. This is what strangers notice from across a room.`},
-  {t:'15 min â€” 2 hours',s:'The heart',k:'mid',d:s=>`The opening burns off and the real scent arrives. ${s.mid.slice(0,2).join(' and ')} take over. This is the part people mean when they say "you smell good."`},
-  {t:'2 â€” 6 hours',s:'The base settles',k:'base',d:s=>`It stops projecting and starts belonging to you. ${s.base.slice(0,2).join(' and ')} sit close to the skin, warm and quiet.`},
-  {t:'6 â€” 10 hours',s:'Skin scent',k:'base',d:s=>`Barely there, but there. ${s.base[s.base.length-1]} is the last thing standing â€” you'll find it on your collar the next morning.`}
-];
-
-const SETS = [
-  {sz:'100',n:'The Trio',ids:['smoky','leather','oud'],p:4499,d:'Smoky Rum, Classic Leather, Nawab Oud. Our three loudest personalities, boxed.'},
-  {sz:'100',n:'The Gourmand',ids:['pistachio','candy','vanilla'],p:4499,d:'Pistachio Pop, Lush Candy, Vanilla Kiss. Sweet enough to be a problem.'},
-  {sz:'100',n:'Day & Night',ids:['blu','amberrose'],p:3399,d:'Ombre Blu for the office. Amber Rose for after. Two bottles, one whole day.'},
-  {sz:'25',n:'The Discovery Five',ids:['smoky','leather','oud','blu','vanilla'],p:2799,d:'Five scents, five weeks. Find your signature, then buy it in 100ml.'},
-  {sz:'25',n:'The Layering Kit',ids:['oud','amberrose','vanilla'],p:1799,d:'Three bottles chosen to stack. Oud Rose, Rum & Cream, and everything between.'},
-  {sz:'25',n:'The Sweet Three',ids:['pistachio','candy','angel'],p:1799,d:'Pistachio Pop, Lush Candy, Angel. The gourmand starter pack.'}
-];
-
-const CREDS = [
-  ['IFRA compliant','Every formula filed and within limits.','<svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>'],
-  ['Dermatologically tested','Patch-tested. Safe on skin.','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 13a4 4 0 0 0 8 0"/><circle cx="9.5" cy="10" r=".6" fill="currentColor"/><circle cx="14.5" cy="10" r=".6" fill="currentColor"/></svg>'],
-  ['Cruelty free','Never tested on animals.','<svg viewBox="0 0 24 24"><ellipse cx="8" cy="7" rx="2" ry="3"/><ellipse cx="16" cy="7" rx="2" ry="3"/><ellipse cx="5" cy="13" rx="2" ry="2.5"/><ellipse cx="19" cy="13" rx="2" ry="2.5"/><path d="M12 12c3 0 5 2.6 5 5a3 3 0 0 1-4 2.8 4 4 0 0 0-2 0A3 3 0 0 1 7 17c0-2.4 2-5 5-5z"/></svg>'],
-  ['Paraben & phthalate free','No shortcuts in the base.','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M6 18L18 6"/></svg>'],
-  ['Made in India','Blended and bottled in our own unit.','<svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg>'],
-  ['GST invoice','On every order. Batch code on every bottle.','<svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>']
-];
-
-/* â”€â”€ STATE â”€â”€ */
-let size='100', cur=SCENTS[0], qty=2, combo=['smoky','leather'], addons={}, setSize='100', layA='smoky', layB='vanilla';
-const $=id=>document.getElementById(id);
-const S=id=>SCENTS.find(x=>x.id===id);
-const inr=n=>'â‚¹'+Math.round(n).toLocaleString('en-IN');
-const cfg=()=>SIZES[size];
-
-/* keep the scent list the same length as the quantity */
-function fitCombo(){
-  while(combo.length<qty) combo.push(bestPartner(combo[combo.length-1]||cur.id).id);
-  combo=combo.slice(0,qty);
-  combo[0]=cur.id;
-}
-function setQty(n, openBulk){
-  qty=Math.max(1,Math.min(MAXQ,n));
-  fitCombo();
-  if(openBulk) $('bulk').classList.add('open');
-  renderTiers(); renderBulk(); renderPicker(); calc();
-}
-
-/* â”€â”€ CREDENTIALS â”€â”€ */
-$('creds').innerHTML = CREDS.map(([t,s,g])=>`<div class="cred">${g}<div class="ct">${t}</div><div class="cs">${s}</div></div>`).join('');
-
-/* â”€â”€ INGREDIENTS â”€â”€ */
-function noteCard(name, layer){
-  const f = FAM[NOTE_FAM[name] || 'wood'];
-  const img = NOTE_IMAGES[name];
-  const inner = img
-    ? `<img src="${img}" alt="${name}" loading="lazy"/>`
-    : f.g;
-  return `<div class="ing">
-    <div class="ing-img" style="background:${f.bg}">
-      <span class="ing-layer">${layer}</span>
-      ${inner}
-    </div>
-    <div class="ing-b">
-      <div class="ing-n">${name}</div>
-      <div class="ing-d">${f.d}</div>
-      <div class="ing-src">${img?'':'Illustration â€” swap for photo'}</div>
-    </div>
-  </div>`;
-}
-function renderIngredients(){
-  $('ingH').textContent = `What ${cur.name} is actually made of`;
-  const all = [...cur.top.map(n=>[n,'Top']), ...cur.mid.map(n=>[n,'Heart']), ...cur.base.map(n=>[n,'Base'])];
-  $('ingGrid').innerHTML = all.map(([n,l])=>noteCard(n,l)).join('');
-}
-
-/* â”€â”€ SIZES â”€â”€ */
-function renderSizes(){
-  const perMl=k=>SIZES[k].unit/SIZES[k].ml;
-  const better=Math.round((1-perMl('100')/perMl('25'))*100);
-  $('sizes').innerHTML = Object.keys(SIZES).map(k=>{
-    const c=SIZES[k], win=k==='100';
-    return `<button class="size ${k===size?'on':''}" data-sz="${k}">
-      ${win?`<span class="badge">Save ${better}% per ml</span>`:''}
-      <div class="sz-t">${c.label}</div><div class="sz-r">${c.role}</div>
-      <div class="sz-p">${inr(c.unit)}</div>
-      <div class="sz-ml ${win?'win':''}">${perMl(k).toFixed(2)} per ml</div>
-    </button>`;
-  }).join('');
-  $('sizeHint').innerHTML = size==='100'
-    ? `Not sure yet? <b data-go="25">Start with 25ml</b> â€” â‚¹699, and we credit it back when you upgrade.`
-    : `25ml is the layering size. Own three, and you can build blends nobody else is wearing. <b data-go="lab">See the layering lab â†“</b>`;
-}
-$('sizes').onclick=e=>{const b=e.target.closest('.size'); if(b) setSizeTo(b.dataset.sz);};
-$('sizeHint').onclick=e=>{
-  const b=e.target.closest('b'); if(!b) return;
-  if(b.dataset.go==='25') setSizeTo('25'); else $('layering').scrollIntoView({behavior:'smooth'});
-};
-function setSizeTo(k){
-  size=k; fitCombo();
-  $('scaleNote').textContent=SIZES[k].label+' â€” shown to scale';
-  setSize=k;
-  renderSizes(); renderTiers(); renderBulk(); renderPicker(); renderAddons(); calc(); renderCombos(); paintSeg();
-}
-
-/* â”€â”€ SCENTS â”€â”€ */
-$('scents').innerHTML = SCENTS.map(s=>`<button class="chip ${s.id===cur.id?'on':''}" data-s="${s.id}"><span class="dot" style="background:${s.hex}"></span>${s.name}</button>`).join('');
-$('scents').onclick=e=>{
-  const b=e.target.closest('.chip'); if(!b) return;
-  cur=S(b.dataset.s); combo[0]=cur.id;
-  paintScent(); calc(); drydown(); renderIngredients();
-};
-
-/* â”€â”€ QUICK TIERS â”€â”€ */
-function renderTiers(){
-  $('tiers').innerHTML = cfg().quick.map(t=>{
-    const p=priceFor(size,t.q), mrp=t.q*cfg().unit;
-    return `<button class="tier ${t.q===qty?'on':''}" data-q="${t.q}">
-      ${t.badge?`<span class="badge ${t.good?'g':''}">${t.badge}</span>`:''}
-      <span class="radio"></span>
-      <span><span class="tier-name">${t.name} Â· ${cfg().label}</span><span class="tier-sub">${t.sub}${t.q>1?` Â· ${inr(p/t.q)} each Â· ${offFor(size,t.q)}% off`:''}</span></span>
-      <span class="tier-price">${t.q>1?`<div class="strike">${inr(mrp)}</div>`:''}<div class="p">${inr(p)}</div></span>
-    </button>`;
-  }).join('');
-}
-$('tiers').onclick=e=>{
-  const b=e.target.closest('.tier'); if(!b) return;
-  $('bulk').classList.remove('open');
-  setQty(+b.dataset.q);
-};
-
-/* â”€â”€ BULK LADDER â”€â”€ */
-function renderBulk(){
-  $('ladder').innerHTML = Array.from({length:MAXQ},(_,i)=>{
-    const q=i+1, off=offFor(size,q);
-    return `<button class="rung ${q===qty?'on':''} ${q<=qty?'reached':''}" data-q="${q}" title="${q} Ã— ${cfg().label} â€” ${inr(priceFor(size,q))}">
-      <span class="rq">${q}</span><span class="ro">${off?off+'%':'â€”'}</span>
-    </button>`;
-  }).join('');
-  $('ladder').querySelectorAll('.rung').forEach(r=>{ r.onclick=()=>setQty(+r.dataset.q, true); });
-
-  const p=priceFor(size,qty);
-  $('qVal').textContent=qty;
-  $('qLab').textContent=`${qty===1?'bottle':'bottles'} Â· ${cfg().label}`;
-  $('qPrice').textContent=inr(p);
-  $('qEach').textContent=`${inr(p/qty)} each Â· ${offFor(size,qty)}% off`;
-
-  if(qty<MAXQ){
-    const now=priceFor(size,qty), next=priceFor(size,qty+1);
-    const extra=next-now;                         // what the next bottle costs you
-    const newOff=offFor(size,qty+1);
-    $('nudge').innerHTML =
-      `<span>One more bottle costs only <b>${inr(extra)}</b> â€” takes you to ${newOff}% off, ${inr(next/(qty+1))} each.</span>
-       <button id="nudgeBtn">Add one â†’</button>`;
-    $('nudgeBtn').onclick=()=>setQty(qty+1, true);
-  } else {
-    $('nudge').innerHTML = `<span>Maximum box. <b>${offFor(size,MAXQ)}% off</b> â€” ${inr(priceFor(size,MAXQ)/MAXQ)} a bottle. Nothing goes lower than this.</span>`;
-  }
-}
-$('bulkH').onclick=()=>$('bulk').classList.toggle('open');
-$('qMinus').onclick=()=>setQty(qty-1, true);
-$('qPlus').onclick=()=>setQty(qty+1, true);
-
-/* â”€â”€ SCENT PICKER â”€â”€ */
-function renderPicker(){
-  if(qty===1){$('picker').style.display='none'; return;}
-  $('picker').style.display='block';
-  const tip = qty>=3
-    ? `<div class="pick-tip">Tip â€” pair one heavy scent (Oud, Leather, Tobacco) with one sweet one (Vanilla, Pistachio, Candy). That's a layering pair. Duplicates are fine too, if you want a backup of the one you love.</div>`
-    : '';
-  const rows = combo.map((id,i)=>
-    `<div class="pick-row"><span class="pick-n">No. ${i+1}</span><select data-i="${i}">${SCENTS.map(s=>`<option value="${s.id}" ${s.id===id?'selected':''}>${s.name}</option>`).join('')}</select></div>`
-  ).join('');
-  $('picker').innerHTML = (qty>3 ? `<div class="grid2">${rows}</div>` : rows) + tip;
-  $('picker').querySelectorAll('select').forEach(sel=>{ sel.onchange=e=>{combo[+e.target.dataset.i]=e.target.value; calc();}; });
-}
-
-/* â”€â”€ ADD-ONS â”€â”€ */
-function renderAddons(){
-  const rows = size==='100'
-    ? [['travel',699,'Travel spray, 25ml','Same scent. Lives in your bag.'],
-       ['disc',999,'Discovery set â€” 5 Ã— 2ml','â‚¹999 back as credit on your next 100ml.'],
-       ['gift',0,'Gift box + handwritten card','Free. Add your message at checkout.']]
-    : [['travel',1300,'Upgrade to 100ml','Pay the difference. â‚¹8 cheaper per ml.'],
-       ['disc',249,'Layering card + atomiser','A printed guide to what stacks with what.'],
-       ['gift',0,'Gift box + handwritten card','Free. Add your message at checkout.']];
-  $('addons').innerHTML = rows.map(([k,p,t,s])=>
-    `<button class="addon ${addons[k]?'on':''}" data-a="${k}" data-p="${p}"><span class="box"></span><span class="ad-t">${t}<span class="ad-s">${s}</span></span><span class="ad-p">${p?'+'+inr(p):'Free'}</span></button>`
-  ).join('');
-  $('addons').querySelectorAll('.addon').forEach(a=>{
-    a.onclick=()=>{const k=a.dataset.a; addons[k]=!addons[k]; a.classList.toggle('on',addons[k]); calc();};
-  });
-}
-function addonTotal(){let t=0; $('addons').querySelectorAll('.addon').forEach(a=>{if(addons[a.dataset.a]) t+=+a.dataset.p;}); return t;}
-
-/* â”€â”€ CALC â”€â”€ */
-function calc(){
-  const base=priceFor(size,qty), sub=base+addonTotal();
-  const mrp=qty*cfg().unit + Math.round(addonTotal()*1.35);
-  $('totalAmt').textContent=inr(sub);
-  $('wasAmt').textContent=inr(mrp);
-  $('wasAmt').style.display = mrp>sub?'inline':'none';
-  const saved=mrp-sub;
-  $('savings').style.display=saved>0?'flex':'none';
-  $('savingsAmt').innerHTML = `${inr(saved)} <span style="font-family:var(--font-body-family);font-size:10px;font-weight:400">Â· ${offFor(size,qty)}% off</span>`;
-  const ml=qty*cfg().ml + (addons.travel&&size==='100'?25:0);
-  $('ctaNote').innerHTML = `${qty} Ã— ${cfg().label} Â· ${ml}ml total Â· ${inr(sub/ml)} per ml Â· GST included`;
-  const pct=Math.min(100, sub/FREE_SHIP_MIN*100);
-  $('shipFill').style.width=pct+'%';
-  if(sub>=FREE_SHIP_MIN){$('shipTxt').textContent='Free shipping unlocked'; $('shipTxt').classList.add('done');}
-  else {$('shipTxt').textContent=`Add ${inr(FREE_SHIP_MIN-sub)} more for free shipping`; $('shipTxt').classList.remove('done');}
-  $('snPrice').textContent=`${inr(sub)} Â· ${qty} Ã— ${cfg().label}`;
-  $('snName').textContent = qty>1 ? `${qty} bottles` : cur.name;
-}
-
-/* â”€â”€ PAINT â”€â”€ */
-function paintScent(){
-  document.documentElement.style.setProperty('--accent',cur.hex);
-  document.documentElement.style.setProperty('--accent-soft',cur.soft);
-  $('heroFrame').style.background=cur.soft;
-  // $('liquid').style.background=cur.hex;
-  // $('swLiquid').style.background=cur.hex;
-  // $('labelName').textContent=cur.name;
-  // $('pName').textContent=cur.name;
-  // $('pLine').textContent=cur.line;
-  $('famLabel').textContent=cur.fam;
-  $('pIf').textContent=cur.pIf;
-  $('pFor').textContent=cur.pFor;
-  const best=bestPartner(cur.id);
-  $('pLike').textContent=`${S(best.id).name} â€” ${best.score}% match.${best.n?' We call it "'+best.n+'".':''}`;
-  document.querySelectorAll('#scents .chip').forEach(c=>c.classList.toggle('on',c.dataset.s===cur.id));
-  $('pyramid').innerHTML=[['Top notes',cur.top,'First 15 min'],['Heart notes',cur.mid,'Hours 1 to 3'],['Base notes',cur.base,'Hours 3 to 10']]
-    .map(([l,n,w])=>`<div class="pyr-row"><div class="pyr-lab">${l}<br/><span style="color:var(--line-2)">${w}</span></div><div class="pyr-notes">${n.join(' Â· ')}</div></div>`).join('');
-  $('mLong').style.width=cur.longevity*10+'%';
-  $('mSil').style.width=cur.sillage*10+'%';
-  $('mLongV').textContent=cur.longevity>=9?'8â€“10 hrs':cur.longevity>=8?'7â€“9 hrs':'5â€“7 hrs';
-  $('mSilV').textContent=cur.sillage>=8?'Strong':cur.sillage>=7?'Moderate':'Close to skin';
-  document.querySelectorAll('.pips').forEach(p=>{
-    const v=cur.s[p.dataset.s];
-    p.innerHTML=[1,2,3].map(i=>`<span class="pip ${i<=v?'on':''}"></span>`).join('');
-  });
-}
-
-/* â”€â”€ DRYDOWN â”€â”€ */
-function drydown(){
-  const v=+$('ddSlider').value;
-  const st=STAGES[v<15?0:v<35?1:v<70?2:3];
-  $('ddTime').textContent=st.t; $('ddStage').textContent=st.s; $('ddDesc').textContent=st.d(cur);
-  const all=[...cur.top.map(n=>[n,'top']),...cur.mid.map(n=>[n,'mid']),...cur.base.map(n=>[n,'base'])];
-  $('ddNotes').innerHTML=all.map(([n,k])=>`<span class="dd-note ${k===st.k?'lit':''}">${n}</span>`).join('');
-  $('cLine').setAttribute('x1',v*5); $('cLine').setAttribute('x2',v*5);
-  const L=cur.longevity;
-  const mk=(peak,decay,h)=>{let d='';for(let x=0;x<=500;x+=10){const t=x/500,rise=1-Math.exp(-t/(peak+.01)),fall=Math.exp(-Math.max(0,t-peak)/decay);d+=(x===0?'M':'L')+x+' '+(220-(rise*fall)*h*(L/10)).toFixed(1)+' ';}return d;};
-  $('cTop').setAttribute('d',mk(.05,.12,175));
-  $('cMid').setAttribute('d',mk(.22,.32,165));
-  $('cBase').setAttribute('d',mk(.45,1.4,150));
-}
-$('ddSlider').oninput=drydown;
-
-/* â”€â”€ LAYERING â”€â”€ */
-function shared(a,b){return S(a).base.filter(n=>S(b).base.includes(n)).length;}
-function pairOf(a,b){return PAIRS.find(p=>p.a===a&&p.b===b);}
-function scoreOf(a,b){
-  if(a===b) return 0;
-  const p=pairOf(a,b); if(p) return p.score;
-  const A=S(a),B=S(b); let sc=52;
-  sc+=Math.min(24,Math.abs(A.weight-B.weight)*3.2);
-  sc+=shared(a,b)*9;
-  sc+= A.weight>=B.weight ? 8 : -6;
-  if(A.sweet>7&&B.sweet>7) sc-=8;
-  return Math.max(38,Math.min(98,Math.round(sc)));
-}
-function bestPartner(a){
-  let best=null;
-  SCENTS.forEach(s=>{ if(s.id===a) return;
-    const sc=scoreOf(a,s.id);
-    if(!best||sc>best.score) best={id:s.id,score:sc,n:(pairOf(a,s.id)||{}).n};
-  });
-  return best;
-}
-function autoDesc(a,b){
-  const A=S(a),B=S(b),sh=shared(a,b);
-  return `${A.name} goes down first â€” ${A.base[0].toLowerCase()} and ${A.base[1].toLowerCase()} do the anchoring. ${B.name} lands on top with ${B.top[0].toLowerCase()}. `
-    + (sh?`They share ${A.base.filter(n=>B.base.includes(n)).join(' and ').toLowerCase()} in the base, so they bond instead of clashing. `:`Different bases, so this reads as two scents in conversation rather than one blend. `)
-    + (A.weight>=B.weight?`The weight order is right â€” heavy under light.`:`Heads up: ${B.name} is heavier. Try swapping the order.`);
-}
-function renderLab(){
-  const mk=(w,sel)=>SCENTS.map(s=>`<button class="lab-chip ${s.id===sel?'on':''}" data-w="${w}" data-s="${s.id}"><span class="dot" style="background:${s.hex}"></span>${s.name}</button>`).join('');
-  $('labA').innerHTML=mk('a',layA); $('labB').innerHTML=mk('b',layB);
-  paintMix();
-}
-['labA','labB'].forEach(id=>{
-  $(id).onclick=e=>{
-    const b=e.target.closest('.lab-chip'); if(!b) return;
-    if(b.dataset.w==='a') layA=b.dataset.s; else layB=b.dataset.s;
-    if(layA===layB) toast('Pick two different scents to layer');
-    renderLab();
-  };
-});
-function paintMix(){
-  const p=pairOf(layA,layB), sc=scoreOf(layA,layB), A=S(layA), B=S(layB);
-  $('mixName').textContent = p?p.n:`${A.name} Ã— ${B.name}`;
-  $('mixTag').textContent = p?'A blend we know works':'Your blend';
-  $('mixNum').textContent = sc+'% match';
-  $('mixFill').style.width = sc+'%';
-  const col = sc>=85?'#5DCAA5':sc>=70?'#EF9F27':'#F09595';
-  $('mixFill').style.background=col; $('mixNum').style.color=col;
-  $('mixDesc').textContent = p?p.d:autoDesc(layA,layB);
-  $('mixHow').innerHTML=`<b>1.</b> Two sprays of ${A.name} on the chest and wrists.<br/><b>2.</b> Wait 30 seconds â€” let it dry down.<br/><b>3.</b> One spray of ${B.name} over the top. One, not two.`;
-  $('mixBuy').textContent=`Add both â€” 25ml Â· ${inr(priceFor('25',2))}`;
-  $('mixBuyBig').textContent=`Add both â€” 100ml Â· ${inr(priceFor('100',2))}`;
-}
-$('mixBuy').onclick=()=>loadPair('25');
-$('mixBuyBig').onclick=()=>loadPair('100');
-function loadPair(sz){
-  if(layA===layB){toast('Pick two different scents'); return;}
-  size=sz; cur=S(layA); qty=2; combo=[layA,layB];
-  $('bottle').className='bottle '+(sz==='100'?'big':'small');
-  $('scaleNote').textContent=SIZES[sz].label+' â€” shown to scale';
-  $('labelSize').textContent='Extrait Â· '+SIZES[sz].label;
-  setSize=sz;
-  renderSizes(); renderTiers(); renderBulk(); renderPicker(); renderAddons(); paintScent(); calc(); drydown(); renderIngredients(); renderCombos(); paintSeg();
-  window.scrollTo({top:0,behavior:'smooth'});
-  toast(`${S(layA).name} + ${S(layB).name} â€” ${SIZES[sz].label}`);
-}
-function renderPresets(){
-  $('presets').innerHTML = PAIRS.slice(0,4).map(p=>{
-    const A=S(p.a),B=S(p.b);
-    return `<button class="preset" data-a="${p.a}" data-b="${p.b}">
-      <span class="pdots"><i style="background:${A.hex}"></i><i style="background:${B.hex}"></i></span>
-      <div class="pn">${p.n}</div>
-      <div class="pp">${A.name} + ${B.name}<br/>${p.score}% match Â· ${inr(SIZES['25'].unit*2-199)} in 25ml</div>
-    </button>`;
-  }).join('');
-  $('presets').querySelectorAll('.preset').forEach(b=>{
-    b.onclick=()=>{layA=b.dataset.a; layB=b.dataset.b; renderLab(); $('layering').scrollIntoView({behavior:'smooth'});};
-  });
-}
-
-/* â”€â”€ SETS â”€â”€ */
-$('setSeg').onclick=e=>{const b=e.target.closest('button'); if(!b) return; setSize=b.dataset.sz; paintSeg(); renderCombos();};
-function paintSeg(){$('setSeg').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.sz===setSize));}
-function renderCombos(){
-  const list=SETS.filter(s=>s.sz===setSize), c=SIZES[setSize];
-  $('combos').innerHTML=list.map(s=>{
-    const mrp=s.ids.length*c.unit, ml=s.ids.length*c.ml;
-    const bots=s.ids.map(id=>{const sc=S(id); return `<span class="mini ${setSize==='100'?'big':'small'}" style="background:${sc.soft};border:1px solid ${sc.hex}33"><i style="background:${sc.hex}"></i></span>`;}).join('');
-    return `<div class="combo"><div class="combo-top">${bots}</div><div class="combo-body">
-      <div class="combo-n">${s.n}</div><div class="combo-d">${s.d}</div>
-      <div class="combo-p"><span class="a">${inr(s.p)}</span><span class="b">${inr(mrp)}</span><span class="c">Save ${inr(mrp-s.p)}</span></div>
-      <div class="combo-ml">${s.ids.length} Ã— ${c.label} Â· ${ml}ml Â· ${inr(s.p/ml)} per ml</div>
-      <button class="combo-btn" data-set="${s.n}">Add the set</button>
-      <div class="combo-perk">Free shipping Â· gift box included</div>
-    </div></div>`;
-  }).join('');
-  $('combos').querySelectorAll('.combo-btn').forEach(b=>{
-    b.onclick=()=>{
-      const s=SETS.find(x=>x.n===b.dataset.set);
-      size=s.sz; qty=s.ids.length; combo=[...s.ids]; cur=S(combo[0]);
-      $('bottle').className='bottle '+(size==='100'?'big':'small');
-      $('scaleNote').textContent=SIZES[size].label+' â€” shown to scale';
-      $('labelSize').textContent='Extrait Â· '+SIZES[size].label;
-      renderSizes(); renderTiers(); renderBulk(); renderPicker(); renderAddons(); paintScent(); calc(); drydown(); renderIngredients();
-      window.scrollTo({top:0,behavior:'smooth'});
-      toast(`${s.n} added â€” ${SIZES[size].label}`);
-    };
-  });
-}
-
-/* â”€â”€ PINCODE â”€â”€ */
-$('pinBtn').onclick=()=>{
-  const p=$('pinIn').value.trim();
-  if(!/^\d{6}$/.test(p)){toast('Enter a valid 6-digit pincode'); return;}
-  const days=2+(+p.slice(-1)%3);
-  const d=new Date(Date.now()+days*864e5);
-  const fmt=d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
-  $('pinOut').className='pin-out show';
-  $('pinOut').innerHTML=
-    `<div class="pin-line"><span class="ic">âœ“</span><span>Arrives by <b style="font-weight:500">${fmt}</b> â€” tracked, ships within 24 hours</span></div>
-     <div class="pin-line"><span class="ic">âœ“</span><span>Free shipping on this order over â‚¹1,499</span></div>`;
-};
-$('pinIn').onkeydown=e=>{if(e.key==='Enter') $('pinBtn').click();};
-
-/* â”€â”€ FAQ â”€â”€ */
-const FAQ=[
-  ['Is the 25ml a weaker version?','No. Identical Extrait concentration, 20â€“30% oil. Same juice, smaller bottle. The only difference is how long it lasts you, not how long it lasts on you.'],
-  ['Which size should I buy first?','If you already know you love the scent â€” 100ml, it works out â‚¹8 cheaper per ml. If you\'re guessing â€” 25ml, and we credit it back when you upgrade.'],
-  ['What is layering, actually?','Wearing two perfumes at once. Spray the heavier one first, let it settle thirty seconds, then one spray of the lighter one on top. You get a scent nobody else in the room is wearing. The layering lab tells you which pairs work.'],
-  ['How do I know it\'s authentic?','Every bottle carries a batch code on the base, traceable to the day it was filled in our unit. We manufacture our own fragrances â€” there is no reseller in the chain.'],
-  ['Is it safe for sensitive skin?','All formulas are IFRA compliant and dermatologically tested. Spray on clothing rather than skin if you\'re sensitive, and patch-test first.'],
-  ['Can I mix scents inside a combo?','Yes. Every multi-bottle tier lets you pick any scents from the collection. The price doesn\'t change.']
-];
-$('faq').innerHTML=FAQ.map(([q,a])=>`<div class="q"><div class="q-t"><span>${q}</span><span class="pm">+</span></div><div class="q-a">${a}</div></div>`).join('');
-$('faq').onclick=e=>{const q=e.target.closest('.q'); if(q) q.classList.toggle('open');};
-
-$('thumbs').onclick=e=>{
-  const t=e.target.closest('.thumb'); if(!t) return;
-  document.querySelectorAll('.thumb').forEach(x=>x.classList.remove('on'));
-  t.classList.add('on'); $('galTag').textContent=t.dataset.t;
-};
-
-let tt;
-function toast(m){$('toast').textContent=m; $('toast').classList.add('up'); clearTimeout(tt); tt=setTimeout(()=>$('toast').classList.remove('up'),3200);}
-function lineItem(){
-  const counts={};
-  combo.forEach(id=>{counts[id]=(counts[id]||0)+1;});
-  return Object.entries(counts).map(([id,n])=>(n>1?n+'× ':'')+S(id).name).join(', ');
-}
-/* Shopify: replace these with /cart/add.js and /cart/:variantId:qty?checkout */
-function addToCart() {
-  const btn = $('ctaBuy');
-  const oldText = btn.innerText;
-  btn.innerText = 'Adding...';
-  
-  // 1. Get the current selected product name and convert to handle
-  const currentScent = "{{ product.title | escape }}";
-  const handle = "{{ product.handle }}";
-  const selectedSize = cfg().label; // e.g. "100ml" or "25ml"
-  const quantity = qty;
-  
-  // 2. Fetch the product JSON from Shopify to get the variant ID
-  fetch(`/products/${handle}.js`)
-    .then(res => {
-      if (!res.ok) throw new Error('Product not found on store');
-      return res.json();
-    })
-    .then(productData => {
-      // Find variant matching the size
-      const variant = productData.variants.find(v => v.title.toLowerCase().includes(selectedSize.toLowerCase()) || v.option1.toLowerCase().includes(selectedSize.toLowerCase()));
-      if (!variant) throw new Error(`Size ${selectedSize} not found for this product`);
-      
-      // 3. Add to cart
-      return fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: variant.id, quantity: quantity })
-      });
-    })
-    .then(res => res.json())
-    .then(cartData => {
-      btn.innerText = 'Added!';
-      toast(`✓ Added to cart — ${currentScent} ${selectedSize}`);
-      // Refresh cart drawer if exists
-      document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cartData } }));
-      if (window.theme && window.theme.CartDrawer) window.theme.CartDrawer.open();
-      setTimeout(() => btn.innerText = oldText, 2000);
-    })
-    .catch(err => {
-      console.error(err);
-      btn.innerText = 'Error';
-      toast(`Could not add to cart: ${err.message}`);
-      setTimeout(() => btn.innerText = oldText, 3000);
-    });
-}
-function buyNow() {
-  const btn = $('ctaBuy');
-  const oldText = btn.innerText;
-  btn.innerText = 'Redirecting...';
-  
-  const currentScent = "{{ product.title | escape }}";
-  const handle = "{{ product.handle }}";
-  const selectedSize = cfg().label;
-  const quantity = qty;
-  
-  fetch(`/products/${handle}.js`)
-    .then(res => res.json())
-    .then(productData => {
-      const variant = productData.variants.find(v => v.title.toLowerCase().includes(selectedSize.toLowerCase()) || v.option1.toLowerCase().includes(selectedSize.toLowerCase()));
-      if (!variant) throw new Error(`Size ${selectedSize} not found`);
-      
-      return fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: variant.id, quantity: quantity })
-      });
-    })
-    .then(() => {
-      window.location.href = '/checkout';
-    })
-    .catch(err => {
-      console.error(err);
-      toast(`Error: ${err.message}`);
-      btn.innerText = oldText;
-    });
-}
-$('cta').onclick=addToCart; $('stickyCta').onclick=addToCart;
-$('ctaBuy').onclick=buyNow;  $('stickyBuy').onclick=buyNow;
-new IntersectionObserver(([e])=>{$('sticky').classList.toggle('up',!e.isIntersecting);},{threshold:0}).observe($('cta'));
-
-/* boot */
-fitCombo();
-renderSizes(); renderTiers(); renderBulk(); renderPicker(); renderAddons(); paintScent(); calc(); drydown(); renderIngredients(); renderLab(); renderPresets(); renderCombos(); paintSeg();
-</script>
-
-
-
 {% schema %}
 {
-  "name": "Custom Product Page",
+  "name": "t:sections.main-product.name",
   "tag": "section",
   "class": "section",
   "blocks": [
@@ -2986,11 +2371,6 @@ renderSizes(); renderTiers(); renderBulk(); renderPicker(); renderAddons(); pain
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
-    }
-  ],
-  "presets": [
-    {
-      "name": "Custom Product Page"
     }
   ]
 }
