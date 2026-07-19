@@ -782,12 +782,18 @@
     <div class="ingredients-scroll-container" id="ingredients-scroll-container">
       {% for ingredient in product.metafields.custom.ingredients.value %}
       <div class="ingredients-item">
-        {% if ingredient.image != blank %}
-          <img loading="lazy" src="{{ ingredient.image | img_url: '150x' }}" width="75" height="75" alt="{{ ingredient.name | escape }}">
+        {%- assign ing_img = ingredient.image.value | default: ingredient.image -%}
+        {%- assign ing_name = ingredient.name.value | default: ingredient.name -%}
+        {% if ing_img != blank %}
+          {% if ing_img.src or ing_img.url or ing_img.media_type %}
+            <img loading="lazy" src="{{ ing_img | image_url: width: 150 }}" width="75" height="75" alt="{{ ing_name | escape }}">
+          {% else %}
+            <img loading="lazy" src="{{ ing_img }}" width="75" height="75" alt="{{ ing_name | escape }}">
+          {% endif %}
         {% else %}
           <div style="width:75px;height:75px;border-radius:10px;background:#eee;margin:0 auto;display:flex;align-items:center;justify-content:center;">🌿</div>
         {% endif %}
-        <p>{{ ingredient.name }}</p>
+        <p>{{ ing_name }}</p>
       </div>
       {% endfor %}
     </div>
