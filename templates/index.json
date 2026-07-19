@@ -93,38 +93,51 @@
     "watch_and_buy": {
       "type": "watch-and-buy",
       "blocks": {
+        "video_product_FXVTpf": {
+          "type": "video_product",
+          "settings": {
+            "video_url": "shopify://files/videos/Royale Tobacco sehafli.MOV",
+            "product": "royale-tobacco-perfume"
+          }
+        },
         "watchbuy_excel_0": {
           "type": "video_product",
           "settings": {
+            "video_url": "shopify://files/videos/Ombre Bliss - Symphony.mp4",
             "product": "nawab-oud-perfume"
           }
         },
         "watchbuy_excel_1": {
           "type": "video_product",
           "settings": {
+            "video_url": "shopify://files/videos/Ombre Bliss - Constellation.mp4",
             "product": "pistachio-pop-perfume"
           }
         },
         "watchbuy_excel_2": {
           "type": "video_product",
           "settings": {
+            "video_url": "shopify://files/videos/whatmore_1080p_7c0c8076-8b19-4b47-86eb-69846f7e3bac.mp4",
             "product": "lush-candy-perfume"
           }
         },
         "watchbuy_excel_3": {
           "type": "video_product",
           "settings": {
+            "video_url": "shopify://files/videos/whatmore_1080p_800e5041-b4a6-4066-a50a-1537512c7ae9.mp4",
             "product": "vanilla-kiss-perfume"
           }
         },
         "watchbuy_excel_4": {
           "type": "video_product",
           "settings": {
+            "video_url": "shopify://files/videos/whatmore_1080p_0dc004ea-9bb4-4119-8e5a-c376cc9ba9b4.mp4",
             "product": "smoky-rum"
           }
         }
       },
       "block_order": [
+        "video_product_FXVTpf",
         "watchbuy_excel_0",
         "watchbuy_excel_1",
         "watchbuy_excel_2",
