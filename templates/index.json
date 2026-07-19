@@ -12,6 +12,14 @@
     "custom_hero_1": {
       "type": "custom-hero",
       "blocks": {
+        "slide_VrDUMi": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/p-2.webp",
+            "image_mobile": "shopify://shop_images/m-2.webp",
+            "link": "shopify://collections"
+          }
+        },
         "slide_KLMGjc": {
           "type": "slide",
           "settings": {
@@ -22,6 +30,7 @@
         }
       },
       "block_order": [
+        "slide_VrDUMi",
         "slide_KLMGjc"
       ],
       "settings": {
