@@ -1,0 +1,215 @@
+<section class="availability-section" id="availability-{{ section.id }}">
+  <h2>NOW ALSO AVAILABLE</h2>
+  <p>Shop our premium products online with ease. Fast delivery & exclusive deals await!</p>
+
+  <div class="scroll-hint">
+    ← Swipe / Scroll →
+  </div>
+
+  <div class="availability-slider">
+
+    <a href="https://www.amazon.in/Marino-Collection-occasions-valentine-Boyfriend/dp/B0DTLGQC24" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0694/0478/6914/files/amazon-ombrebliss.svg?v=1782286302" alt="Amazon" loading="lazy">
+    </a>
+
+    <a href="https://www.flipkart.com/search?q=Ombre+bliss&marketplace=FLIPKART&as-show=on&pageUID=1740047749140" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0694/0478/6914/files/Flipkart-ombrebliss.svg?v=1782286302" alt="Flipkart" loading="lazy">
+    </a>
+
+    <a href="https://www.myntra.com/ombre-bliss?rawQuery=ombre%20bliss" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0694/0478/6914/files/myntra-ombrebliss.svg?v=1782286302" alt="Myntra" loading="lazy">
+    </a>
+
+    <a href="https://www.ajio.com/search/?text=ombre%20bliss" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0694/0478/6914/files/ajio-logo-brandlogos.net_vzrwvgzda.svg?v=1782286302" alt="AJIO" loading="lazy">
+    </a>
+
+    <a href="https://blinkit.com/prn/ombre-bliss-marino-eau-de-parfum-ozonic/prid/652393?srsltid=AfmBOoopwOqI1wJl4KuB7uW3x4N4HwAy9j5lh15UdBqlxw0OR53BpzZy" target="_blank" rel="noopener" class="marketplace-logo">
+      <img src="https://cdn.shopify.com/s/files/1/0694/0478/6914/files/blinkit-logo-app-icon-transparent-background-free-png_1.webp?v=1782286303" alt="Blinkit" loading="lazy">
+    </a>
+
+    <a href="https://www.firstcry.com/search?q=ombre%20bliss%20perfume&ref2=q_ombre%20bliss%20perfume" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0694/0478/6914/files/firstcry.webp?v=1782286302" alt="FirstCry" loading="lazy">
+    </a>
+
+    <a href="https://www.swiggy.com/stores/instamart/collection-listing?collectionId=106463&custom_back=true&brand=Ombre%20Bliss" target="_blank" rel="noopener" class="marketplace-logo">
+      <img src="https://cdn.shopify.com/s/files/1/0694/0478/6914/files/instamart_logo.jpg?v=1782286302" alt="Instamart" loading="lazy">
+    </a>
+
+  </div>
+</section>
+
+<style>
+  #availability-{{ section.id }}.availability-section {
+    text-align: center;
+    margin: 60px auto;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  #availability-{{ section.id }} h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  #availability-{{ section.id }} p {
+    margin-top: 10px;
+    color: #666;
+    font-size: 15px;
+  }
+
+  #availability-{{ section.id }} .scroll-hint {
+    margin-top: 22px;
+    font-size: 14px;
+    color: #888;
+    font-weight: 500;
+    animation: swipeAnim 1.5s infinite;
+  }
+
+  @keyframes swipeAnim {
+    0% { transform: translateX(0px); }
+    50% { transform: translateX(8px); }
+    100% { transform: translateX(0px); }
+  }
+
+  #availability-{{ section.id }} .availability-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    padding: 38px 30px 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: visible;
+    scrollbar-width: none;
+  }
+
+  #availability-{{ section.id }} .availability-slider::-webkit-scrollbar {
+    display: none;
+  }
+
+  #availability-{{ section.id }} .availability-slider a {
+    width: 130px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #availability-{{ section.id }} .availability-slider img {
+    max-width: 130px;
+    max-height: 55px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  #availability-{{ section.id }} .availability-slider .marketplace-logo {
+    width: 150px;
+    height: 60px;
+  }
+
+  #availability-{{ section.id }} .availability-slider .marketplace-logo img {
+    max-width: 150px;
+    max-height: 60px;
+  }
+
+  #availability-{{ section.id }} .availability-slider a:hover img {
+    transform: scale(1.06);
+  }
+
+  #availability-{{ section.id }} .availability-slider .instamart-logo {
+    min-width: 150px;
+    height: 50px;
+    text-decoration: none;
+  }
+  
+  #availability-{{ section.id }} .availability-slider .instamart-logo span {
+    font-size: 26px;
+    font-weight: 800;
+    color: #fc8019;
+    line-height: 1;
+    letter-spacing: -0.5px;
+  }
+
+  @media (max-width: 1024px) {
+    #availability-{{ section.id }} .availability-slider {
+      justify-content: flex-start;
+      overflow-x: auto;
+      gap: 40px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    #availability-{{ section.id }}.availability-section {
+      margin: 45px auto;
+    }
+
+    #availability-{{ section.id }} h2 {
+      font-size: 22px;
+    }
+
+    #availability-{{ section.id }} p {
+      font-size: 13px;
+      padding: 0 18px;
+    }
+
+    #availability-{{ section.id }} .scroll-hint {
+      font-size: 12px;
+      margin-top: 16px;
+    }
+
+    #availability-{{ section.id }} .availability-slider {
+      justify-content: flex-start;
+      overflow-x: auto;
+      gap: 28px;
+      padding: 28px 16px 12px;
+    }
+
+    #availability-{{ section.id }} .availability-slider a {
+      width: 105px;
+      height: 42px;
+    }
+
+    #availability-{{ section.id }} .availability-slider img {
+      max-width: 105px;
+      max-height: 42px;
+    }
+
+    #availability-{{ section.id }} .availability-slider .marketplace-logo {
+      width: 125px;
+      height: 50px;
+    }
+
+    #availability-{{ section.id }} .availability-slider .marketplace-logo img {
+      max-width: 125px;
+      max-height: 50px;
+    }
+    
+    #availability-{{ section.id }} .availability-slider .instamart-logo {
+      min-width: 120px;
+      height: 40px;
+    }
+    #availability-{{ section.id }} .availability-slider .instamart-logo span {
+      font-size: 21px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Marketplace Availability",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Marketplace Availability"
+    }
+  ]
+}
+{% endschema %}

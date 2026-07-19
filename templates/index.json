@@ -244,6 +244,10 @@
         "show_author": false,
         "blog": "news"
       }
+    },
+    "marketplace_availability_1": {
+      "type": "marketplace-availability",
+      "settings": {}
     }
   },
   "order": [
@@ -253,6 +257,7 @@
     "marquee_HeTqbn",
     "watch_and_buy",
     "custom_product_tabs_1",
-    "featured_blog_1"
+    "featured_blog_1",
+    "marketplace_availability_1"
   ]
 }
