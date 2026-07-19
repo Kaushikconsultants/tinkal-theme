@@ -92,7 +92,7 @@
         "image_zoom": "lightbox",
         "hide_variants": true,
         "enable_video_looping": false,
-        "auto_slide_speed": 4,
+        "auto_slide_speed": 2,
         "padding_top": 36,
         "padding_bottom": 12
       }
