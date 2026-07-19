@@ -1,0 +1,185 @@
+<style>
+  .custom-product-slider--{{ section.id }} {
+    padding: {{ section.settings.padding_y }}px 0;
+    background-color: {{ section.settings.bg_color }};
+  }
+  .custom-product-slider__title {
+    text-align: center;
+    font-size: {{ section.settings.title_size }}px;
+    color: {{ section.settings.title_color }};
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .custom-product-slider__track-wrapper {
+    width: 100%;
+    overflow: hidden;
+  }
+  .custom-product-slider__track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 15px;
+    padding: 10px 20px;
+    scrollbar-width: none; /* Firefox */
+  }
+  .custom-product-slider__track::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+  .custom-product-slider__item {
+    flex: 0 0 calc(25% - 15px); /* 4 items on desktop */
+    scroll-snap-align: start;
+    text-align: center;
+    text-decoration: none;
+  }
+  .custom-product-slider__image-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 100%; /* square ratio */
+    margin-bottom: 15px;
+  }
+  .custom-product-slider__image-wrapper img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  .custom-product-slider__item:hover img {
+    transform: scale(1.05);
+  }
+  .custom-product-slider__product-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+  }
+  .custom-product-slider__price {
+    font-size: 13px;
+    color: #666;
+  }
+  
+  @media screen and (max-width: 990px) {
+    .custom-product-slider__item {
+      flex: 0 0 calc(33.333% - 15px);
+    }
+  }
+  @media screen and (max-width: 750px) {
+    .custom-product-slider__item {
+      flex: 0 0 calc(50% - 15px);
+    }
+    .custom-product-slider__title {
+      font-size: {{ section.settings.title_size | divided_by: 1.5 }}px;
+    }
+  }
+  @media screen and (max-width: 480px) {
+    .custom-product-slider__item {
+      flex: 0 0 calc(70% - 15px);
+    }
+  }
+</style>
+
+<div class="custom-product-slider--{{ section.id }}">
+  {%- if section.settings.title != blank -%}
+    <div class="custom-product-slider__title">{{ section.settings.title }}</div>
+  {%- endif -%}
+
+  <div class="custom-product-slider__track-wrapper">
+    <div class="custom-product-slider__track">
+      {%- assign collection = collections[section.settings.collection] -%}
+      {%- if collection != blank -%}
+        {%- for product in collection.products limit: section.settings.limit -%}
+          <a href="{{ product.url }}" class="custom-product-slider__item">
+            <div class="custom-product-slider__image-wrapper">
+              {%- if product.featured_image != blank -%}
+                {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy' }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+            <div class="custom-product-slider__product-title">{{ product.title }}</div>
+            <div class="custom-product-slider__price">{{ product.price | money }}</div>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..6) -%}
+          <div class="custom-product-slider__item">
+            <div class="custom-product-slider__image-wrapper">
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+            <div class="custom-product-slider__product-title">Sample Product</div>
+            <div class="custom-product-slider__price">$19.99</div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Couture Collection",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "DISCOVER OMBRE BLISS - COUTURE COLLECTION"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 16,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading Size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Heading Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "label": "Maximum products to show",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top/Bottom Padding",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Couture Collection"
+    }
+  ]
+}
+{% endschema %}

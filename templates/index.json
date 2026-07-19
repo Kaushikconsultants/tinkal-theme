@@ -301,65 +301,105 @@
     },
     "custom_hero_1": {
       "type": "custom-hero",
-      "settings": {
-        "image_desktop": "shopify://shop_images/p-1_c0192e44-d835-430c-8431-15582fcd627a.webp",
-        "image_mobile": "shopify://shop_images/m-1_69ce1efc-a69f-4f24-be57-f67825d1052f.webp",
-        "link": "shopify://collections/premium-collection"
-      }
-    },
-    "custom_brand_slider_1": {
-      "type": "custom-brand-slider",
       "blocks": {
-        "brand_1": {
-          "type": "brand",
+        "slide_1": {
+          "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/1_2.webp"
+            "image_desktop": "shopify://shop_images/p-1_c0192e44-d835-430c-8431-15582fcd627a.webp",
+            "image_mobile": "shopify://shop_images/m-1_69ce1efc-a69f-4f24-be57-f67825d1052f.webp",
+            "link": "shopify://collections/premium-collection"
           }
         },
-        "brand_2": {
-          "type": "brand",
+        "slide_2": {
+          "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/2_85119307-24ea-40bc-9c28-185c7e367869.webp"
-          }
-        },
-        "brand_3": {
-          "type": "brand",
-          "settings": {
-            "image": "shopify://shop_images/3_2c02eb27-8f7e-46ff-a663-47a9ac4f630b.webp"
-          }
-        },
-        "brand_4": {
-          "type": "brand",
-          "settings": {
-            "image": "shopify://shop_images/4_427e3543-2559-4aac-af84-8af6905aa7ec.webp"
-          }
-        },
-        "brand_5": {
-          "type": "brand",
-          "settings": {
-            "image": "shopify://shop_images/4_e4f6e736-39c9-42c9-a0a2-b4fc9c0040ef.webp"
+            "image_desktop": "shopify://shop_images/p-2_8a2d5e71-464a-4316-bc06-3af48356f17e.webp",
+            "image_mobile": "shopify://shop_images/m-2_d96f9a56-42fc-4b5b-af86-090c2f2d9c0f.webp",
+            "link": "shopify://collections/premium-collection"
           }
         }
       },
       "block_order": [
-        "brand_1",
-        "brand_2",
-        "brand_3",
-        "brand_4",
-        "brand_5"
+        "slide_1",
+        "slide_2"
       ],
       "settings": {
-        "title": "Our Brands"
+        "speed": 5
+      }
+    },
+    "custom_product_slider_1": {
+      "type": "custom-product-slider",
+      "settings": {
+        "title": "DISCOVER OMBRE BLISS - COUTURE COLLECTION",
+        "title_size": 24,
+        "limit": 8
+      }
+    },
+    "custom_essence_grid_1": {
+      "type": "custom-essence-grid",
+      "blocks": {
+        "grid_1": {
+          "type": "grid_item",
+          "settings": {
+            "title": "CLEAN FRAGRANCE",
+            "text": "100% non-toxic, safe-for-skin premium formulations."
+          }
+        },
+        "grid_2": {
+          "type": "grid_item",
+          "settings": {
+            "title": "HONEST PERFUMERY",
+            "text": "Transparent ingredient sourcing and artisanal production."
+          }
+        },
+        "grid_3": {
+          "type": "grid_item",
+          "settings": {
+            "title": "TRANSPARENT PRICING",
+            "text": "Luxury scents accessible directly without retail markup."
+          }
+        },
+        "grid_4": {
+          "type": "grid_item",
+          "settings": {
+            "title": "ETHICAL SCENTS",
+            "text": "Cruelty-free, vegan, and environmentally conscious."
+          }
+        },
+        "grid_5": {
+          "type": "grid_item",
+          "settings": {
+            "title": "MINIMAL LUXURY",
+            "text": "Sustainable packaging paired with elegant aesthetics."
+          }
+        },
+        "grid_6": {
+          "type": "grid_item",
+          "settings": {
+            "title": "PURE INGREDIENTS",
+            "text": "Sourced from the finest natural essence fields globally."
+          }
+        }
+      },
+      "block_order": [
+        "grid_1",
+        "grid_2",
+        "grid_3",
+        "grid_4",
+        "grid_5",
+        "grid_6"
+      ],
+      "settings": {
+        "title": "The Essence of Our Brand",
+        "title_size": 32
       }
     }
   },
   "order": [
     "custom_hero_1",
-    "custom_brand_slider_1",
+    "custom_product_slider_1",
+    "custom_essence_grid_1",
     "marquee_HeTqbn",
-    "watch_and_buy",
-    "product_tab_block_mAVk8f",
-    "featured_blog_iKWhTj",
-    "custom_liquid_YEFt3e"
+    "watch_and_buy"
   ]
 }

@@ -4,6 +4,15 @@
     width: 100%;
     overflow: hidden;
   }
+  .custom-hero__track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+  }
+  .custom-hero__slide {
+    flex: 0 0 100%;
+    position: relative;
+  }
   .custom-hero__image-desktop {
     display: none;
     width: 100%;
@@ -25,55 +34,167 @@
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: 2;
   }
+  /* Optional Dots */
+  .custom-hero__dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 3;
+  }
+  .custom-hero__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    border: none;
+    padding: 0;
+  }
+  .custom-hero__dot.active {
+    background: #fff;
+  }
 </style>
 
-<div class="custom-hero--{{ section.id }}">
-  {%- if section.settings.link != blank -%}
-    <a href="{{ section.settings.link }}" class="custom-hero__link" aria-label="{{ section.settings.image_desktop.alt | escape | default: 'Hero image' }}"></a>
-  {%- endif -%}
+<div class="custom-hero--{{ section.id }}" data-speed="{{ section.settings.speed | times: 1000 }}">
+  <div class="custom-hero__track">
+    {%- for block in section.blocks -%}
+      <div class="custom-hero__slide" {{ block.shopify_attributes }}>
+        {%- if block.settings.link != blank -%}
+          <a href="{{ block.settings.link }}" class="custom-hero__link" aria-label="{{ block.settings.image_desktop.alt | escape | default: 'Hero image' }}"></a>
+        {%- endif -%}
 
-  {%- if section.settings.image_desktop != blank -%}
-    {{ section.settings.image_desktop | image_url: width: 3840 | image_tag: class: 'custom-hero__image-desktop', loading: 'eager', fetchpriority: 'high' }}
-  {%- else -%}
-    {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg custom-hero__image-desktop' }}
-  {%- endif -%}
+        {%- if block.settings.image_desktop != blank -%}
+          {{ block.settings.image_desktop | image_url: width: 3840 | image_tag: class: 'custom-hero__image-desktop', loading: 'eager', fetchpriority: 'high' }}
+        {%- else -%}
+          {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg custom-hero__image-desktop' }}
+        {%- endif -%}
 
-  {%- if section.settings.image_mobile != blank -%}
-    {{ section.settings.image_mobile | image_url: width: 1500 | image_tag: class: 'custom-hero__image-mobile', loading: 'eager', fetchpriority: 'high' }}
-  {%- else -%}
-    {%- if section.settings.image_desktop != blank -%}
-      {{ section.settings.image_desktop | image_url: width: 1500 | image_tag: class: 'custom-hero__image-mobile', loading: 'eager', fetchpriority: 'high' }}
-    {%- else -%}
-      {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg custom-hero__image-mobile' }}
-    {%- endif -%}
+        {%- if block.settings.image_mobile != blank -%}
+          {{ block.settings.image_mobile | image_url: width: 1500 | image_tag: class: 'custom-hero__image-mobile', loading: 'eager', fetchpriority: 'high' }}
+        {%- else -%}
+          {%- if block.settings.image_desktop != blank -%}
+            {{ block.settings.image_desktop | image_url: width: 1500 | image_tag: class: 'custom-hero__image-mobile', loading: 'eager', fetchpriority: 'high' }}
+          {%- else -%}
+            {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg custom-hero__image-mobile' }}
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if section.blocks.size > 1 -%}
+    <div class="custom-hero__dots">
+      {%- for block in section.blocks -%}
+        <button class="custom-hero__dot {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="Go to slide {{ forloop.index }}"></button>
+      {%- endfor -%}
+    </div>
   {%- endif -%}
 </div>
 
+{%- if section.blocks.size > 1 -%}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('.custom-hero--{{ section.id }}');
+    if (!section) return;
+    const track = section.querySelector('.custom-hero__track');
+    const dots = section.querySelectorAll('.custom-hero__dot');
+    const speed = parseInt(section.getAttribute('data-speed')) || 5000;
+    let currentIndex = 0;
+    const totalSlides = {{ section.blocks.size }};
+    let interval;
+
+    function goToSlide(index) {
+      currentIndex = index;
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentIndex);
+      });
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      goToSlide(currentIndex);
+    }
+
+    function startAutoPlay() {
+      if (speed > 0) {
+        interval = setInterval(nextSlide, speed);
+      }
+    }
+
+    function stopAutoPlay() {
+      clearInterval(interval);
+    }
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', function() {
+        stopAutoPlay();
+        goToSlide(parseInt(this.getAttribute('data-index')));
+        startAutoPlay();
+      });
+    });
+
+    // Pause on hover
+    section.addEventListener('mouseenter', stopAutoPlay);
+    section.addEventListener('mouseleave', startAutoPlay);
+
+    // Initial play
+    startAutoPlay();
+  });
+</script>
+{%- endif -%}
+
 {% schema %}
 {
-  "name": "Custom Clean Hero",
+  "name": "Custom Hero Slider",
   "tag": "section",
   "class": "section",
   "settings": [
     {
-      "type": "image_picker",
-      "id": "image_desktop",
-      "label": "Desktop Image"
-    },
+      "type": "range",
+      "id": "speed",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Auto-swipe Speed (0 to disable)",
+      "default": 5
+    }
+  ],
+  "blocks": [
     {
-      "type": "image_picker",
-      "id": "image_mobile",
-      "label": "Mobile Image (Optional)"
-    },
-    {
-      "type": "url",
-      "id": "link",
-      "label": "Banner Link"
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_desktop",
+          "label": "Desktop Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile Image (Optional)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Slide Link"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Custom Clean Hero"
+      "name": "Custom Hero Slider",
+      "blocks": [
+        {
+          "type": "slide"
+        }
+      ]
     }
   ]
 }
