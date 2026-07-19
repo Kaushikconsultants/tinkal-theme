@@ -197,25 +197,29 @@
         "tab_1": {
           "type": "ProductTabs",
           "settings": {
-            "title": "UNISEX"
+            "title": "UNISEX",
+            "collection": "all"
           }
         },
         "tab_2": {
           "type": "ProductTabs",
           "settings": {
-            "title": "FOR HER"
+            "title": "FOR HER",
+            "collection": "all"
           }
         },
         "tab_3": {
           "type": "ProductTabs",
           "settings": {
-            "title": "FOR HIM"
+            "title": "FOR HIM",
+            "collection": "all"
           }
         },
         "tab_4": {
           "type": "ProductTabs",
           "settings": {
-            "title": "GIFT SETS"
+            "title": "GIFT SETS",
+            "collection": "all"
           }
         }
       },
@@ -226,7 +230,8 @@
         "tab_4"
       ],
       "settings": {
-        "product_block_layout": "grid",
+        "product_block_title": "Trending Now",
+        "product_block_layout": "slider",
         "product_block_limit": 8
       }
     }

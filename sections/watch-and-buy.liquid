@@ -1139,30 +1139,37 @@
     let startX;
     let scrollLeft;
 
-    slider.addEventListener('mousedown', (e) => {
+    slider.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') return;
       isDown = true;
       isDragging = false;
       slider.style.scrollSnapType = 'none'; // disable snapping during drag
+      slider.style.scrollBehavior = 'auto'; // FIX: disable smooth scroll during drag
       startX = e.pageX - slider.offsetLeft;
       scrollLeft = slider.scrollLeft;
     });
 
-    slider.addEventListener('mouseleave', () => {
+    slider.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse') return;
       isDown = false;
       slider.style.scrollSnapType = 'x mandatory';
+      slider.style.scrollBehavior = 'smooth';
     });
 
-    slider.addEventListener('mouseup', () => {
+    slider.addEventListener('pointerup', (e) => {
+      if (e.pointerType !== 'mouse') return;
       isDown = false;
       slider.style.scrollSnapType = 'x mandatory';
+      slider.style.scrollBehavior = 'smooth';
     });
 
-    slider.addEventListener('mousemove', (e) => {
+    slider.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
       if (!isDown) return;
       e.preventDefault();
       const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 2; // drag speed multiplier
-      if (Math.abs(walk) > 10) {
+      const walk = (x - startX) * 1; // 1:1 drag speed
+      if (Math.abs(walk) > 5) {
         isDragging = true;
       }
       slider.scrollLeft = scrollLeft - walk;
