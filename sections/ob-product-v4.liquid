@@ -1,7 +1,9 @@
 {%- comment -%} Ombre Bliss — full v4 product page. Real variants/prices/metafields + % discount codes. {%- endcomment -%}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500&family=Jost:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+{%- assign ob_fonts = 'https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500&family=Jost:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap' -%}
+<link rel="preload" as="style" href="{{ ob_fonts }}" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ ob_fonts }}"></noscript>
 {{ 'ob-v4.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
@@ -21,7 +23,7 @@
     <div class="hero-frame" id="heroFrame">
       <div class="gal-tag" id="galTag">Bottle</div>
       <div class="scale-note" id="scaleNote">100ml — shown to scale</div>
-      <img class="hero-img" id="heroImg" alt="{{ product.title | escape }}" style="display:none">
+      <img class="hero-img" id="heroImg" width="700" height="875" alt="{{ product.title | escape }}" style="display:none">
       <div class="bottle big" id="bottle">
         <div class="bottle-cap"></div><div class="bottle-neck"></div>
         <div class="bottle-body"><div class="bottle-liquid" id="liquid"></div>
@@ -170,14 +172,18 @@ window.OB_V4 = {
     '25':  { ml:25,  label:'25ml',  unit:499,  mrp:599,  px:[0,499,899,1249,1599,1899,2199,2499,2749,2999,3199] }
   },
   variants: {
-  {%- for id in sc_ids -%}
-    {%- assign h = sc_handles[forloop.index0] -%}
-    {%- assign pr = all_products[h] -%}
-    {%- assign v100 = nil -%}{%- assign v25 = nil -%}
-    {%- for v in pr.variants -%}
-      {%- if v.title contains '100' -%}{%- assign v100 = v -%}{%- elsif v.title contains '25' -%}{%- assign v25 = v -%}{%- endif -%}
-    {%- endfor -%}
-    {{ id | json }}: { "v100": {{ v100.id | default: 'null' }}, "v25": {{ v25.id | default: 'null' }}, "img": {{ pr.featured_image | image_url: width: 900 | json }}, "url": {{ pr.url | json }} }{%- unless forloop.last -%},{%- endunless -%}
+  {%- assign couture = collections['premium-collection'] -%}
+  {%- assign first_v = true -%}
+  {%- for pr in couture.products -%}
+    {%- assign sidx = -1 -%}
+    {%- for h in sc_handles -%}{%- if h == pr.handle -%}{%- assign sidx = forloop.index0 -%}{%- break -%}{%- endif -%}{%- endfor -%}
+    {%- if sidx > -1 -%}
+      {%- assign sid = sc_ids[sidx] -%}
+      {%- assign v100 = nil -%}{%- assign v25 = nil -%}
+      {%- for v in pr.variants -%}{%- if v.title contains '100' -%}{%- assign v100 = v -%}{%- elsif v.title contains '25' -%}{%- assign v25 = v -%}{%- endif -%}{%- endfor -%}
+      {%- unless first_v -%},{%- endunless -%}{%- assign first_v = false -%}
+      {{ sid | json }}: { "v100": {{ v100.id | default: 'null' }}, "v25": {{ v25.id | default: 'null' }}, "img": {{ pr.featured_image | image_url: width: 700 | json }}, "url": {{ pr.url | json }} }
+    {%- endif -%}
   {%- endfor -%}
   }
 };
