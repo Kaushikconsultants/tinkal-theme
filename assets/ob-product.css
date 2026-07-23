@@ -1,0 +1,68 @@
+/* Ombre Bliss — product modules. One stylesheet for all ob-* blocks. */
+.ob{
+  --ob-plum:#55343B; --ob-olive:#BFB500; --ob-terra:#D88356;
+  --ob-butter:#E4DD86; --ob-cream:#F3E6DA;
+  --ob-i2:rgba(85,52,59,.72); --ob-i3:rgba(85,52,59,.46); --ob-i4:rgba(85,52,59,.24);
+  --ob-line:rgba(85,52,59,.13);
+  --ob-scent:var(--ob-terra); --ob-tint:rgba(216,131,86,.07);
+  --ob-T:'Cinzel Decorative',Georgia,serif;
+  color:var(--ob-plum);
+}
+.ob *{box-sizing:border-box}
+
+/* ══ SCENT PROFILE ══ */
+.ob-prof{border:1px solid var(--ob-line);background:var(--ob-tint);position:relative;margin:14px 0}
+.ob-prof::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ob-scent)}
+.ob-band{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:12px 16px;border-bottom:1px solid var(--ob-line);flex-wrap:wrap}
+.ob-band .f{font-family:var(--ob-T);font-size:18px;letter-spacing:.03em;line-height:1.15}
+.ob-band .c{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+  color:#fff;background:var(--ob-scent);padding:5px 9px;white-space:nowrap}
+.ob-mid{display:grid;grid-template-columns:1.15fr .85fr}
+@media(max-width:600px){.ob-mid{grid-template-columns:1fr}}
+.ob-mt{padding:15px 16px;border-right:1px solid var(--ob-line)}
+@media(max-width:600px){.ob-mt{border-right:none;border-bottom:1px solid var(--ob-line)}}
+.ob-m{display:grid;grid-template-columns:74px 1fr auto;gap:10px;align-items:center;margin-bottom:11px}
+.ob-m:last-child{margin-bottom:0}
+.ob-m .l{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ob-i2)}
+.ob-m .t{height:5px;background:rgba(85,52,59,.12);border-radius:3px;overflow:hidden}
+.ob-m .fbar{height:100%;border-radius:3px;background:var(--ob-scent)}
+.ob-m .v{font-size:10.5px;font-weight:700;white-space:nowrap}
+.ob-wh{padding:15px 16px}
+.ob-wr{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;
+  color:var(--ob-i2);padding:4px 0;font-weight:500}
+.ob-pips{display:flex;gap:4px}
+.ob-pip{width:7px;height:7px;border-radius:50%;border:1px solid rgba(85,52,59,.3)}
+.ob-pip.on{background:var(--ob-scent);border-color:var(--ob-scent)}
+.ob-if{border-top:1px solid var(--ob-line);padding:14px 16px;background:rgba(255,255,255,.6)}
+.ob-if b{font-size:8px;letter-spacing:.17em;text-transform:uppercase;font-weight:700;
+  color:var(--ob-scent);display:block;margin-bottom:5px}
+.ob-if .v{font-family:var(--ob-T);font-size:15px;line-height:1.45;letter-spacing:.015em}
+@media(max-width:600px){.ob-if .v{font-size:13.5px}.ob-band .f{font-size:16px}}
+
+/* ══ SCENT STRIP ══ */
+.ob-strip{border:1px solid var(--ob-line);background:#fff;margin:10px 0;overflow:hidden}
+.ob-tabs{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--ob-line);position:relative}
+.ob-tabs::after{content:"";position:absolute;bottom:-1px;left:0;height:2px;width:33.333%;
+  background:var(--ob-scent);transition:transform .38s cubic-bezier(.2,.8,.2,1);transform:translateX(var(--ob-sx,0))}
+.ob-tab{padding:10px 6px 11px;text-align:center;transition:.18s;background:none;border:none;
+  cursor:pointer;font-family:inherit;color:inherit;min-height:48px}
+.ob-tab:hover{background:var(--ob-cream)}
+.ob-tab .a{display:block;font-size:7.5px;letter-spacing:.11em;text-transform:uppercase;
+  font-weight:700;color:var(--ob-i4)}
+.ob-tab .b{display:block;font-size:11.5px;margin-top:2px;color:var(--ob-i3);font-weight:600}
+.ob-tab[aria-selected="true"] .a{color:var(--ob-scent)}
+.ob-tab[aria-selected="true"] .b{color:var(--ob-plum)}
+.ob-body{padding:12px 14px;display:flex;gap:12px;align-items:center}
+@media(max-width:560px){.ob-body{flex-direction:column;align-items:stretch;gap:10px}}
+.ob-dots{display:flex;gap:7px;flex:none;flex-wrap:wrap}
+.ob-nd{width:40px;height:40px;border-radius:50%;overflow:hidden;flex:none;border:1px solid var(--ob-line);
+  transition:.28s;cursor:pointer;padding:0;background:var(--ob-cream);opacity:.26;filter:saturate(.3)}
+.ob-nd.lit{opacity:1;filter:none;border-color:var(--ob-scent)}
+.ob-nd[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ob-scent)}
+.ob-nd img{width:100%;height:100%;object-fit:cover;display:block}
+.ob-nd .ph{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:15px}
+.ob-txt{flex:1;min-width:0}
+.ob-n{font-size:13px;font-weight:700;line-height:1.3}
+.ob-d{font-size:11.5px;color:var(--ob-i3);margin-top:2px;line-height:1.45}
+@media(prefers-reduced-motion:reduce){.ob *{transition:none!important}}

@@ -1,0 +1,96 @@
+{%- comment -%}
+  Ombre Bliss — scent profile
+  Usage: {% render 'ob-scent-profile', product: product, block: block %}
+  Renders nothing if the core metafields are empty.
+{%- endcomment -%}
+
+{%- liquid
+  assign mf = product.metafields.custom
+  assign has_band  = false
+  assign has_meter = false
+  assign has_seas  = false
+  if mf.scent_family != blank or mf.concentration != blank or mf.gender != blank
+    assign has_band = true
+  endif
+  if mf.longevity != blank or mf.projection != blank or mf.sweetness_score != blank
+    assign has_meter = true
+  endif
+  if mf.season_winter != blank or mf.season_summer != blank or mf.season_night != blank or mf.season_day != blank
+    assign has_seas = true
+  endif
+-%}
+
+{%- if has_band or has_meter or has_seas or mf.wear_this_if != blank -%}
+<div class="ob" {{ block.shopify_attributes }}
+     {% if block.settings.accent != blank %}style="--ob-scent:{{ block.settings.accent }};--ob-tint:{{ block.settings.accent }}12"{% endif %}>
+  <div class="ob-prof">
+
+    {%- if has_band -%}
+      <div class="ob-band">
+        {%- if mf.scent_family != blank -%}<span class="f">{{ mf.scent_family }}</span>{%- endif -%}
+        {%- capture chip -%}
+          {%- if mf.concentration != blank -%}{{ mf.concentration }}{%- endif -%}
+          {%- if mf.concentration != blank and mf.gender != blank -%} · {% endif -%}
+          {%- if mf.gender != blank -%}{{ mf.gender }}{%- endif -%}
+        {%- endcapture -%}
+        {%- if chip != blank -%}<span class="c">{{ chip }}</span>{%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if has_meter or has_seas -%}
+      <div class="ob-mid">
+
+        {%- if has_meter -%}
+          <div class="ob-mt">
+            {%- if mf.longevity != blank -%}
+              {%- assign s = mf.longevity_score | default: 7 | times: 10 -%}
+              <div class="ob-m"><span class="l">{{ block.settings.label_longevity }}</span>
+                <span class="t"><span class="fbar" style="width:{{ s }}%"></span></span>
+                <span class="v">{{ mf.longevity }}</span></div>
+            {%- endif -%}
+            {%- if mf.projection != blank -%}
+              {%- assign s = mf.projection_score | default: 7 | times: 10 -%}
+              <div class="ob-m"><span class="l">{{ block.settings.label_projection }}</span>
+                <span class="t"><span class="fbar" style="width:{{ s }}%"></span></span>
+                <span class="v">{{ mf.projection }}</span></div>
+            {%- endif -%}
+            {%- if mf.sweetness_score != blank -%}
+              {%- assign sw = mf.sweetness_score -%}
+              {%- if sw >= 8 -%}{%- assign swl = 'Very sweet' -%}
+              {%- elsif sw >= 5 -%}{%- assign swl = 'Balanced' -%}
+              {%- else -%}{%- assign swl = 'Dry' -%}{%- endif -%}
+              <div class="ob-m"><span class="l">{{ block.settings.label_sweetness }}</span>
+                <span class="t"><span class="fbar" style="width:{{ sw | times: 10 }}%"></span></span>
+                <span class="v">{{ swl }}</span></div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if has_seas -%}
+          <div class="ob-wh">
+            {%- assign seasons = 'season_winter,season_summer,season_night,season_day' | split: ',' -%}
+            {%- assign labels  = 'Winter,Summer,Night,Day' | split: ',' -%}
+            {%- for key in seasons -%}
+              {%- assign val = mf[key] -%}
+              {%- if val != blank -%}
+                <div class="ob-wr"><span>{{ labels[forloop.index0] }}</span><span class="ob-pips">
+                  {%- for i in (1..3) -%}
+                    <span class="ob-pip{% if i <= val %} on{% endif %}"></span>
+                  {%- endfor -%}
+                </span></div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+      </div>
+    {%- endif -%}
+
+    {%- if mf.wear_this_if != blank -%}
+      <div class="ob-if"><b>{{ block.settings.label_wear }}</b>
+        <div class="v">{{ mf.wear_this_if }}</div></div>
+    {%- endif -%}
+
+  </div>
+</div>
+{%- endif -%}
