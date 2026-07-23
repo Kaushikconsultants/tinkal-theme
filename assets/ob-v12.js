@@ -83,7 +83,13 @@ function fit(){ while(combo.length<qty) combo.push(SC[combo.length%SC.length].id
 function setQty(n,open){ qty=Math.max(1,Math.min(MAXQ,n)); fit(); if(open)$('bulk').classList.add('open'); tiers(); bulk(); picker(); renderFbt(); calc(); }
 
 /* GALLERY */
-function heroList(){ var l=(cur.imgs&&cur.imgs.length)?cur.imgs.slice():[]; if(!l.length){ var f=cur.img100||cur.img25; if(f)l=[f]; } return l; }
+function heroList(){
+  var l=(cur.imgs&&cur.imgs.length)?cur.imgs.slice():[];
+  var si=size==='100'?cur.img100:cur.img25;
+  if(si){ var idx=l.indexOf(si); if(idx>0){l.splice(idx,1);l.unshift(si);} else if(idx<0){l.unshift(si);} }
+  if(!l.length){ var f=cur.img100||cur.img25; if(f)l=[f]; }
+  return l;
+}
 function renderGallery(){
   var list=heroList();
   $('gtrack').innerHTML=list.map(function(u){return '<div class="gslide"><img src="'+u+'" loading="lazy" alt="'+cur.name+'"></div>';}).join('');
@@ -120,7 +126,7 @@ function sizes(){
   $('sizes').innerHTML=Object.keys(SIZES).map(function(k){var c=SIZES[k],win=k==='100';return '<button class="sz '+(k===size?'on':'')+'" data-z="'+k+'">'+(win?'<span class="bdg">'+better+'% better value</span>':'')+'<div class="t">'+c.label+'</div><div class="r">'+c.role+'</div><div class="p">'+inr(c.unit)+'<s>'+inr(c.mrp)+'</s></div><div class="m">₹'+pm(k).toFixed(2)+' per ml</div></button>';}).join('');
   Array.prototype.forEach.call($('sizes').querySelectorAll('.sz'),function(b){b.onclick=function(){setSizeTo(b.dataset.z);};});
 }
-function setSizeTo(k){ size=k; fit(); $('gscale').textContent=SIZES[k].label+' — shown to scale'; scrollGalTo(0); sizes(); tiers(); bulk(); picker(); renderFbt(); calc(); }
+function setSizeTo(k){ size=k; fit(); $('gscale').textContent=SIZES[k].label+' — shown to scale'; renderGallery(); scrollGalTo(0); sizes(); tiers(); bulk(); picker(); renderFbt(); calc(); }
 /* TIERS */
 function tiers(){
   $('tiers').innerHTML=cf().quick.map(function(t){var p=priceFor(size,t.q),mrp=t.q*cf().mrp;return '<button class="tier '+(t.q===qty?'on':'')+'" data-q="'+t.q+'">'+(t.b?'<span class="bdg2 '+(t.o?'o':'')+'">'+t.b+'</span>':'')+'<span class="rad"></span><span><span class="n">'+t.n+'</span><span class="s">'+t.s+(t.q>1?' · '+inr(p/t.q)+' each · '+offFor(size,t.q)+'% off':'')+'</span></span><span class="pr">'+(t.q>1?'<span class="b">'+inr(mrp)+'</span>':'')+'<span class="a">'+inr(p)+'</span></span></button>';}).join('');
