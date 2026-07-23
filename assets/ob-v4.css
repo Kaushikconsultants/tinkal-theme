@@ -184,6 +184,14 @@
 .obv4 .seg button.on{background:var(--ink);color:var(--porcelain)}
 .obv4 .band.dark .seg button.on{background:var(--porcelain);color:var(--ink)}
 
+.obv4 .creds{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line-2);border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+.obv4 .cred{background:var(--porcelain);padding:26px 12px;text-align:center}
+.obv4 .cred svg{width:26px;height:26px;stroke:var(--ink);fill:none;stroke-width:1.1;margin:0 auto 10px;display:block}
+.obv4 .cred .ct{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;line-height:1.6}
+.obv4 .cred .cs{font-size:11px;color:var(--ink-3);margin-top:5px;line-height:1.5}
+@media(max-width:900px){.obv4 .creds{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.obv4 .creds{grid-template-columns:repeat(2,1fr)}}
+
 .obv4 .ing-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
 .obv4 .ing-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:36px}
 @media(max-width:1000px){.obv4 .ing-grid{grid-template-columns:repeat(3,1fr)}}

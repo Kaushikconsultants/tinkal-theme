@@ -31,13 +31,7 @@
         </div>
       </div>
     </div>
-    <div class="thumbs" id="thumbs">
-      <div class="thumb on" data-t="Bottle">Bottle</div>
-      <div class="thumb" data-t="The ingredients, up close">Notes<br>macro</div>
-      <div class="thumb" data-t="Both sizes together">Both<br>sizes</div>
-      <div class="thumb" data-t="Size in hand">Size in<br>hand</div>
-      <div class="thumb" data-t="Layering card">Layer<br>card</div>
-    </div>
+    <div class="thumbs" id="thumbs"></div>
   </div>
 
   <div class="buy">
@@ -75,8 +69,6 @@
     <div class="secure"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Secure checkout · 256-bit SSL</div>
     <div class="pays"><span class="pay-badge">UPI</span><span class="pay-badge">GPay</span><span class="pay-badge">PhonePe</span><span class="pay-badge">Paytm</span><span class="pay-badge">Visa</span><span class="pay-badge">Mastercard</span><span class="pay-badge">RuPay</span></div>
     <div class="ship-bar"><div class="ship-track"><div class="ship-fill" id="shipFill"></div></div><div class="ship-txt" id="shipTxt"></div></div>
-
-    <div class="pin"><div class="eyebrow" style="margin-bottom:10px">Delivery</div><div class="pin-in"><input id="pinIn" maxlength="6" inputmode="numeric" placeholder="Enter your pincode"/><button id="pinBtn">Check</button></div><div class="pin-out" id="pinOut"></div></div>
 
     <div class="trust">
       <div class="trust-i"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><b>100% authentic</b>Batch-coded. Our own unit.</div>
@@ -181,8 +173,10 @@ window.OB_V4 = {
       {%- assign sid = sc_ids[sidx] -%}
       {%- assign v100 = nil -%}{%- assign v25 = nil -%}
       {%- for v in pr.variants -%}{%- if v.title contains '100' -%}{%- assign v100 = v -%}{%- elsif v.title contains '25' -%}{%- assign v25 = v -%}{%- endif -%}{%- endfor -%}
+      {%- assign img100 = v100.image | default: pr.featured_image -%}
+      {%- assign img25 = v25.image | default: pr.featured_image -%}
       {%- unless first_v -%},{%- endunless -%}{%- assign first_v = false -%}
-      {{ sid | json }}: { "v100": {{ v100.id | default: 'null' }}, "v25": {{ v25.id | default: 'null' }}, "img": {{ pr.featured_image | image_url: width: 700 | json }}, "url": {{ pr.url | json }} }
+      {{ sid | json }}: { "v100": {{ v100.id | default: 'null' }}, "v25": {{ v25.id | default: 'null' }}, "img100": {{ img100 | image_url: width: 800 | json }}, "img25": {{ img25 | image_url: width: 800 | json }}, "imgs": [ {%- for im in pr.images limit: 6 -%}{{ im | image_url: width: 800 | json }}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%} ], "url": {{ pr.url | json }} }
     {%- endif -%}
   {%- endfor -%}
   }
