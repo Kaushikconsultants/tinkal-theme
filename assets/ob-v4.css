@@ -14,7 +14,7 @@
 .obv4 .eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
 
 .obv4 .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
-.obv4 .pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;padding:14px 0 56px}
+.obv4 .pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;padding-top:14px;padding-bottom:56px}
 @media(max-width:980px){.obv4 .pdp{grid-template-columns:1fr;gap:34px;padding:24px 0 40px}}
 
 .obv4 .gallery{position:sticky;top:78px;align-self:start}
@@ -315,7 +315,7 @@
 /* ── MOBILE OPTIMISATION ── */
 @media(max-width:768px){
   .obv4 .wrap{padding:0 16px}
-  .obv4 .pdp{gap:24px;padding:16px 0 32px}
+  .obv4 .pdp{gap:24px;padding-top:12px;padding-bottom:32px}
   .obv4 h1{font-size:30px;line-height:1.08}
   .obv4 .oneline{font-size:15px}
   .obv4 .sec{margin-top:24px}
