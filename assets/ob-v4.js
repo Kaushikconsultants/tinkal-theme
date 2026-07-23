@@ -16,25 +16,25 @@
 
   /* ── EDITORIAL DATA (brand content) ── */
   var FAM = {
-    citrus:{c:'#E9A93B',bg:'#FBF2E0',d:'Cold-pressed peel. Sharp, sunny, gone in twenty minutes.'},
-    pepper:{c:'#B4485C',bg:'#F8ECEE',d:'Dried berries. A dry, prickly heat that opens the nose.'},
-    spice:{c:'#B5762C',bg:'#F8F0E3',d:'Ground bark and pods. Warm, dry, faintly sweet.'},
-    wood:{c:'#7A6A52',bg:'#F1EEE7',d:'Rasped heartwood. Dry, grounding, quietly green.'},
-    oud:{c:'#4B2A2F',bg:'#F1E8E9',d:'Resin-soaked agarwood. Smoky, animalic, worth the price.'},
-    leather:{c:'#6B4B33',bg:'#F2ECE5',d:'Tanned hide. Dry, smoky, slightly smoked-out.'},
-    tobacco:{c:'#7C5A22',bg:'#F5F0E3',d:'Cured leaf. Honeyed, dry, a little like an old library.'},
-    vanilla:{c:'#9A6B3A',bg:'#F8F1E6',d:'Cured pod, split open. Creamy, boozy, never sugary.'},
-    sugar:{c:'#D98CA6',bg:'#FBEFF3',d:'Spun and caramelised. Sweet, sticky, unapologetic.'},
-    nut:{c:'#8CA35C',bg:'#F0F3E7',d:'Shelled and roasted. Green, buttery, faintly milky.'},
-    cacao:{c:'#5A3A26',bg:'#F1EAE4',d:'Roasted nib. Bitter, dusty, dark.'},
-    rose:{c:'#C2607B',bg:'#FAEDF0',d:'Petals picked at dawn. Fresh, green, honeyed.'},
-    floral:{c:'#D8C68B',bg:'#F8F4E7',d:'Night-picked petals. Creamy, heady, a little indolic.'},
-    amber:{c:'#C08B3A',bg:'#F9F1E2',d:'Fossilised resin. Warm, sweet, glowing.'},
-    musk:{c:'#C3BDB1',bg:'#F4F2ED',d:'Clean, warm, skin-like. The reason it smells like you.'},
-    tea:{c:'#5E6B4A',bg:'#EFF1EA',d:'Dried and smoked leaf. Tannic, dry, faintly bitter.'},
-    booze:{c:'#8C5A2B',bg:'#F6EFE5',d:'Aged in oak. Sweet, sharp, warming on contact.'},
-    lavender:{c:'#8C86BE',bg:'#F1F0F8',d:'Steam-distilled flower. Herbal, cool, slightly medicinal.'},
-    moss:{c:'#5F7248',bg:'#EFF2EA',d:'Forest floor. Damp, green, mineral.'}
+    citrus:{bg:'#FBF2E0',d:'Cold-pressed peel. Sharp, sunny, gone in twenty minutes.',g:'<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="#E9A93B"/><circle cx="50" cy="50" r="26" fill="#F6CE79"/><g stroke="#FBF2E0" stroke-width="2"><line x1="50" y1="50" x2="50" y2="24"/><line x1="50" y1="50" x2="76" y2="50"/><line x1="50" y1="50" x2="50" y2="76"/><line x1="50" y1="50" x2="24" y2="50"/><line x1="50" y1="50" x2="68" y2="32"/><line x1="50" y1="50" x2="68" y2="68"/><line x1="50" y1="50" x2="32" y2="68"/><line x1="50" y1="50" x2="32" y2="32"/></g><circle cx="50" cy="50" r="4" fill="#FBF2E0"/></svg>'},
+    pepper:{bg:'#F8ECEE',d:'Dried berries. A dry, prickly heat that opens the nose.',g:'<svg viewBox="0 0 100 100"><circle cx="36" cy="42" r="12" fill="#B4485C"/><circle cx="60" cy="34" r="9" fill="#CE6C7E"/><circle cx="54" cy="60" r="14" fill="#9E3A4D"/><circle cx="32" cy="66" r="8" fill="#CE6C7E"/><circle cx="72" cy="58" r="7" fill="#B4485C"/></svg>'},
+    spice:{bg:'#F8F0E3',d:'Ground bark and pods. Warm, dry, faintly sweet.',g:'<svg viewBox="0 0 100 100"><rect x="24" y="30" width="10" height="46" rx="5" fill="#8E5A1E"/><rect x="38" y="24" width="10" height="52" rx="5" fill="#B5762C"/><rect x="52" y="30" width="10" height="46" rx="5" fill="#8E5A1E"/><rect x="66" y="34" width="10" height="42" rx="5" fill="#C99150"/></svg>'},
+    wood:{bg:'#F1EEE7',d:'Rasped heartwood. Dry, grounding, quietly green.',g:'<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="#9C8A6E"/><circle cx="50" cy="50" r="27" fill="none" stroke="#7A6A52" stroke-width="3"/><circle cx="50" cy="50" r="19" fill="none" stroke="#7A6A52" stroke-width="3"/><circle cx="50" cy="50" r="11" fill="none" stroke="#7A6A52" stroke-width="3"/><circle cx="50" cy="50" r="4" fill="#5E5140"/></svg>'},
+    oud:{bg:'#F1E8E9',d:'Resin-soaked agarwood. Smoky, animalic, worth the price.',g:'<svg viewBox="0 0 100 100"><path d="M28 74 L38 26 L50 46 L60 22 L72 74 Z" fill="#4B2A2F"/><path d="M38 74 L46 40 L54 58 L62 74 Z" fill="#6E4046"/></svg>'},
+    leather:{bg:'#F2ECE5',d:'Tanned hide. Dry, smoky, slightly smoked-out.',g:'<svg viewBox="0 0 100 100"><rect x="22" y="26" width="56" height="48" rx="4" fill="#6B4B33"/><rect x="28" y="32" width="44" height="36" rx="2" fill="none" stroke="#A0785A" stroke-width="1.5" stroke-dasharray="4 3"/></svg>'},
+    tobacco:{bg:'#F5F0E3',d:'Cured leaf. Honeyed, dry, a little like an old library.',g:'<svg viewBox="0 0 100 100"><path d="M50 20 C24 34 24 66 50 82 C76 66 76 34 50 20 Z" fill="#7C5A22"/><path d="M50 20 V82" stroke="#A98442" stroke-width="2"/></svg>'},
+    vanilla:{bg:'#F8F1E6',d:'Cured pod, split open. Creamy, boozy, never sugary.',g:'<svg viewBox="0 0 100 100"><rect x="30" y="22" width="9" height="58" rx="4.5" fill="#4E3620"/><rect x="45" y="18" width="9" height="64" rx="4.5" fill="#6B4A2C"/><rect x="60" y="24" width="9" height="56" rx="4.5" fill="#4E3620"/></svg>'},
+    sugar:{bg:'#FBEFF3',d:'Spun and caramelised. Sweet, sticky, unapologetic.',g:'<svg viewBox="0 0 100 100"><circle cx="50" cy="44" r="26" fill="#E9AEC2"/><circle cx="50" cy="44" r="18" fill="#F5D2DD"/><rect x="47" y="66" width="6" height="18" rx="3" fill="#C9C1B4"/></svg>'},
+    nut:{bg:'#F0F3E7',d:'Shelled and roasted. Green, buttery, faintly milky.',g:'<svg viewBox="0 0 100 100"><ellipse cx="38" cy="52" rx="18" ry="24" fill="#B79A6A"/><ellipse cx="38" cy="52" rx="12" ry="17" fill="#8CA35C"/><ellipse cx="66" cy="44" rx="14" ry="19" fill="#C9AE80"/><ellipse cx="66" cy="44" rx="9" ry="13" fill="#A3B876"/></svg>'},
+    cacao:{bg:'#F1EAE4',d:'Roasted nib. Bitter, dusty, dark.',g:'<svg viewBox="0 0 100 100"><rect x="24" y="30" width="52" height="40" rx="3" fill="#5A3A26"/><g stroke="#7E5537" stroke-width="2"><path d="M24 43 h52 M24 57 h52 M41 30 v40 M59 30 v40"/></g></svg>'},
+    rose:{bg:'#FAEDF0',d:'Petals picked at dawn. Fresh, green, honeyed.',g:'<svg viewBox="0 0 100 100"><circle cx="50" cy="46" r="28" fill="#E0A0B4"/><circle cx="50" cy="46" r="21" fill="#C2607B"/><circle cx="50" cy="46" r="13" fill="#A34561"/><circle cx="50" cy="46" r="6" fill="#8A3550"/></svg>'},
+    floral:{bg:'#F8F4E7',d:'Night-picked petals. Creamy, heady, a little indolic.',g:'<svg viewBox="0 0 100 100"><g fill="#F2E6BE"><ellipse cx="50" cy="30" rx="13" ry="8"/><ellipse cx="67" cy="42" rx="13" ry="8" transform="rotate(60 67 42)"/><ellipse cx="67" cy="62" rx="13" ry="8" transform="rotate(120 67 62)"/><ellipse cx="50" cy="72" rx="13" ry="8"/><ellipse cx="33" cy="62" rx="13" ry="8" transform="rotate(60 33 62)"/><ellipse cx="33" cy="42" rx="13" ry="8" transform="rotate(120 33 42)"/></g><circle cx="50" cy="51" r="9" fill="#D8C68B"/></svg>'},
+    amber:{bg:'#F9F1E2',d:'Fossilised resin. Warm, sweet, glowing.',g:'<svg viewBox="0 0 100 100"><path d="M50 20 C70 26 80 46 76 64 C72 80 56 84 50 84 C44 84 28 80 24 64 C20 46 30 26 50 20 Z" fill="#C08B3A"/><circle cx="40" cy="40" r="4" fill="#F2D89C" opacity=".7"/></svg>'},
+    musk:{bg:'#F4F2ED',d:'Clean, warm, skin-like. The reason it smells like you.',g:'<svg viewBox="0 0 100 100"><circle cx="42" cy="48" r="20" fill="#DAD5CA"/><circle cx="60" cy="42" r="16" fill="#C3BDB1"/><circle cx="56" cy="62" r="14" fill="#EAE7E0"/></svg>'},
+    tea:{bg:'#EFF1EA',d:'Dried and smoked leaf. Tannic, dry, faintly bitter.',g:'<svg viewBox="0 0 100 100"><path d="M50 22 C28 36 26 62 44 78 C64 66 70 40 50 22 Z" fill="#5E6B4A"/><path d="M50 22 C48 44 46 62 44 78" stroke="#8B9A72" stroke-width="2" fill="none"/></svg>'},
+    booze:{bg:'#F6EFE5',d:'Aged in oak. Sweet, sharp, warming on contact.',g:'<svg viewBox="0 0 100 100"><path d="M32 22 h36 l-4 46 a14 10 0 0 1 -28 0 Z" fill="none" stroke="#8C5A2B" stroke-width="3"/><path d="M35 42 h30 l-2.5 26 a12 8 0 0 1 -25 0 Z" fill="#B5762C" opacity=".85"/></svg>'},
+    lavender:{bg:'#F1F0F8',d:'Steam-distilled flower. Herbal, cool, slightly medicinal.',g:'<svg viewBox="0 0 100 100"><path d="M50 84 V44" stroke="#6E8F4E" stroke-width="3"/><g fill="#8C86BE"><ellipse cx="44" cy="20" rx="6" ry="4"/><ellipse cx="56" cy="26" rx="6" ry="4"/><ellipse cx="44" cy="32" rx="6" ry="4"/><ellipse cx="56" cy="38" rx="6" ry="4"/><ellipse cx="44" cy="44" rx="6" ry="4"/></g></svg>'},
+    moss:{bg:'#EFF2EA',d:'Forest floor. Damp, green, mineral.',g:'<svg viewBox="0 0 100 100"><circle cx="34" cy="58" r="14" fill="#5F7248"/><circle cx="56" cy="50" r="18" fill="#7A8F5E"/><circle cx="68" cy="66" r="11" fill="#5F7248"/><circle cx="44" cy="70" r="9" fill="#8FA372"/></svg>'}
   };
   var NOTE_FAM = {
     'Lemon':'citrus','Citrus':'citrus','Bergamot':'citrus','Sicilian Orange':'citrus','Citron':'citrus',
@@ -127,13 +127,17 @@
   }
   function tierCode(){ return qty>1 ? CODE_PREFIX+size+'Q'+qty : null; }
   var busy=false;
-  function setBusy(b){ busy=b; ['cta','ctaBuy','stickyCta','stickyBuy'].forEach(function(idd){ var el=$(idd); if(el) el.disabled=b; }); }
-  function addToCart(dest){
+  function setBusy(b, btn){
+    busy=b;
+    ['cta','ctaBuy','stickyCta','stickyBuy'].forEach(function(idd){ var el=$(idd); if(el){ el.disabled=b; el.classList.remove('is-loading'); } });
+    if(b && btn) btn.classList.add('is-loading');
+  }
+  function addToCart(dest, btn){
     if(busy) return;
     var items=cartItems();
     if(!items.length){ toast('Pick a scent first'); return; }
     dest = dest || '/cart';
-    setBusy(true); toast('Adding to cart…');
+    setBusy(true, btn);
     var done=false;
     var timer=setTimeout(function(){ if(!done){ done=true; setBusy(false); toast('Network slow — please tap again'); } }, 9000);
     fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:items})})
@@ -141,6 +145,8 @@
       .then(function(){ if(done) return; done=true; clearTimeout(timer); var code=tierCode(); window.location.href = code ? ('/discount/'+encodeURIComponent(code)+'?redirect='+encodeURIComponent(dest)) : dest; })
       .catch(function(){ if(done) return; done=true; clearTimeout(timer); setBusy(false); toast('Could not add to cart — please try again'); });
   }
+  /* reset the button if the user navigates back (bfcache restore) */
+  window.addEventListener('pageshow', function(e){ if(e.persisted){ setBusy(false); if($('toast')) $('toast').classList.remove('up'); } });
 
   /* ── RENDERERS ── */
   $('creds').innerHTML = CREDS.map(function(a){return '<div class="cred">'+(a[2]||'')+'<div class="ct">'+a[0]+'</div><div class="cs">'+a[1]+'</div></div>';}).join('');
@@ -164,7 +170,7 @@
   function noteCard(name,layer){
     var f=FAM[NOTE_FAM[name]||'wood'];
     var img=(OB.noteImages||{})[name];
-    var inner = img ? '<img src="'+img+'" loading="lazy" alt="'+name+'">' : '';
+    var inner = img ? '<img src="'+img+'" loading="lazy" alt="'+name+'">' : (f.g || '');
     return '<div class="ing"><div class="ing-img" style="background:'+f.bg+'"><span class="ing-layer">'+layer+'</span>'+inner+'</div>'
       +'<div class="ing-b"><div class="ing-n">'+name+'</div><div class="ing-d">'+f.d+'</div></div></div>';
   }
@@ -337,8 +343,8 @@
   ['labA','labB'].forEach(function(id){ $(id).onclick=function(e){var b=e.target.closest('.lab-chip'); if(!b)return; if(b.dataset.w==='a')layA=b.dataset.s; else layB=b.dataset.s; if(layA===layB)toast('Pick two different scents to layer'); renderLab();}; });
   $('mixBuy').onclick=function(){loadPair('25');}; $('mixBuyBig').onclick=function(){loadPair('100');};
   $('setSeg').onclick=function(e){var b=e.target.closest('button'); if(!b)return; setSize=b.dataset.sz; paintSeg(); renderCombos();};
-  $('cta').onclick=function(){addToCart('/cart');}; $('stickyCta').onclick=function(){addToCart('/cart');};
-  $('ctaBuy').onclick=function(){addToCart('/checkout');}; $('stickyBuy').onclick=function(){addToCart('/checkout');};
+  $('cta').onclick=function(){addToCart('/cart', $('cta'));}; $('stickyCta').onclick=function(){addToCart('/cart', $('stickyCta'));};
+  $('ctaBuy').onclick=function(){addToCart('/checkout', $('ctaBuy'));}; $('stickyBuy').onclick=function(){addToCart('/checkout', $('stickyBuy'));};
 
   var tt; function toast(m){$('toast').textContent=m; $('toast').classList.add('up'); clearTimeout(tt); tt=setTimeout(function(){$('toast').classList.remove('up');},3200);}
   if($('cta')){ try{ new IntersectionObserver(function(e){$('sticky').classList.toggle('up',!e[0].isIntersecting);},{threshold:0}).observe($('cta')); }catch(e){} }

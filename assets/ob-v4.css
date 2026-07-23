@@ -14,7 +14,7 @@
 .obv4 .eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
 
 .obv4 .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
-.obv4 .pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;padding:44px 0 64px}
+.obv4 .pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;padding:14px 0 56px}
 @media(max-width:980px){.obv4 .pdp{grid-template-columns:1fr;gap:34px;padding:24px 0 40px}}
 
 .obv4 .gallery{position:sticky;top:78px;align-self:start}
@@ -40,8 +40,9 @@
 .obv4 .bottle.small .bottle-label .bs{font-size:5px}
 .obv4 .gal-tag{position:absolute;top:14px;left:14px;z-index:2;background:var(--porcelain);border:1px solid var(--line);padding:5px 10px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase}
 .obv4 .scale-note{position:absolute;bottom:14px;right:14px;z-index:2;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
-.obv4 .thumbs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:8px}
-.obv4 .thumb{aspect-ratio:1;border:1px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:'Space Mono',monospace;font-size:8px;color:var(--ink-3);text-align:center;line-height:1.3;padding:0;cursor:pointer;transition:.2s}
+.obv4 .thumbs{display:flex;gap:8px;margin-top:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+.obv4 .thumbs::-webkit-scrollbar{display:none}
+.obv4 .thumb{flex:0 0 66px;aspect-ratio:1;border:1px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0;cursor:pointer;transition:.2s}
 .obv4 .thumb img{width:100%;height:100%;object-fit:cover}
 .obv4 .thumb:hover{border-color:var(--accent);color:var(--accent)}
 .obv4 .thumb.on{border-color:var(--ink);color:var(--ink)}
@@ -119,7 +120,11 @@
 .obv4 .cta:hover{background:var(--paper)}
 .obv4 .cta.buy{background:var(--ink);color:var(--porcelain);border-color:var(--ink)}
 .obv4 .cta.buy:hover{background:var(--accent);border-color:var(--accent)}
-.obv4 .cta[disabled]{opacity:.5;cursor:progress}
+.obv4 .cta[disabled]{opacity:.7}
+.obv4 .cta.is-loading,.obv4-sticky button.is-loading{color:transparent!important;position:relative;pointer-events:none}
+.obv4 .cta.is-loading::after,.obv4-sticky button.is-loading::after{content:"";position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border:2px solid rgba(21,18,15,.28);border-top-color:#15120F;border-radius:50%;animation:obv4spin .6s linear infinite}
+.obv4 .cta.buy.is-loading::after,.obv4-sticky button.buy.is-loading::after{border-color:rgba(252,251,249,.45);border-top-color:#FCFBF9}
+@keyframes obv4spin{to{transform:rotate(360deg)}}
 .obv4 .cta-note{text-align:center;font-family:'Space Mono',monospace;font-size:10px;color:var(--ink-3);margin-top:10px;line-height:1.7}
 @media(max-width:400px){.obv4 .ctas{grid-template-columns:1fr}}
 
@@ -335,7 +340,8 @@
   .obv4 .pers{grid-template-columns:1fr}
   .obv4 .combos{gap:12px}
   .obv4 .rev-grid{gap:12px}
-  .obv4 .thumbs{grid-template-columns:repeat(5,1fr);gap:6px}
+  .obv4 .thumbs{gap:6px}
+  .obv4 .thumb{flex:0 0 60px}
 }
 @media(max-width:420px){
   .obv4 h1{font-size:26px}
