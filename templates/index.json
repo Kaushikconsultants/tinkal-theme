@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "custom_hero_1": {
@@ -36,6 +45,56 @@
         "limit": 16,
         "padding_y": 0,
         "speed": 40
+      }
+    },
+    "custom_essence_grid_1": {
+      "type": "custom-essence-grid",
+      "blocks": {
+        "grid_1": {
+          "type": "grid_item",
+          "settings": {
+            "custom_svg": "<svg width=\"28\" height=\"28\" viewbox=\"0 0 24 24\" fill=\"#C5A880\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle></svg>",
+            "title": "TRANSPARENT PRICING",
+            "text": "Luxury scents accessible directly without retail markup."
+          }
+        },
+        "grid_2": {
+          "type": "grid_item",
+          "settings": {
+            "custom_svg": "<svg width=\"28\" height=\"28\" viewbox=\"0 0 24 24\" fill=\"#C5A880\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5Z\"></path></svg>",
+            "title": "ETHICAL SCENTS",
+            "text": "Cruelty-free, vegan, and environmentally conscious."
+          }
+        },
+        "grid_3": {
+          "type": "grid_item",
+          "settings": {
+            "custom_svg": "<svg width=\"28\" height=\"28\" viewbox=\"0 0 24 24\" fill=\"#C5A880\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 2C13.1 2 14 2.9 14 4C14 4.7 13.6 5.4 13 5.8V7C16.3 7 19 9.7 19 13V20C19 21.1 18.1 22 17 22H7C5.9 22 5 21.1 5 20V13C5 9.7 7.7 7 11 7V5.8C10.4 5.4 10 4.7 10 4C10 2.9 10.9 2 12 2Z\"></path></svg>",
+            "title": "MINIMAL LUXURY",
+            "text": "Sustainable packaging paired with elegant aesthetics."
+          }
+        },
+        "grid_4": {
+          "type": "grid_item",
+          "settings": {
+            "custom_svg": "<svg width=\"28\" height=\"28\" viewbox=\"0 0 24 24\" fill=\"#C5A880\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 3L6 11C4.33333 13.6667 4 17 6 19C8 21 16 21 18 19C20 17 19.6667 13.6667 18 11L12 3Z\"></path></svg>",
+            "title": "PURE INGREDIENTS",
+            "text": "Sourced from the finest natural essence fields globally."
+          }
+        }
+      },
+      "block_order": [
+        "grid_1",
+        "grid_2",
+        "grid_3",
+        "grid_4"
+      ],
+      "settings": {
+        "title": "The Essence of Our Brand",
+        "title_size": 32,
+        "title_color": "#333333",
+        "bg_color": "#fafafa",
+        "padding_y": 60
       }
     },
     "marquee_HeTqbn": {
@@ -142,55 +201,6 @@
         "padding_bottom": 40
       }
     },
-    "custom_essence_grid_1": {
-      "type": "custom-essence-grid",
-      "blocks": {
-        "grid_1": {
-          "type": "grid_item",
-          "settings": {
-            "title": "TRANSPARENT PRICING",
-            "text": "Luxury scents accessible directly without retail markup.",
-            "custom_svg": "<svg width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"#C5A880\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\"/></svg>"
-          }
-        },
-        "grid_2": {
-          "type": "grid_item",
-          "settings": {
-            "title": "ETHICAL SCENTS",
-            "text": "Cruelty-free, vegan, and environmentally conscious.",
-            "custom_svg": "<svg width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"#C5A880\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5Z\"/></svg>"
-          }
-        },
-        "grid_3": {
-          "type": "grid_item",
-          "settings": {
-            "title": "MINIMAL LUXURY",
-            "text": "Sustainable packaging paired with elegant aesthetics.",
-            "custom_svg": "<svg width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"#C5A880\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 2C13.1 2 14 2.9 14 4C14 4.7 13.6 5.4 13 5.8V7C16.3 7 19 9.7 19 13V20C19 21.1 18.1 22 17 22H7C5.9 22 5 21.1 5 20V13C5 9.7 7.7 7 11 7V5.8C10.4 5.4 10 4.7 10 4C10 2.9 10.9 2 12 2Z\"/></svg>"
-          }
-        },
-        "grid_4": {
-          "type": "grid_item",
-          "settings": {
-            "title": "PURE INGREDIENTS",
-            "text": "Sourced from the finest natural essence fields globally.",
-            "custom_svg": "<svg width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"#C5A880\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 3L6 11C4.33333 13.6667 4 17 6 19C8 21 16 21 18 19C20 17 19.6667 13.6667 18 11L12 3Z\"/></svg>"
-          }
-        }
-      },
-      "block_order": [
-        "grid_1",
-        "grid_2",
-        "grid_3",
-        "grid_4"
-      ],
-      "settings": {
-        "title": "The Essence of Our Brand",
-        "title_size": 32,
-        "bg_color": "#fafafa",
-        "padding_y": 60
-      }
-    },
     "custom_product_tabs_1": {
       "type": "custom-product-tabs",
       "blocks": {
@@ -230,19 +240,28 @@
         "tab_4"
       ],
       "settings": {
-        "title": "Trending Now"
+        "title": "Trending Now",
+        "bg_color": "#fafafa",
+        "padding_y": 40,
+        "swipe_speed": 1.5
       }
     },
     "featured_blog_1": {
       "type": "featured-blog",
+      "disabled": true,
       "settings": {
-        "heading": "BEHIND THE BOTTLE",
+        "blog": "news",
         "post_limit": 2,
+        "heading": "BEHIND THE BOTTLE",
+        "heading_size": "h1",
+        "columns_desktop": 3,
         "show_view_all": false,
         "show_image": true,
         "show_date": false,
         "show_author": false,
-        "blog": "news"
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "marketplace_availability_1": {
