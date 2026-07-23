@@ -145,18 +145,27 @@
   /* ── RENDERERS ── */
   $('creds').innerHTML = CREDS.map(function(a){return '<div class="cred">'+(a[2]||'')+'<div class="ct">'+a[0]+'</div><div class="cs">'+a[1]+'</div></div>';}).join('');
 
-  /* ── GALLERY ── */
-  function imageForSize(){ return size==='100' ? (cur.img100 || (cur.imgs&&cur.imgs[0])) : (cur.img25 || cur.img100 || (cur.imgs&&cur.imgs[0])); }
-  function setHero(src){ var img=$('heroImg'); if(img && src){ img.src=src; img.style.display='block'; } }
+  /* ── GALLERY (swipe carousel) ── */
+  function heroList(){ var l=(cur.imgs && cur.imgs.length) ? cur.imgs.slice() : []; if(!l.length){ var f=cur.img100||cur.img25; if(f) l=[f]; } return l; }
+  function imageForSize(){ var l=heroList(); return size==='100' ? (cur.img100 || l[0]) : (cur.img25 || cur.img100 || l[0]); }
+  function renderHero(){
+    var list=heroList();
+    $('heroTrack').innerHTML = list.map(function(u){ return '<div class="hero-slide"><img class="hero-img" src="'+u+'" loading="lazy" alt=""></div>'; }).join('');
+  }
+  function syncThumb(i){ var ts=$('thumbs').querySelectorAll('.thumb'); Array.prototype.forEach.call(ts,function(x,j){ x.classList.toggle('on',j===i); }); }
+  function scrollHeroTo(i){ var t=$('heroTrack'); if(t && t.children[i]){ t.scrollTo({left:t.children[i].offsetLeft,behavior:'smooth'}); } syncThumb(i); }
+  function setHero(src){ if(!src) return; var i=heroList().indexOf(src); if(i>-1) scrollHeroTo(i); }
   function renderThumbs(){
-    var list = (cur.imgs && cur.imgs.length) ? cur.imgs : [imageForSize()].filter(Boolean);
-    $('thumbs').innerHTML = list.map(function(u,i){ return '<button class="thumb '+(i===0?'on':'')+'" data-src="'+u+'"><img src="'+u+'" loading="lazy" alt=""></button>'; }).join('');
-    Array.prototype.forEach.call($('thumbs').querySelectorAll('.thumb'),function(t){ t.onclick=function(){ Array.prototype.forEach.call($('thumbs').querySelectorAll('.thumb'),function(x){x.classList.remove('on');}); t.classList.add('on'); setHero(t.dataset.src); }; });
+    var list=heroList();
+    $('thumbs').innerHTML = list.map(function(u,i){ return '<button class="thumb '+(i===0?'on':'')+'" data-i="'+i+'"><img src="'+u+'" loading="lazy" alt=""></button>'; }).join('');
+    Array.prototype.forEach.call($('thumbs').querySelectorAll('.thumb'),function(t){ t.onclick=function(){ scrollHeroTo(+t.dataset.i); }; });
   }
 
   function noteCard(name,layer){
     var f=FAM[NOTE_FAM[name]||'wood'];
-    return '<div class="ing"><div class="ing-img" style="background:'+f.bg+'"><span class="ing-layer">'+layer+'</span></div>'
+    var img=(OB.noteImages||{})[name];
+    var inner = img ? '<img src="'+img+'" loading="lazy" alt="'+name+'">' : '';
+    return '<div class="ing"><div class="ing-img" style="background:'+f.bg+'"><span class="ing-layer">'+layer+'</span>'+inner+'</div>'
       +'<div class="ing-b"><div class="ing-n">'+name+'</div><div class="ing-d">'+f.d+'</div></div></div>';
   }
   function renderIngredients(){
@@ -249,7 +258,7 @@
   function paintScent(){
     root.style.setProperty('--accent',cur.hex); root.style.setProperty('--accent-soft',cur.soft);
     $('heroFrame').style.background=cur.soft; $('liquid').style.background=cur.hex; if($('swLiquid'))$('swLiquid').style.background=cur.hex;
-    setHero(imageForSize()); renderThumbs();
+    renderHero(); renderThumbs();
     $('labelName').textContent=cur.name; $('pName').textContent=cur.name; $('pLine').textContent=cur.line; $('famLabel').textContent=cur.fam;
     $('pIf').textContent=cur.pIf; $('pFor').textContent=cur.pFor;
     var best=bestPartner(cur.id);
