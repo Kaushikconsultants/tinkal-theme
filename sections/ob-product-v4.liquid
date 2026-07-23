@@ -21,15 +21,9 @@
 <section class="pdp wrap">
   <div class="gallery">
     <div class="hero-frame" id="heroFrame">
-      <div class="gal-tag" id="galTag">Bottle</div>
       <div class="scale-note" id="scaleNote">100ml — shown to scale</div>
-      <img class="hero-img" id="heroImg" width="700" height="875" alt="{{ product.title | escape }}" style="display:none">
-      <div class="bottle big" id="bottle">
-        <div class="bottle-cap"></div><div class="bottle-neck"></div>
-        <div class="bottle-body"><div class="bottle-liquid" id="liquid"></div>
-          <div class="bottle-label"><div class="bn" id="labelName">{{ product.title | escape }}</div><div class="bs" id="labelSize">Extrait · 100ml</div></div>
-        </div>
-      </div>
+      <img class="hero-img" id="heroImg" width="700" height="875" src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}">
+      <span id="labelName" hidden></span><span id="labelSize" hidden></span><span id="liquid" hidden></span><span id="galTag" hidden></span>
     </div>
     <div class="thumbs" id="thumbs"></div>
   </div>
