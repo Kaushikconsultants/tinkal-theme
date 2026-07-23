@@ -1,0 +1,84 @@
+{%- comment -%}
+  Ombre Bliss — three-stage scent strip
+  Usage: {% render 'ob-scent-strip', product: product, block: block %}
+  Note photos come from the custom.ingredients metaobject list, matched by name.
+{%- endcomment -%}
+
+{%- liquid
+  assign mf = product.metafields.custom
+  assign top  = mf.top_notes    | split: ','
+  assign mid  = mf.middle_notes | split: ','
+  assign base = mf.base_notes   | split: ','
+  assign total = top.size | plus: mid.size | plus: base.size
+-%}
+
+{%- if total > 0 -%}
+{%- assign uid = 'obstrip-' | append: section.id -%}
+<div class="ob" {{ block.shopify_attributes }}
+     {% if block.settings.accent != blank %}style="--ob-scent:{{ block.settings.accent }}"{% endif %}>
+  <div class="ob-strip" data-ob-strip id="{{ uid }}">
+
+    <div class="ob-tabs" role="tablist" style="--ob-sx:0%">
+      {%- assign labels = block.settings.stage_labels | default: 'First spray,The heart,The dry-down' | split: ',' -%}
+      {%- assign windows = block.settings.stage_windows | default: '0–15 min,15 min – 3 hr,3 – 10 hr' | split: ',' -%}
+      {%- for i in (0..2) -%}
+        <button type="button" class="ob-tab" role="tab" data-ob-stage="{{ i }}"
+                aria-selected="{% if i == 0 %}true{% else %}false{% endif %}"
+                aria-controls="{{ uid }}-panel">
+          <span class="a">{{ windows[i] | strip }}</span>
+          <span class="b">{{ labels[i] | strip }}</span>
+        </button>
+      {%- endfor -%}
+    </div>
+
+    <div class="ob-body" id="{{ uid }}-panel" role="tabpanel">
+      <div class="ob-dots">
+        {%- for group in 'top,mid,base' | split: ',' -%}
+          {%- case group -%}
+            {%- when 'top'  -%}{%- assign notes = top  -%}
+            {%- when 'mid'  -%}{%- assign notes = mid  -%}
+            {%- else        -%}{%- assign notes = base -%}
+          {%- endcase -%}
+          {%- for raw in notes -%}
+            {%- assign note = raw | strip -%}
+            {%- assign img = null -%}
+            {%- for ing in product.metafields.custom.ingredients.value -%}
+              {%- assign ing_name = ing.name.value | default: ing.name | strip -%}
+              {%- if ing_name == note -%}{%- assign img = ing.image.value | default: ing.image -%}{%- endif -%}
+            {%- endfor -%}
+            <button type="button"
+                    class="ob-nd{% if group == 'top' %} lit{% endif %}"
+                    data-ob-note="{{ note | escape }}"
+                    data-ob-group="{{ group }}"
+                    aria-pressed="false"
+                    title="{{ note | escape }}">
+              {%- if img != blank -%}
+                <img src="{{ img | image_url: width: 120 }}" width="40" height="40"
+                     loading="lazy" alt="{{ note | escape }}">
+              {%- else -%}
+                <span class="ph" aria-hidden="true">&#127807;</span>
+              {%- endif -%}
+            </button>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="ob-txt">
+        <div class="ob-n" data-ob-name>{{ mf.top_notes }}</div>
+        <div class="ob-d" data-ob-desc>{{ block.settings.copy_top }}</div>
+      </div>
+    </div>
+
+    <script type="application/json" data-ob-strip-data>
+      {
+        "notes": { "top": {{ mf.top_notes | default: '' | json }},
+                   "mid": {{ mf.middle_notes | default: '' | json }},
+                   "base": {{ mf.base_notes | default: '' | json }} },
+        "copy":  { "top": {{ block.settings.copy_top | default: '' | json }},
+                   "mid": {{ block.settings.copy_mid | default: '' | json }},
+                   "base": {{ block.settings.copy_base | default: '' | json }} }
+      }
+    </script>
+  </div>
+</div>
+{%- endif -%}

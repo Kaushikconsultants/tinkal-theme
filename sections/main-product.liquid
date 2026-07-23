@@ -16,6 +16,9 @@
   {{ 'component-rating.css' | asset_url | stylesheet_tag }}
   {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
 
+  {{ 'ob-product.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'ob-product.js' | asset_url }}" defer></script>
+
   {% unless product.has_only_default_variant %}
     {{ 'component-product-variant-picker.css' | asset_url | stylesheet_tag }}
     {{ 'component-swatch-input.css' | asset_url | stylesheet_tag }}
@@ -688,6 +691,10 @@
                   </product-recommendations>
                 {%- when 'icon-with-text' -%}
                   {% render 'icon-with-text', block: block %}
+                {%- when 'ob_scent_profile' -%}
+                  {% render 'ob-scent-profile', product: product, block: block, section: section %}
+                {%- when 'ob_scent_strip' -%}
+                  {% render 'ob-scent-strip', product: product, block: block, section: section %}
               {%- endcase -%}
             {%- endfor -%}
             <a href="{{ product.url }}" class="link product__view-details animate-arrow">
@@ -958,6 +965,70 @@
           "id": "share_label",
           "label": "t:sections.main-product.blocks.share.settings.text.label",
           "default": "t:sections.main-product.blocks.share.settings.text.default"
+        }
+      ]
+    },
+    {
+      "type": "ob_scent_profile",
+      "name": "Scent profile",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Reads custom.scent_family, concentration, gender, longevity, projection, sweetness_score, season_* and wear_this_if. Empty fields are hidden automatically."
+        },
+        {
+          "type": "color",
+          "id": "accent",
+          "label": "Accent colour",
+          "info": "Leave empty to use Warm Terracotta."
+        },
+        { "type": "text", "id": "label_longevity",  "label": "Longevity label",  "default": "Longevity" },
+        { "type": "text", "id": "label_projection", "label": "Projection label", "default": "Projection" },
+        { "type": "text", "id": "label_sweetness",  "label": "Sweetness label",  "default": "Sweetness" },
+        { "type": "text", "id": "label_wear",       "label": "Pull-quote label", "default": "Wear this if" }
+      ]
+    },
+    {
+      "type": "ob_scent_strip",
+      "name": "Scent strip",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Three stages from custom.top_notes, middle_notes and base_notes. Photos are matched by name against the custom.ingredients metaobject."
+        },
+        { "type": "color", "id": "accent", "label": "Accent colour" },
+        {
+          "type": "text",
+          "id": "stage_labels",
+          "label": "Stage names",
+          "default": "First spray,The heart,The dry-down",
+          "info": "Three names, comma separated."
+        },
+        {
+          "type": "text",
+          "id": "stage_windows",
+          "label": "Time windows",
+          "default": "0–15 min,15 min – 3 hr,3 – 10 hr"
+        },
+        {
+          "type": "textarea",
+          "id": "copy_top",
+          "label": "Opening copy",
+          "default": "What people notice first, across a room. Gone within the quarter hour."
+        },
+        {
+          "type": "textarea",
+          "id": "copy_mid",
+          "label": "Heart copy",
+          "default": "The real scent, once the opening burns off."
+        },
+        {
+          "type": "textarea",
+          "id": "copy_base",
+          "label": "Dry-down copy",
+          "default": "Close to the skin — still there tomorrow morning."
         }
       ]
     },
