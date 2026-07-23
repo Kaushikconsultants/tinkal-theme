@@ -62,7 +62,7 @@
   /* attach real variant ids + images from Liquid */
   SCENTS.forEach(function(s){
     var v = (OB.variants||{})[s.id] || {};
-    s.v100 = v.v100; s.v25 = v.v25; s.img = v.img; s.url = v.url;
+    s.v100 = v.v100; s.v25 = v.v25; s.img100 = v.img100; s.img25 = v.img25; s.imgs = v.imgs || []; s.url = v.url;
   });
   var PAIRS = [
     {a:'smoky',b:'vanilla',n:'Rum & Cream',score:96,d:'Smoky Rum lays down tobacco and rum. Vanilla Kiss pours cream over it. The smoke stops being harsh and starts being dessert — and it lasts even longer than either bottle alone.'},
@@ -88,10 +88,16 @@
     {sz:'25',n:'The Layering Kit',ids:['oud','amberrose','vanilla'],d:'Three bottles chosen to stack.'},
     {sz:'25',n:'The Sweet Three',ids:['pistachio','candy','angel'],d:'The gourmand starter pack.'}
   ];
+  var IC_SHIELD='<svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>';
+  var IC_DROP='<svg viewBox="0 0 24 24"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>';
+  var IC_LEAF='<svg viewBox="0 0 24 24"><path d="M4 20c8 0 16-4 16-16C8 4 4 12 4 20z"/><path d="M4 20l8-8"/></svg>';
+  var IC_NO='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M6 18L18 6"/></svg>';
+  var IC_HOME='<svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg>';
+  var IC_DOC='<svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>';
   var CREDS = [
-    ['IFRA compliant','Every formula filed and within limits.'],['Dermatologically tested','Patch-tested. Safe on skin.'],
-    ['Cruelty free','Never tested on animals.'],['Paraben & phthalate free','No shortcuts in the base.'],
-    ['Made in India','Blended and bottled in our own unit.'],['GST invoice','On every order. Batch code on every bottle.']
+    ['IFRA compliant','Every formula filed and within limits.',IC_SHIELD],['Dermatologically tested','Patch-tested. Safe on skin.',IC_DROP],
+    ['Cruelty free','Never tested on animals.',IC_LEAF],['Paraben & phthalate free','No shortcuts in the base.',IC_NO],
+    ['Made in India','Blended and bottled in our own unit.',IC_HOME],['GST invoice','On every order. Batch code on every bottle.',IC_DOC]
   ];
   var FAQ = [
     ['Is the 25ml a weaker version?','No. Identical Extrait concentration. Same juice, smaller bottle. The only difference is how long it lasts you, not how long it lasts on you.'],
@@ -120,22 +126,33 @@
     return Object.keys(counts).map(function(v){ return {id:parseInt(v,10),quantity:counts[v]}; });
   }
   function tierCode(){ return qty>1 ? CODE_PREFIX+size+'Q'+qty : null; }
-  function checkout(items, code, dest){
-    fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:items})})
-      .then(function(r){ if(!r.ok) throw new Error('add'); return r.json(); })
-      .then(function(){ window.location.href = code ? ('/discount/'+encodeURIComponent(code)+'?redirect='+encodeURIComponent(dest)) : dest; })
-      .catch(function(){ $('cta').disabled=false; $('ctaBuy').disabled=false; toast('Could not add to cart — please try again'); });
-  }
+  var busy=false;
+  function setBusy(b){ busy=b; ['cta','ctaBuy','stickyCta','stickyBuy'].forEach(function(idd){ var el=$(idd); if(el) el.disabled=b; }); }
   function addToCart(dest){
+    if(busy) return;
     var items=cartItems();
     if(!items.length){ toast('Pick a scent first'); return; }
-    $('cta').disabled=true; $('ctaBuy').disabled=true;
-    toast('Adding to cart…');
-    checkout(items, tierCode(), dest || '/cart');
+    dest = dest || '/cart';
+    setBusy(true); toast('Adding to cart…');
+    var done=false;
+    var timer=setTimeout(function(){ if(!done){ done=true; setBusy(false); toast('Network slow — please tap again'); } }, 9000);
+    fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:items})})
+      .then(function(r){ if(!r.ok) throw new Error('add'); return r.json(); })
+      .then(function(){ if(done) return; done=true; clearTimeout(timer); var code=tierCode(); window.location.href = code ? ('/discount/'+encodeURIComponent(code)+'?redirect='+encodeURIComponent(dest)) : dest; })
+      .catch(function(){ if(done) return; done=true; clearTimeout(timer); setBusy(false); toast('Could not add to cart — please try again'); });
   }
 
   /* ── RENDERERS ── */
-  $('creds').innerHTML = CREDS.map(function(a){return '<div class="cred"><div class="ct">'+a[0]+'</div><div class="cs">'+a[1]+'</div></div>';}).join('');
+  $('creds').innerHTML = CREDS.map(function(a){return '<div class="cred">'+(a[2]||'')+'<div class="ct">'+a[0]+'</div><div class="cs">'+a[1]+'</div></div>';}).join('');
+
+  /* ── GALLERY ── */
+  function imageForSize(){ return size==='100' ? (cur.img100 || (cur.imgs&&cur.imgs[0])) : (cur.img25 || cur.img100 || (cur.imgs&&cur.imgs[0])); }
+  function setHero(src){ var img=$('heroImg'), bot=$('bottle'); if(src){ img.src=src; img.style.display='block'; if(bot)bot.style.display='none'; } else { img.style.display='none'; if(bot)bot.style.display='block'; } }
+  function renderThumbs(){
+    var list = (cur.imgs && cur.imgs.length) ? cur.imgs : [imageForSize()].filter(Boolean);
+    $('thumbs').innerHTML = list.map(function(u,i){ return '<button class="thumb '+(i===0?'on':'')+'" data-src="'+u+'"><img src="'+u+'" loading="lazy" alt=""></button>'; }).join('');
+    Array.prototype.forEach.call($('thumbs').querySelectorAll('.thumb'),function(t){ t.onclick=function(){ Array.prototype.forEach.call($('thumbs').querySelectorAll('.thumb'),function(x){x.classList.remove('on');}); t.classList.add('on'); setHero(t.dataset.src); }; });
+  }
 
   function noteCard(name,layer){
     var f=FAM[NOTE_FAM[name]||'wood'];
@@ -166,6 +183,7 @@
     $('bottle').className='bottle '+(k==='100'?'big':'small');
     $('scaleNote').textContent=SIZES[k].label+' — shown to scale';
     $('labelSize').textContent='Extrait · '+SIZES[k].label;
+    setHero(imageForSize());
     renderSizes(); renderTiers(); renderBulk(); renderPicker(); renderAddons(); calc(); renderCombos(); paintSeg();
   }
   function renderTiers(){
@@ -232,8 +250,7 @@
   function paintScent(){
     root.style.setProperty('--accent',cur.hex); root.style.setProperty('--accent-soft',cur.soft);
     $('heroFrame').style.background=cur.soft; $('liquid').style.background=cur.hex; if($('swLiquid'))$('swLiquid').style.background=cur.hex;
-    if(cur.img){ $('heroImg').src=cur.img; $('heroImg').style.display='block'; $('bottle').style.display='none'; }
-    else { $('heroImg').style.display='none'; $('bottle').style.display='block'; }
+    setHero(imageForSize()); renderThumbs();
     $('labelName').textContent=cur.name; $('pName').textContent=cur.name; $('pLine').textContent=cur.line; $('famLabel').textContent=cur.fam;
     $('pIf').textContent=cur.pIf; $('pFor').textContent=cur.pFor;
     var best=bestPartner(cur.id);
@@ -298,8 +315,6 @@
   /* ── FAQ / PIN ── */
   $('faq').innerHTML=FAQ.map(function(x){return '<div class="q"><div class="q-t"><span>'+x[0]+'</span><span class="pm">+</span></div><div class="q-a">'+x[1]+'</div></div>';}).join('');
   $('faq').onclick=function(e){var q=e.target.closest('.q'); if(q)q.classList.toggle('open');};
-  $('pinBtn').onclick=function(){ var p=$('pinIn').value.trim(); if(!/^\d{6}$/.test(p)){toast('Enter a valid 6-digit pincode');return;} var days=2+(+p.slice(-1)%3); var d=new Date(Date.now()+days*864e5); var fmt=d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'}); $('pinOut').className='pin-out show'; $('pinOut').innerHTML='<div class="pin-line"><span class="ic">✓</span><span>Arrives by <b style="font-weight:500">'+fmt+'</b> — ships within 24 hours</span></div><div class="pin-line"><span class="ic">✓</span><span>Free shipping on orders over ₹1,499</span></div>'; };
-  $('pinIn').onkeydown=function(e){if(e.key==='Enter')$('pinBtn').click();};
 
   /* ── EVENTS ── */
   $('scents').innerHTML=SCENTS.map(function(s){return '<button class="chip '+(s.id===cur.id?'on':'')+'" data-s="'+s.id+'"><span class="dot" style="background:'+s.hex+'"></span>'+s.name+'</button>';}).join('');
@@ -314,7 +329,6 @@
   ['labA','labB'].forEach(function(id){ $(id).onclick=function(e){var b=e.target.closest('.lab-chip'); if(!b)return; if(b.dataset.w==='a')layA=b.dataset.s; else layB=b.dataset.s; if(layA===layB)toast('Pick two different scents to layer'); renderLab();}; });
   $('mixBuy').onclick=function(){loadPair('25');}; $('mixBuyBig').onclick=function(){loadPair('100');};
   $('setSeg').onclick=function(e){var b=e.target.closest('button'); if(!b)return; setSize=b.dataset.sz; paintSeg(); renderCombos();};
-  $('thumbs').onclick=function(e){var t=e.target.closest('.thumb'); if(!t)return; Array.prototype.forEach.call(document.querySelectorAll('.thumb'),function(x){x.classList.remove('on');}); t.classList.add('on'); $('galTag').textContent=t.dataset.t;};
   $('cta').onclick=function(){addToCart('/cart');}; $('stickyCta').onclick=function(){addToCart('/cart');};
   $('ctaBuy').onclick=function(){addToCart('/checkout');}; $('stickyBuy').onclick=function(){addToCart('/checkout');};
 
