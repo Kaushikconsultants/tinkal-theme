@@ -194,6 +194,7 @@
         "watchbuy_excel_3",
         "watchbuy_excel_4"
       ],
+      "disabled": true,
       "settings": {
         "title": "Watch and Buy",
         "bg_color": "#ffffff",
