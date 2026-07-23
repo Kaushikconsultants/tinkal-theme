@@ -1,0 +1,197 @@
+{%- comment -%} Ombre Bliss — full v4 product page. Real variants/prices/metafields + % discount codes. {%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500&family=Jost:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+{{ 'ob-v4.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sc_ids = 'smoky,leather,oud,pistachio,candy,blu,tobacco,vanilla,amberrose,angel' | split: ','
+  assign sc_handles = 'smoky-rum,classical-leather-perfume,nawab-oud-perfume,pistachio-pop-perfume,lush-candy-perfume,ombre-blu-perfume,royale-tobacco-perfume,vanilla-kiss-perfume,amber-rose-unisex-perfume,angel-perfume' | split: ','
+  assign cur_scent = 'smoky'
+  for id in sc_ids
+    if sc_handles[forloop.index0] == product.handle
+      assign cur_scent = id
+    endif
+  endfor
+-%}
+
+<div class="obv4">
+<section class="pdp wrap">
+  <div class="gallery">
+    <div class="hero-frame" id="heroFrame">
+      <div class="gal-tag" id="galTag">Bottle</div>
+      <div class="scale-note" id="scaleNote">100ml — shown to scale</div>
+      <img class="hero-img" id="heroImg" alt="{{ product.title | escape }}" style="display:none">
+      <div class="bottle big" id="bottle">
+        <div class="bottle-cap"></div><div class="bottle-neck"></div>
+        <div class="bottle-body"><div class="bottle-liquid" id="liquid"></div>
+          <div class="bottle-label"><div class="bn" id="labelName">{{ product.title | escape }}</div><div class="bs" id="labelSize">Extrait · 100ml</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="thumbs" id="thumbs">
+      <div class="thumb on" data-t="Bottle">Bottle</div>
+      <div class="thumb" data-t="The ingredients, up close">Notes<br>macro</div>
+      <div class="thumb" data-t="Both sizes together">Both<br>sizes</div>
+      <div class="thumb" data-t="Size in hand">Size in<br>hand</div>
+      <div class="thumb" data-t="Layering card">Layer<br>card</div>
+    </div>
+  </div>
+
+  <div class="buy">
+    <div class="title-row">
+      <div><div class="eyebrow">The Couture Collection</div><h1 id="pName">{{ product.title | escape }}</h1></div>
+      <div class="conc">Extrait</div>
+    </div>
+    <p class="oneline" id="pLine"></p>
+    <div class="stars"><span class="s">★★★★★</span><span>4.7</span><a href="#obv4-reviews">Reviews</a><span class="vbadge">✓ Verified buyers</span></div>
+
+    <div class="sec"><div class="sec-h"><div class="eyebrow">Choose your size</div></div><div class="sizes" id="sizes"></div><div class="size-hint" id="sizeHint"></div></div>
+    <div class="sec"><div class="sec-h"><div class="eyebrow">Choose your scent</div><div class="eyebrow" id="famLabel"></div></div><div class="scents" id="scents"></div></div>
+
+    <div class="sec">
+      <div class="sec-h"><div class="eyebrow">How many bottles</div><div class="eyebrow">Mix any scents</div></div>
+      <div id="tiers"></div>
+      <div class="bulk" id="bulk">
+        <button class="bulk-h" id="bulkH"><span><span class="bh-t">Build a bigger box — up to 10 bottles</span><span class="bh-s">The more you take, the cheaper each one gets.</span></span><span class="pm">+</span></button>
+        <div class="bulk-b"><div class="bulk-in">
+          <div class="ladder" id="ladder"></div>
+          <div class="step"><button id="qMinus">−</button><span class="sv"><b id="qVal">2</b><span id="qLab">bottles · 100ml</span></span><span class="sp"><b id="qPrice">₹0</b><span id="qEach">₹0 each</span></span><button id="qPlus">+</button></div>
+          <div class="nudge" id="nudge"></div>
+        </div></div>
+      </div>
+      <div class="picker" id="picker"></div>
+      <div class="savings" id="savings" style="display:none"><span>You're saving</span><b id="savingsAmt">₹0</b></div>
+    </div>
+
+    <div class="sec"><div class="eyebrow" style="margin-bottom:12px">Add to your order</div><div id="addons"></div></div>
+
+    <div class="total"><span class="tl">Total</span><span class="tr"><span class="was" id="wasAmt">₹0</span><span class="amt" id="totalAmt">₹0</span></span></div>
+    <div class="ctas"><button class="cta" id="cta">Add to cart</button><button class="cta buy" id="ctaBuy">Buy now</button></div>
+    <div class="cta-note" id="ctaNote"></div>
+
+    <div class="secure"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Secure checkout · 256-bit SSL</div>
+    <div class="pays"><span class="pay-badge">UPI</span><span class="pay-badge">GPay</span><span class="pay-badge">PhonePe</span><span class="pay-badge">Paytm</span><span class="pay-badge">Visa</span><span class="pay-badge">Mastercard</span><span class="pay-badge">RuPay</span></div>
+    <div class="ship-bar"><div class="ship-track"><div class="ship-fill" id="shipFill"></div></div><div class="ship-txt" id="shipTxt"></div></div>
+
+    <div class="pin"><div class="eyebrow" style="margin-bottom:10px">Delivery</div><div class="pin-in"><input id="pinIn" maxlength="6" inputmode="numeric" placeholder="Enter your pincode"/><button id="pinBtn">Check</button></div><div class="pin-out" id="pinOut"></div></div>
+
+    <div class="trust">
+      <div class="trust-i"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><b>100% authentic</b>Batch-coded. Our own unit.</div>
+      <div class="trust-i"><svg viewBox="0 0 24 24"><path d="M3 12h4l2-6 3 12 3-9 2 3h4"/></svg><b>Extrait grade</b>Both sizes, same juice.</div>
+      <div class="trust-i"><svg viewBox="0 0 24 24"><path d="M4 8h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/><path d="M9 13l2 2 4-4"/></svg><b>7-day exchange</b>Swap the scent.</div>
+      <div class="trust-i"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><b>Ships in 24 hrs</b>Tracked across India.</div>
+    </div>
+  </div>
+</section>
+
+<section class="creds" id="creds"></section>
+
+<section class="band">
+  <div class="wrap"><div class="ing-head"><div><div class="eyebrow">Inside the bottle</div><h2 class="band-h" id="ingH">What it's made of</h2><p class="band-sub">Every note, and what it looks like before it becomes perfume.</p></div></div><div class="ing-grid" id="ingGrid"></div></div>
+</section>
+
+<section class="band dark">
+  <div class="wrap"><div class="eyebrow">The signature</div><h2 class="band-h">A perfume isn't one smell. It's four, over ten hours.</h2>
+    <div class="dd"><div><div class="dd-time" id="ddTime"></div><div class="dd-stage" id="ddStage"></div><div class="dd-desc" id="ddDesc"></div><div class="dd-notes" id="ddNotes"></div></div>
+      <div><input type="range" class="dd-slider" id="ddSlider" min="0" max="100" value="4" step="1"/><div class="dd-ticks"><span>Spray</span><span>1 hr</span><span>3 hr</span><span>6 hr</span><span>10 hr</span></div></div></div>
+  </div>
+</section>
+
+<section class="band dark" id="layering" style="border-top:1px solid #2A241E">
+  <div class="wrap"><div class="eyebrow">The layering lab · Built for 25ml</div><h2 class="band-h">Two scents. One that nobody else has.</h2>
+    <p class="band-sub">Spray the heavier scent first, let it settle thirty seconds, then the lighter one on top.</p>
+    <div class="lab"><div>
+        <div class="lab-pick"><div class="lab-lab">Base layer — spray first</div><div class="lab-grid" id="labA"></div></div>
+        <div class="lab-pick"><div class="lab-lab">Top layer — spray second</div><div class="lab-grid" id="labB"></div></div>
+      </div>
+      <div class="mix"><div class="lab-lab" id="mixTag">Your blend</div><div class="mix-name" id="mixName"></div>
+        <div class="mix-score"><span class="mix-track"><span class="mix-fill" id="mixFill"></span></span><span class="mix-num" id="mixNum"></span></div>
+        <div class="mix-desc" id="mixDesc"></div><div class="mix-how" id="mixHow"></div>
+        <div class="mix-buy"><button class="mix-btn" id="mixBuy">Add both — 25ml</button><button class="mix-btn ghost" id="mixBuyBig">Add both — 100ml</button></div>
+      </div>
+    </div>
+    <div class="lab-lab" style="margin-top:48px">Blends we've already made for you</div><div class="presets" id="presets"></div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap"><div class="eyebrow">The pyramid · How it performs</div><h2 class="band-h">The build</h2>
+    <p class="band-sub">Both sizes are the same Extrait concentration. The 25ml isn't watered down.</p>
+    <div class="two"><div id="pyramid"></div>
+      <div>
+        <div class="meter"><div class="meter-top"><span>Longevity</span><span class="v" id="mLongV"></span></div><div class="meter-track"><div class="meter-fill" id="mLong"></div></div></div>
+        <div class="meter"><div class="meter-top"><span>Sillage — how far it travels</span><span class="v" id="mSilV"></span></div><div class="meter-track"><div class="meter-fill" id="mSil"></div></div></div>
+        <div class="season"><span>Winter</span><span class="pips" data-s="winter"></span></div>
+        <div class="season"><span>Monsoon</span><span class="pips" data-s="monsoon"></span></div>
+        <div class="season"><span>Summer</span><span class="pips" data-s="summer"></span></div>
+        <div class="season"><span>Night</span><span class="pips" data-s="night"></span></div>
+        <div class="season" style="border-bottom:none"><span>Day</span><span class="pips" data-s="day"></span></div>
+      </div>
+    </div>
+    <div class="pers"><div><div class="pk">Wear this if</div><div class="pv" id="pIf"></div></div><div><div class="pk">Best for</div><div class="pv" id="pFor"></div></div><div><div class="pk">Layers beautifully with</div><div class="pv" id="pLike"></div></div></div>
+  </div>
+</section>
+
+<section class="band" style="background:var(--paper)">
+  <div class="wrap"><div class="sec-h" style="align-items:center;flex-wrap:wrap;margin-bottom:0">
+      <div><div class="eyebrow">Ready-made sets</div><h2 class="band-h">Boxed, named, done.</h2></div>
+      <div class="seg" id="setSeg"><button class="on" data-sz="100">100ml sets</button><button data-sz="25">25ml sets</button></div>
+    </div><div class="combos" id="combos"></div></div>
+</section>
+
+<section class="band" id="obv4-reviews">
+  <div class="wrap"><div class="eyebrow">What buyers say</div><h2 class="band-h">What it did for them</h2>
+    <div class="rev-head"><div><div class="rev-score">4.7</div><div class="stars"><span class="s">★★★★★</span></div></div>
+      <div class="rev-bars"><div class="rev-bar"><span>5</span><span class="t"><i style="width:78%"></i></span><span>78%</span></div><div class="rev-bar"><span>4</span><span class="t"><i style="width:14%"></i></span><span>14%</span></div><div class="rev-bar"><span>3</span><span class="t"><i style="width:5%"></i></span><span>5%</span></div><div class="rev-bar"><span>2</span><span class="t"><i style="width:2%"></i></span><span>2%</span></div><div class="rev-bar"><span>1</span><span class="t"><i style="width:1%"></i></span><span>1%</span></div></div>
+    </div>
+    <div class="rev-grid">
+      <div class="rev"><div class="rs">★★★★★</div><div class="rt">Started with the 25ml five-pack because I couldn't decide. Ended up buying the 100ml two weeks later.</div><div class="rm"><span class="vbadge">✓ Verified</span> Aditya M.</div></div>
+      <div class="rev"><div class="rs">★★★★★</div><div class="rt">Layering Nawab Oud under Vanilla Kiss is unreal. Nobody can place what I'm wearing.</div><div class="rm"><span class="vbadge">✓ Verified</span> Sneha R.</div></div>
+      <div class="rev"><div class="rs">★★★★☆</div><div class="rt">The 25ml lives in my bag, the 100ml on my dresser. Same scent, lasts through a Delhi workday.</div><div class="rm"><span class="vbadge">✓ Verified</span> Karan S.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" style="background:var(--paper)"><div class="wrap"><div class="eyebrow">Before you buy</div><h2 class="band-h">Questions we get asked</h2><div class="faq" id="faq"></div></div></section>
+</div>
+
+<div class="obv4-sticky" id="sticky"><div class="sw"><i id="swLiquid"></i></div><div class="si"><div class="sn" id="snName"></div><div class="sp" id="snPrice"></div></div><div class="sbtns"><button id="stickyCta">Add</button><button class="buy" id="stickyBuy">Buy now</button></div></div>
+<div class="obv4-toast" id="toast"></div>
+
+<script>
+window.OB_V4 = {
+  freeShipMin: 1499,
+  codePrefix: 'OBC',
+  currentScent: {{ cur_scent | json }},
+  rating: { value: {{ product.metafields.reviews.rating.value.rating | default: 4.7 }}, count: {{ product.metafields.reviews.rating_count.value | default: 0 }} },
+  sizes: {
+    '100': { ml:100, label:'100ml', unit:1499, mrp:1999, px:[0,1499,2549,2999,3799,4649,5449,6249,6999,7749,8449] },
+    '25':  { ml:25,  label:'25ml',  unit:499,  mrp:599,  px:[0,499,899,1249,1599,1899,2199,2499,2749,2999,3199] }
+  },
+  variants: {
+  {%- for id in sc_ids -%}
+    {%- assign h = sc_handles[forloop.index0] -%}
+    {%- assign pr = all_products[h] -%}
+    {%- assign v100 = nil -%}{%- assign v25 = nil -%}
+    {%- for v in pr.variants -%}
+      {%- if v.title contains '100' -%}{%- assign v100 = v -%}{%- elsif v.title contains '25' -%}{%- assign v25 = v -%}{%- endif -%}
+    {%- endfor -%}
+    {{ id | json }}: { "v100": {{ v100.id | default: 'null' }}, "v25": {{ v25.id | default: 'null' }}, "img": {{ pr.featured_image | image_url: width: 900 | json }}, "url": {{ pr.url | json }} }{%- unless forloop.last -%},{%- endunless -%}
+  {%- endfor -%}
+  }
+};
+</script>
+<script src="{{ 'ob-v4.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "OB Product v4",
+  "tag": "section",
+  "class": "section ob-product-v4",
+  "settings": [
+    { "type": "paragraph", "content": "Full Ombre Bliss product page. Reads Couture variants, prices and the ob discount codes. Assign this via the 'v4' product template." }
+  ],
+  "presets": [ { "name": "OB Product v4" } ]
+}
+{% endschema %}
