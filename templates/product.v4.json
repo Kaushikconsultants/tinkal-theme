@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "ob-product-v4",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
