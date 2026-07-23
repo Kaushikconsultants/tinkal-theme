@@ -92,11 +92,11 @@ function heroList(){
 }
 function renderGallery(){
   var list=heroList();
-  $('gtrack').innerHTML=list.map(function(u){return '<div class="gslide"><img src="'+u+'" loading="lazy" alt="'+cur.name+'"></div>';}).join('');
-  $('thumbs').innerHTML=list.map(function(u,i){return '<button class="th '+(i===0?'on':'')+'" data-i="'+i+'"><img src="'+u+'" loading="lazy" alt=""></button>';}).join('');
-  Array.prototype.forEach.call($('thumbs').querySelectorAll('.th'),function(t){ t.onclick=function(){ scrollGalTo(+t.dataset.i); }; });
+  if($('mainImg')) $('mainImg').src=list[0]||'';
+  $('thumbs').innerHTML=list.map(function(u,i){return '<button class="th '+(i===0?'on':'')+'" data-src="'+u+'"><img src="'+u+'" loading="lazy" alt=""></button>';}).join('');
+  Array.prototype.forEach.call($('thumbs').querySelectorAll('.th'),function(t){ t.onclick=function(){ setMain(t.dataset.src); Array.prototype.forEach.call($('thumbs').querySelectorAll('.th'),function(x){x.classList.toggle('on',x===t);}); }; });
 }
-function scrollGalTo(i){ var tr=$('gtrack'); if(tr&&tr.children[i]) tr.scrollTo({left:tr.children[i].offsetLeft,behavior:'smooth'}); Array.prototype.forEach.call($('thumbs').querySelectorAll('.th'),function(x,j){x.classList.toggle('on',j===i);}); }
+function setMain(src){ if($('mainImg')&&src)$('mainImg').src=src; }
 
 /* PROFILE */
 function profile(){
@@ -126,7 +126,7 @@ function sizes(){
   $('sizes').innerHTML=Object.keys(SIZES).map(function(k){var c=SIZES[k],win=k==='100';return '<button class="sz '+(k===size?'on':'')+'" data-z="'+k+'">'+(win?'<span class="bdg">'+better+'% better value</span>':'')+'<div class="t">'+c.label+'</div><div class="r">'+c.role+'</div><div class="p">'+inr(c.unit)+'<s>'+inr(c.mrp)+'</s></div><div class="m">₹'+pm(k).toFixed(2)+' per ml</div></button>';}).join('');
   Array.prototype.forEach.call($('sizes').querySelectorAll('.sz'),function(b){b.onclick=function(){setSizeTo(b.dataset.z);};});
 }
-function setSizeTo(k){ size=k; fit(); $('gscale').textContent=SIZES[k].label+' — shown to scale'; renderGallery(); scrollGalTo(0); sizes(); tiers(); bulk(); picker(); renderFbt(); calc(); }
+function setSizeTo(k){ size=k; fit(); $('gscale').textContent=SIZES[k].label+' — shown to scale'; renderGallery(); sizes(); tiers(); bulk(); picker(); renderFbt(); calc(); }
 /* TIERS */
 function tiers(){
   $('tiers').innerHTML=cf().quick.map(function(t){var p=priceFor(size,t.q),mrp=t.q*cf().mrp;return '<button class="tier '+(t.q===qty?'on':'')+'" data-q="'+t.q+'">'+(t.b?'<span class="bdg2 '+(t.o?'o':'')+'">'+t.b+'</span>':'')+'<span class="rad"></span><span><span class="n">'+t.n+'</span><span class="s">'+t.s+(t.q>1?' · '+inr(p/t.q)+' each · '+offFor(size,t.q)+'% off':'')+'</span></span><span class="pr">'+(t.q>1?'<span class="b">'+inr(mrp)+'</span>':'')+'<span class="a">'+inr(p)+'</span></span></button>';}).join('');
@@ -231,8 +231,9 @@ function go(dest,btn){
   var items=cartItems();
   if(!items.length){toast('Pick a scent first');return;}
   dest=dest||'/cart'; setBusy(true,btn);
-  var done=false, timer=setTimeout(function(){if(!done){done=true;setBusy(false);toast('Network slow — please tap again');}},9000);
-  fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:items})})
+  var done=false, timer=setTimeout(function(){if(!done){done=true;setBusy(false);toast('Network slow — please tap again');}},12000);
+  fetch('/cart/clear.js',{method:'POST'})
+   .then(function(){return fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:items})});})
    .then(function(r){if(!r.ok)throw new Error('add');return r.json();})
    .then(function(){if(done)return;done=true;clearTimeout(timer);var c=tierCode();window.location.href=c?('/discount/'+encodeURIComponent(c)+'?redirect='+encodeURIComponent(dest)):dest;})
    .catch(function(){if(done)return;done=true;clearTimeout(timer);setBusy(false);toast('Could not add to cart — please try again');});
