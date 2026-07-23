@@ -33,7 +33,8 @@
 
     <div class="ob-body" id="{{ uid }}-panel" role="tabpanel">
       <div class="ob-dots">
-        {%- for group in 'top,mid,base' | split: ',' -%}
+        {%- assign ob_groups = 'top,mid,base' | split: ',' -%}
+        {%- for group in ob_groups -%}
           {%- case group -%}
             {%- when 'top'  -%}{%- assign notes = top  -%}
             {%- when 'mid'  -%}{%- assign notes = mid  -%}
