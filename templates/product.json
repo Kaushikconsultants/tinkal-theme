@@ -29,6 +29,14 @@
           "type": "title",
           "settings": {}
         },
+        "ob_profile": {
+          "type": "ob_scent_profile",
+          "settings": {}
+        },
+        "ob_strip": {
+          "type": "ob_scent_strip",
+          "settings": {}
+        },
         "custom_liquid_fUyFKy": {
           "type": "custom_liquid",
           "settings": {
@@ -72,6 +80,8 @@
         "gallery_carousel",
         "vendor",
         "title",
+        "ob_profile",
+        "ob_strip",
         "custom_liquid_fUyFKy",
         "price",
         "variant_picker",
