@@ -21,8 +21,10 @@
 <section class="pdp wrap">
   <div class="gallery">
     <div class="hero-frame" id="heroFrame">
+      <div class="hero-track" id="heroTrack">
+        <div class="hero-slide"><img class="hero-img" src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}"></div>
+      </div>
       <div class="scale-note" id="scaleNote">100ml — shown to scale</div>
-      <img class="hero-img" id="heroImg" width="700" height="875" src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}">
       <span id="labelName" hidden></span><span id="labelSize" hidden></span><span id="liquid" hidden></span><span id="galTag" hidden></span>
     </div>
     <div class="thumbs" id="thumbs"></div>
@@ -172,6 +174,19 @@ window.OB_V4 = {
       {%- unless first_v -%},{%- endunless -%}{%- assign first_v = false -%}
       {{ sid | json }}: { "v100": {{ v100.id | default: 'null' }}, "v25": {{ v25.id | default: 'null' }}, "img100": {{ img100 | image_url: width: 800 | json }}, "img25": {{ img25 | image_url: width: 800 | json }}, "imgs": [ {%- for im in pr.images limit: 6 -%}{{ im | image_url: width: 800 | json }}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%} ], "url": {{ pr.url | json }} }
     {%- endif -%}
+  {%- endfor -%}
+  },
+  noteImages: {
+  {%- assign first_ni = true -%}
+  {%- for pr in couture.products -%}
+    {%- for ing in pr.metafields.custom.ingredients.value -%}
+      {%- assign iname = ing.name.value | default: ing.name -%}
+      {%- assign iimg = ing.image.value | default: ing.image -%}
+      {%- if iname != blank and iimg != blank -%}
+        {%- unless first_ni -%},{%- endunless -%}{%- assign first_ni = false -%}
+        {{ iname | strip | json }}: {{ iimg | image_url: width: 400 | json }}
+      {%- endif -%}
+    {%- endfor -%}
   {%- endfor -%}
   }
 };
