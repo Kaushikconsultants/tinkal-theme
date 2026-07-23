@@ -147,7 +147,7 @@
 
   /* ── GALLERY ── */
   function imageForSize(){ return size==='100' ? (cur.img100 || (cur.imgs&&cur.imgs[0])) : (cur.img25 || cur.img100 || (cur.imgs&&cur.imgs[0])); }
-  function setHero(src){ var img=$('heroImg'), bot=$('bottle'); if(src){ img.src=src; img.style.display='block'; if(bot)bot.style.display='none'; } else { img.style.display='none'; if(bot)bot.style.display='block'; } }
+  function setHero(src){ var img=$('heroImg'); if(img && src){ img.src=src; img.style.display='block'; } }
   function renderThumbs(){
     var list = (cur.imgs && cur.imgs.length) ? cur.imgs : [imageForSize()].filter(Boolean);
     $('thumbs').innerHTML = list.map(function(u,i){ return '<button class="thumb '+(i===0?'on':'')+'" data-src="'+u+'"><img src="'+u+'" loading="lazy" alt=""></button>'; }).join('');
@@ -180,7 +180,6 @@
   }
   function setSizeTo(k){
     size=k; setSize=k; fitCombo();
-    $('bottle').className='bottle '+(k==='100'?'big':'small');
     $('scaleNote').textContent=SIZES[k].label+' — shown to scale';
     $('labelSize').textContent='Extrait · '+SIZES[k].label;
     setHero(imageForSize());
