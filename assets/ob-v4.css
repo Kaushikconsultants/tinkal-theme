@@ -14,13 +14,14 @@
 .obv4 .eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
 
 .obv4 .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
-.obv4 .pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;padding-top:14px;padding-bottom:56px}
-@media(max-width:980px){.obv4 .pdp{grid-template-columns:1fr;gap:34px;padding:24px 0 40px}}
+.obv4 .pdp{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:64px;padding-top:14px;padding-bottom:56px}
+.obv4 .gallery,.obv4 .buy{min-width:0}
+@media(max-width:980px){.obv4 .pdp{grid-template-columns:minmax(0,1fr);gap:34px;padding-top:24px;padding-bottom:40px}}
 
 .obv4 .gallery{position:sticky;top:78px;align-self:start}
 @media(max-width:980px){.obv4 .gallery{position:static}}
 .obv4 .hero-frame{position:relative;border:1px solid var(--line);background:var(--accent-soft);overflow:hidden;transition:background .7s ease;aspect-ratio:1/1}
-.obv4 .hero-track{display:flex;width:100%;height:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.obv4 .hero-track{display:flex;width:100%;height:100%;min-width:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .obv4 .hero-track::-webkit-scrollbar{display:none}
 .obv4 .hero-slide{flex:0 0 100%;width:100%;height:100%;scroll-snap-align:center}
 .obv4 .hero-img{width:100%;height:100%;object-fit:cover;display:block}
@@ -40,7 +41,7 @@
 .obv4 .bottle.small .bottle-label .bs{font-size:5px}
 .obv4 .gal-tag{position:absolute;top:14px;left:14px;z-index:2;background:var(--porcelain);border:1px solid var(--line);padding:5px 10px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase}
 .obv4 .scale-note{position:absolute;bottom:14px;right:14px;z-index:2;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
-.obv4 .thumbs{display:flex;gap:8px;margin-top:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+.obv4 .thumbs{display:flex;gap:8px;margin-top:8px;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
 .obv4 .thumbs::-webkit-scrollbar{display:none}
 .obv4 .thumb{flex:0 0 66px;aspect-ratio:1;border:1px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0;cursor:pointer;transition:.2s}
 .obv4 .thumb img{width:100%;height:100%;object-fit:cover}
