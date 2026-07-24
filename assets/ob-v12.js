@@ -233,6 +233,7 @@ function go(dest,btn){
   dest=dest||'/cart'; setBusy(true,btn);
   var done=false, timer=setTimeout(function(){if(!done){done=true;setBusy(false);toast('Network slow — please tap again');}},12000);
   fetch('/cart/clear.js',{method:'POST'})
+   .then(function(){return fetch('/cart/update.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({discount:''})});})
    .then(function(){return fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:items})});})
    .then(function(r){if(!r.ok)throw new Error('add');return r.json();})
    .then(function(){if(done)return;done=true;clearTimeout(timer);var c=tierCode();window.location.href=c?('/discount/'+encodeURIComponent(c)+'?redirect='+encodeURIComponent(dest)):dest;})
