@@ -1,0 +1,92 @@
+{%- comment -%} Ombre Bliss — collection page (brand kit). Real variants/images/urls. {%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{%- assign ob_fonts = 'https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@300;400;500;600;700&display=swap' -%}
+<link rel="preload" as="style" href="{{ ob_fonts }}" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ ob_fonts }}"></noscript>
+{{ 'ob-collection.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign ids = 'smoky,oud,leather,blu,tobacco,vanilla,amberrose,angel,pistachio,candy,marino,vicious,yakuza,honour,bouquet,obsessed,luna,pierce,gsHim,gsHer' | split: ','
+  assign handles = 'smoky-rum,nawab-oud-perfume,classical-leather-perfume,ombre-blu-perfume,royale-tobacco-perfume,vanilla-kiss-perfume,amber-rose-unisex-perfume,angel-perfume,pistachio-pop-perfume,lush-candy-perfume,marino-perfume-for-him,vicious-perfume-for-him,yazuka-perfume-for-him,honour-perfume-for-him,the-bouquet-perfume-for-her,obsessed-perfume-for-her,luna-perfume-for-her,pierce-perfume-for-her,luxury-perfume-gift-set-for-him-4-x-25mls,luxury-perfume-gift-set-for-her-4-x-25mls' | split: ','
+-%}
+
+<div class="obcol">
+<section class="hero">
+  <div class="wrap">
+    <span class="lbl" id="heroEye">Every scent we make</span>
+    <h1 id="heroH">Shop All Perfumes</h1>
+    <p id="heroP"></p>
+    <div class="tabs" id="tabs"></div>
+  </div>
+</section>
+
+<div class="bar"><div class="bar-in">
+  <button class="fbtn" id="fBtn"><span class="dot"></span>Filter</button>
+  <span class="cnt" id="cnt"></span>
+  <select class="srt" id="srt">
+    <option value="pop">Bestselling</option>
+    <option value="new">Newest</option>
+    <option value="plo">Price: low to high</option>
+    <option value="phi">Price: high to low</option>
+    <option value="rate">Highest rated</option>
+  </select>
+</div></div>
+
+<main class="wrap">
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<div class="trust"><div class="trust-in">
+  <span>Extrait · up to 25% oil</span><span>8–10 hour wear</span><span>Vegan &amp; cruelty free</span><span>Free shipping over ₹1,499</span>
+</div></div>
+</div>
+
+<div class="obcol-cbar" id="cbar"><div class="cbar-in">
+  <div class="i"><div class="t" id="cbT"></div><div class="s" id="cbS"></div></div>
+  <button id="cbGo">View cart</button>
+</div></div>
+
+<div class="obcol-sheet" id="sheet">
+  <div class="sheet-o" data-close></div>
+  <div class="sheet-p">
+    <div class="sheet-h"><span class="t">Filter</span><button data-close>&times;</button></div>
+    <div class="sheet-b" id="sheetB"></div>
+    <div class="sheet-f"><button class="btn" id="clrAll">Clear all</button><button class="btn solid" data-close id="showBtn">Show results</button></div>
+  </div>
+</div>
+<div class="obcol-toast" id="toast"></div>
+
+<script>
+window.OB_COL = { products: {
+{%- assign first_p = true -%}
+{%- for id in ids -%}
+  {%- assign h = handles[forloop.index0] -%}
+  {%- assign pr = all_products[h] -%}
+  {%- if pr != empty and pr.id -%}
+    {%- assign v100 = nil -%}{%- assign v25 = nil -%}
+    {%- for v in pr.variants -%}
+      {%- if v.title contains '100' -%}{%- assign v100 = v -%}{%- elsif v.title contains '25' -%}{%- assign v25 = v -%}{%- endif -%}
+    {%- endfor -%}
+    {%- if v100 == nil and v25 == nil -%}{%- assign v100 = pr.variants.first -%}{%- endif -%}
+    {%- assign vset = pr.variants.first -%}
+    {%- unless first_p -%},{%- endunless -%}{%- assign first_p = false -%}
+    {{ id | json }}: { "v100": {{ v100.id | default: 'null' }}, "v25": {{ v25.id | default: 'null' }}, "vset": {{ vset.id | default: 'null' }}, "img": {{ pr.featured_image | image_url: width: 600 | json }}, "url": {{ pr.url | json }} }
+  {%- endif -%}
+{%- endfor -%}
+} };
+</script>
+<script src="{{ 'ob-collection.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "OB Collection",
+  "tag": "section",
+  "class": "ob-collection",
+  "settings": [
+    { "type": "paragraph", "content": "Filterable brand-kit collection grid. Reads real variants, images and prices. Assign via a collection template." }
+  ],
+  "presets": [ { "name": "OB Collection" } ]
+}
+{% endschema %}

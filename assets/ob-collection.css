@@ -1,0 +1,125 @@
+/* Ombre Bliss — collection page (brand kit). Scoped under .obcol. */
+.obcol{
+  --plum:#55343B; --olive:#BFB500; --terra:#D88356; --butter:#E4DD86; --cream:#F3E6DA;
+  --bg:#FCFAF7; --surf:#FFF; --ink:#55343B;
+  --i2:rgba(85,52,59,.72); --i3:rgba(85,52,59,.46); --i4:rgba(85,52,59,.24);
+  --line:rgba(85,52,59,.13); --line2:rgba(85,52,59,.24);
+  --ok:#4A7C59; --max:1280px;
+  --T:'Cinzel Decorative',Georgia,serif; --B:'Raleway',system-ui,sans-serif; --E:cubic-bezier(.22,.9,.26,1);
+  font-family:var(--B);color:var(--ink);font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.obcol *{box-sizing:border-box}
+.obcol button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.obcol input,.obcol select{font-family:inherit;font-size:inherit;color:inherit}
+.obcol a{color:inherit;text-decoration:none}
+.obcol img{max-width:100%;display:block}
+.obcol .wrap{max-width:var(--max);margin:0 auto;padding:0 18px}
+.obcol .lbl{font-size:9px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--i3)}
+.obcol .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:14px 22px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;border:1px solid var(--plum);color:var(--plum);background:transparent;transition:.25s}
+.obcol .btn:hover{background:var(--plum);color:var(--cream)}
+.obcol .btn.solid{background:var(--plum);color:var(--cream)}
+.obcol .btn.solid:hover{background:var(--terra);border-color:var(--terra);color:#fff}
+
+.obcol-toast{position:fixed;bottom:92px;left:50%;transform:translate(-50%,190%);background:#55343B;color:#F3E6DA;padding:13px 20px;z-index:150;font-size:11px;letter-spacing:.05em;font-weight:500;transition:transform .4s cubic-bezier(.22,.9,.26,1);max-width:88vw;text-align:center;font-family:'Raleway',sans-serif}
+.obcol-toast.up{transform:translate(-50%,0)}
+.obcol-toast.win{background:#BFB500;color:#55343B;font-weight:700}
+@media(min-width:961px){.obcol-toast{bottom:26px}}
+
+.obcol .hero{padding:26px 0 0;border-bottom:1px solid var(--line);background:var(--cream)}
+.obcol .hero h1{font-family:var(--T);font-weight:400;font-size:clamp(26px,4.6vw,40px);line-height:1.08;letter-spacing:.03em;margin-top:9px}
+.obcol .hero p{font-size:14px;color:var(--i2);max-width:48ch;margin-top:9px;line-height:1.55}
+@media(max-width:600px){.obcol .hero p{font-size:13px}}
+.obcol .tabs{display:flex;gap:0;margin-top:20px;overflow-x:auto;scrollbar-width:none}
+.obcol .tabs::-webkit-scrollbar{display:none}
+.obcol .tab{padding:13px 20px;white-space:nowrap;border-bottom:2px solid transparent;transition:.2s;font-size:12.5px;font-weight:600;letter-spacing:.04em;color:var(--i3)}
+.obcol .tab .n{font-size:9px;opacity:.6;margin-left:5px;font-weight:500}
+.obcol .tab.on{border-bottom-color:var(--plum);color:var(--ink)}
+@media(max-width:600px){.obcol .tab{padding:12px 15px;font-size:12px}}
+
+.obcol .bar{position:sticky;top:0;z-index:60;background:rgba(252,250,247,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:10px 0}
+.obcol .bar-in{max-width:var(--max);margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.obcol .fbtn{display:flex;align-items:center;gap:8px;border:1px solid var(--line2);padding:10px 15px;font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;transition:.2s}
+.obcol .fbtn:hover{border-color:var(--plum)}
+.obcol .fbtn .dot{width:6px;height:6px;border-radius:50%;background:var(--terra);display:none}
+.obcol .fbtn.act .dot{display:block}
+.obcol .cnt{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--i3);font-weight:600}
+@media(max-width:520px){.obcol .cnt{display:none}}
+.obcol .srt{border:1px solid var(--line2);background:var(--surf);padding:10px 12px;font-size:11.5px;border-radius:0;font-weight:500;max-width:170px}
+.obcol .srt:focus{outline:none;border-color:var(--plum)}
+
+.obcol .chips{display:flex;gap:6px;flex-wrap:wrap;padding:14px 0 0}
+.obcol .chip{display:inline-flex;align-items:center;gap:7px;background:var(--plum);color:var(--cream);padding:6px 11px;font-size:9px;letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+.obcol .chip i{font-style:normal;opacity:.65;font-size:11px}
+.obcol .chip.clear{background:transparent;color:var(--i3);border:1px solid var(--line2)}
+
+.obcol .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:22px 0 40px}
+@media(max-width:1080px){.obcol .grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.obcol .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;padding:16px 0 30px}}
+.obcol .card{display:flex;flex-direction:column;background:var(--surf);border:1px solid var(--line);transition:.25s cubic-bezier(.22,.9,.26,1);min-width:0}
+.obcol .card:hover{border-color:var(--line2);transform:translateY(-2px);box-shadow:0 8px 22px rgba(85,52,59,.07)}
+.obcol .c-m{position:relative;aspect-ratio:1/1.04;display:block;overflow:hidden;background:var(--cream)}
+.obcol .c-m img{width:100%;height:100%;object-fit:cover;transition:transform .45s cubic-bezier(.22,.9,.26,1)}
+.obcol .card:hover .c-m img{transform:scale(1.04)}
+.obcol .c-tag{position:absolute;top:9px;left:9px;font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:4px 7px;background:var(--surf);border:1px solid var(--line);z-index:2}
+.obcol .c-tag.hot{background:var(--plum);color:var(--cream);border-color:var(--plum)}
+.obcol .c-tag.new{background:var(--olive);color:var(--plum);border-color:var(--olive)}
+.obcol .c-off{position:absolute;top:9px;right:9px;font-size:8px;letter-spacing:.07em;font-weight:700;background:var(--butter);color:var(--plum);padding:4px 7px;z-index:2}
+.obcol .c-b{padding:13px;display:flex;flex-direction:column;flex:1}
+.obcol .c-n{font-family:var(--T);font-size:15px;letter-spacing:.02em;line-height:1.2}
+@media(max-width:760px){.obcol .c-n{font-size:13.5px}}
+.obcol .c-f{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--i3);margin-top:5px;font-weight:600}
+.obcol .c-nt{font-size:11px;color:var(--i3);margin-top:6px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media(max-width:760px){.obcol .c-nt{display:none}}
+.obcol .c-p{display:flex;align-items:baseline;gap:6px;margin-top:10px}
+.obcol .c-p .a{font-size:15px;font-weight:700}
+.obcol .c-p .b{font-size:11px;color:var(--i3);text-decoration:line-through}
+.obcol .c-act{margin-top:10px;position:relative}
+.obcol .c-add{width:100%;border:1px solid var(--plum);padding:11px 8px;font-size:9px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;transition:.2s;background:var(--surf);color:var(--plum)}
+.obcol .c-add:hover{background:var(--plum);color:var(--cream)}
+.obcol .c-act.open .c-add{background:var(--plum);color:var(--cream)}
+.obcol .c-add.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.obcol .c-opts{display:none;flex-direction:column;gap:4px;margin-top:5px}
+.obcol .c-act.open .c-opts{display:flex}
+.obcol .c-opt{display:flex;justify-content:space-between;align-items:center;gap:6px;border:1px solid var(--line2);background:var(--surf);padding:9px 9px;font-size:10px;font-weight:600;transition:.16s;min-height:36px}
+.obcol .c-opt:hover{border-color:var(--plum);background:var(--cream)}
+.obcol .c-opt .p{font-weight:700}
+.obcol .c-opt.both{background:var(--butter);border-color:var(--butter);color:var(--plum)}
+.obcol .c-opt.both:hover{background:var(--olive);border-color:var(--olive)}
+
+.obcol-cbar{position:fixed;left:0;right:0;bottom:0;z-index:90;background:#55343B;color:#F3E6DA;transform:translateY(105%);transition:transform .4s cubic-bezier(.22,.9,.26,1)}
+.obcol-cbar.up{transform:none}
+.obcol-cbar .cbar-in{max-width:1280px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:14px}
+.obcol-cbar .i{flex:1;min-width:0}
+.obcol-cbar .t{font-family:'Cinzel Decorative',serif;font-size:16px;letter-spacing:.025em}
+.obcol-cbar .s{font-size:10px;color:rgba(243,230,218,.7);margin-top:2px}
+.obcol-cbar .s b{color:#E4DD86;font-weight:700}
+.obcol-cbar button{background:#E4DD86;color:#55343B;padding:13px 20px;font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;white-space:nowrap}
+
+.obcol-sheet{position:fixed;inset:0;z-index:120;visibility:hidden;pointer-events:none}
+.obcol-sheet.on{visibility:visible;pointer-events:auto}
+.obcol-sheet .sheet-o{position:absolute;inset:0;background:rgba(85,52,59,.42);opacity:0;transition:.3s}
+.obcol-sheet.on .sheet-o{opacity:1}
+.obcol-sheet .sheet-p{position:absolute;left:0;right:0;bottom:0;max-height:84vh;background:#FCFAF7;transform:translateY(100%);transition:transform .4s cubic-bezier(.22,.9,.26,1);display:flex;flex-direction:column}
+.obcol-sheet.on .sheet-p{transform:none}
+@media(min-width:761px){.obcol-sheet .sheet-p{left:auto;top:0;bottom:0;width:340px;max-height:none;transform:translateX(100%)}.obcol-sheet.on .sheet-p{transform:none}}
+.obcol-sheet .sheet-h{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(85,52,59,.13);flex:none}
+.obcol-sheet .sheet-h .t{font-family:'Cinzel Decorative',serif;font-size:18px;color:#55343B}
+.obcol-sheet .sheet-h button{font-size:20px;line-height:1;color:rgba(85,52,59,.46);padding:4px 8px}
+.obcol-sheet .sheet-b{flex:1;overflow-y:auto;padding:4px 18px 18px;color:#55343B}
+.obcol-sheet .fg{border-bottom:1px solid rgba(85,52,59,.13);padding:16px 0}
+.obcol-sheet .fg .h{font-size:9px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:rgba(85,52,59,.46);margin-bottom:11px}
+.obcol-sheet .fo{display:flex;flex-wrap:wrap;gap:6px}
+.obcol-sheet .fo button{border:1px solid rgba(85,52,59,.24);padding:9px 13px;font-size:11.5px;font-weight:500;transition:.2s;color:#55343B;background:#FFF}
+.obcol-sheet .fo button.on{background:#55343B;color:#F3E6DA;border-color:#55343B}
+.obcol-sheet .fo button .n{font-size:9px;opacity:.55;margin-left:5px}
+.obcol-sheet .sheet-f{flex:none;padding:14px 18px;border-top:1px solid rgba(85,52,59,.13);display:flex;gap:8px;background:#FFF}
+.obcol-sheet .sheet-f .btn{flex:1;display:inline-flex;align-items:center;justify-content:center;padding:14px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;border:1px solid #55343B;color:#55343B}
+.obcol-sheet .sheet-f .btn.solid{background:#55343B;color:#F3E6DA}
+
+.obcol .trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surf)}
+.obcol .trust-in{max-width:var(--max);margin:0 auto;padding:16px 18px;display:flex;gap:26px;justify-content:center;flex-wrap:wrap}
+.obcol .trust span{font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--i3);font-weight:700}
+.obcol .empty{grid-column:1/-1;padding:56px 20px;text-align:center}
+.obcol .empty .t{font-family:var(--T);font-size:22px;letter-spacing:.025em}
+.obcol .empty p{color:var(--i3);margin:8px 0 18px;font-size:13.5px}
+@media(prefers-reduced-motion:reduce){.obcol *{transition:none!important}}
