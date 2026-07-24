@@ -175,7 +175,7 @@ var cpBtn=$('cpBtn'); if(cpBtn) cpBtn.onclick=function(){
 var cp=$('cp'); if(cp) cp.onkeydown=function(e){if(e.key==='Enter')cpBtn.click();};
 
 var tt; function toast(m,w){$('toast').textContent=m;$('toast').className='obcart-toast up'+(w?' win':'');clearTimeout(tt);tt=setTimeout(function(){$('toast').classList.remove('up');},w?3200:2200);}
-window.addEventListener('pageshow',function(e){if(e.persisted){busy=false;refresh(false);}});
+window.addEventListener('pageshow',function(){busy=false;refresh(false);});
 
 /* boot: apply the correct tier code once, then render */
 refresh(true).then(function(){ lastUnlocked=GIFTS.filter(function(g){return (CART.orig||CART.total)>=g.at;}).length; });

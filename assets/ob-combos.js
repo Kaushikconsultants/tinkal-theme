@@ -140,5 +140,6 @@ function renderCombos(){
   };});
 }
 var tt;function toast(m,w){$('toast').textContent=m;$('toast').className='obcmb-toast up'+(w?' win':'');clearTimeout(tt);tt=setTimeout(function(){$('toast').classList.remove('up');},2400);}
+window.addEventListener('pageshow',function(){ busy=false; var mg=$('mGo'); if(mg){mg.disabled=false;mg.textContent='Add box';} renderSum(); renderCombos(); });
 renderLines();renderPick();renderLad();renderSum();renderPills();renderCombos();
 })();

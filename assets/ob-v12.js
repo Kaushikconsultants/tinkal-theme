@@ -253,7 +253,7 @@ $('bulkH').onclick=function(){$('bulk').classList.toggle('open');$('bulkCta').te
 $('cta').onclick=function(){go('/cart',$('cta'));}; $('satcAdd').onclick=function(){go('/cart',$('satcAdd'));}; $('fbtBtn').onclick=function(){go('/cart',$('fbtBtn'));};
 $('ctaBuy').onclick=function(){go('/checkout',$('ctaBuy'));}; $('satcBuy').onclick=function(){go('/checkout',$('satcBuy'));};
 if($('cta')){ try{ new IntersectionObserver(function(e){$('satc').classList.toggle('up',!e[0].isIntersecting);},{threshold:0,rootMargin:'-10px 0px 0px 0px'}).observe($('cta')); }catch(e){} }
-window.addEventListener('pageshow',function(e){ if(e.persisted){ setBusy(false); if($('toast'))$('toast').classList.remove('up'); } });
+window.addEventListener('pageshow',function(){ setBusy(false); if($('toast'))$('toast').classList.remove('up'); });
 
 /* boot */
 fit(); sizes(); tiers(); bulk(); picker(); renderFbt(); paint(); profile(); strip(); calc();

@@ -128,5 +128,6 @@ $('clrAll').onclick=function(){F={gender:[],fam:[],occ:[]};renderSheet();render(
 $('srt').onchange=function(e){sort=e.target.value;render();};
 var tt; function toast(m,w){$('toast').textContent=m;$('toast').className='obcol-toast up'+(w?' win':'');clearTimeout(tt);tt=setTimeout(function(){$('toast').classList.remove('up');},2200);}
 var t0=TABS[0];$('heroEye').textContent=t0.eye;$('heroH').textContent=t0.h;$('heroP').textContent=t0.p;
+window.addEventListener('pageshow',function(){ render(); renderCart(); });
 renderTabs();renderSheet();render();renderCart();
 })();
