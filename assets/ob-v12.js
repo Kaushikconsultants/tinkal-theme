@@ -6,7 +6,7 @@ var OB = window.OB_V12 || {};
 var ROOT = document.querySelector('.obv12');
 if(!ROOT) return;
 
-var SIZES = {
+var SIZES = OB.sizes || {
   '100':{ml:100,label:'100ml',role:'Your signature',unit:1499,mrp:1999,
     px:[0,1499,2549,2999,3799,4649,5449,6249,6999,7749,8449],
     quick:[{q:1,n:'One bottle',s:'Your signature'},{q:2,n:'Two bottles',s:'Day and night',b:'Most popular'},{q:3,n:'Three bottles',s:'A full wardrobe',b:'Best value',o:1}]},
@@ -14,7 +14,7 @@ var SIZES = {
     px:[0,499,899,1249,1599,1899,2199,2499,2749,2999,3199],
     quick:[{q:1,n:'One bottle',s:'Try before you commit'},{q:3,n:'Three bottles',s:'Enough to layer',b:'Most popular'},{q:5,n:'Five bottles',s:'The whole wardrobe',b:'Best value',o:1}]}
 };
-var FREE_SHIP=1499, MAXQ=10, CODE_PREFIX=OB.codePrefix||'OBC';
+var FREE_SHIP=1499, MAXQ=(OB.maxQ||10), CODE_PREFIX=OB.codePrefix||'OBC', HAS25=!!SIZES['25'];
 var priceFor=function(z,q){return SIZES[z].px[Math.max(1,Math.min(MAXQ,q))];};
 var offFor=function(z,q){return Math.round((1-priceFor(z,q)/(SIZES[z].mrp*q))*100);};
 var pctFor=function(z,q){return 1-priceFor(z,q)/(SIZES[z].unit*q);};   /* real code fraction */
@@ -70,7 +70,7 @@ SC.forEach(function(s){ var v=(OB.variants||{})[s.id]||{}; s.v100=v.v100; s.v25=
 
 var PARTNER={smoky:['vanilla','the smoke turns to dessert'],blu:['leather','citrus opens the leather up'],leather:['oud','two heavyweights that stack'],oud:['amberrose','the oldest pairing there is'],tobacco:['vanilla','softens a dry tobacco'],vanilla:['smoky','cream over the smoke'],amberrose:['oud','rose sits on oud perfectly'],angel:['blu','bergamot cools the cocoa'],pistachio:['tobacco','smells like the best mithai shop'],candy:['vanilla','anchors the sugar']};
 
-var size='100', cur=null, qty=2, combo=[], addons={layer:true,travel:true}, stage=0, pick=null;
+var size='100', cur=null, qty=2, combo=[], addons=(HAS25?{layer:true,travel:true}:{}), stage=0, pick=null;
 var $=function(i){return document.getElementById(i);};
 var S=function(id){for(var i=0;i<SC.length;i++){if(SC[i].id===id)return SC[i];}return null;};
 var inr=function(n){return '₹'+Math.round(n).toLocaleString('en-IN');};
@@ -122,8 +122,8 @@ function strip(){
 /* SIZE */
 function sizes(){
   var pm=function(k){return SIZES[k].unit/SIZES[k].ml;};
-  var better=Math.round((1-pm('100')/pm('25'))*100);
-  $('sizes').innerHTML=Object.keys(SIZES).map(function(k){var c=SIZES[k],win=k==='100';return '<button class="sz '+(k===size?'on':'')+'" data-z="'+k+'">'+(win?'<span class="bdg">'+better+'% better value</span>':'')+'<div class="t">'+c.label+'</div><div class="r">'+c.role+'</div><div class="p">'+inr(c.unit)+'<s>'+inr(c.mrp)+'</s></div><div class="m">₹'+pm(k).toFixed(2)+' per ml</div></button>';}).join('');
+  var better=HAS25?Math.round((1-pm('100')/pm('25'))*100):0;
+  $('sizes').innerHTML=Object.keys(SIZES).map(function(k){var c=SIZES[k],win=k==='100';return '<button class="sz '+(k===size?'on':'')+'" data-z="'+k+'">'+(win&&better>0?'<span class="bdg">'+better+'% better value</span>':'')+'<div class="t">'+c.label+'</div><div class="r">'+c.role+'</div><div class="p">'+inr(c.unit)+'<s>'+inr(c.mrp)+'</s></div><div class="m">₹'+pm(k).toFixed(2)+' per ml</div></button>';}).join('');
   Array.prototype.forEach.call($('sizes').querySelectorAll('.sz'),function(b){b.onclick=function(){setSizeTo(b.dataset.z);};});
 }
 function setSizeTo(k){ size=k; fit(); $('gscale').textContent=SIZES[k].label+' — shown to scale'; renderGallery(); sizes(); tiers(); bulk(); picker(); renderFbt(); calc(); }
@@ -164,11 +164,8 @@ function renderFbt(){
   var pc=pctFor(size,qty);
   var pAd=Math.round(499*(1-pc));
   var p=(PARTNER[cur.id]||['vanilla'])[0], why=(PARTNER[cur.id]||['vanilla',''])[1];
-  var items=[
-    {k:'this',lock:1,n:cur.name+' · '+cf().label,s:qty+' bottle'+(qty>1?'s':'')+(qty>1?' · mix any scents':''),p:priceFor(size,qty),was:qty*cf().mrp},
-    {k:'layer',n:S(p).name+' · 25ml',s:'Layers with '+cur.name+' — <em>'+why+'</em>',p:pAd,was:599},
-    {k:'travel',n:cur.name+' travel spray · 25ml',s:'The same scent, pocket sized',p:pAd,was:599}
-  ];
+  var items=[{k:'this',lock:1,n:cur.name+' · '+cf().label,s:qty+' bottle'+(qty>1?'s':'')+(qty>1?' · mix any scents':''),p:priceFor(size,qty),was:qty*cf().mrp}];
+  if(HAS25){ items.push({k:'layer',n:S(p).name+' · 25ml',s:'Layers with '+cur.name+' — <em>'+why+'</em>',p:pAd,was:599},{k:'travel',n:cur.name+' travel spray · 25ml',s:'The same scent, pocket sized',p:pAd,was:599}); }
   function on(k){return k==='this'||addons[k];}
   $('fbtList').innerHTML=items.map(function(it){return '<button class="fbt-i '+(on(it.k)?'on':'')+' '+(it.lock?'lock':'')+'" data-k="'+it.k+'"><span class="bx"></span><span class="t"><span class="n">'+(it.lock?'This item — ':'')+it.n+'</span><span class="s">'+it.s+'</span></span><span class="p">'+inr(it.p)+(it.was>it.p?'<s>'+inr(it.was)+'</s>':'')+'</span></button>';}).join('');
   Array.prototype.forEach.call($('fbtList').querySelectorAll('.fbt-i'),function(b){b.onclick=function(){var k=b.dataset.k;if(k==='this')return;addons[k]=!addons[k];renderFbt();calc();};});
