@@ -28,8 +28,34 @@ var NOTE_IMAGES=Object.assign({
   'Styrax':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/Styrax.webp?v=1750158959',
   'Tobacco Leaf':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/Tobacco_Leaf.webp?v=1750158959',
   'Vanilla Bean':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/Vanilla_Bean.webp?v=1750158959',
-  'Vetiver Oil':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/Vetiver_Oil.jpg?v=1750158959'
+  'Vetiver Oil':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/Vetiver_Oil.jpg?v=1750158959',
+  /* real store photos reused for matching Couture notes */
+  'Bergamot':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/bergamot.webp?v=1782296301',
+  'Jasmine':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/Jasmin_2010a34c-0b81-48f2-9871-b05c4b50a00c.webp?v=1782293377',
+  'Patchouli':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/patchouli_fbf193f2-0d6d-4975-836e-ff7d6426c05a.webp?v=1782298796',
+  'Vetiver':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/vetiver_8ce949bd-93da-4b6a-98be-6439e1d4116e.webp?v=1782294875',
+  'Sandalwood':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/sandal_wood.jpg?v=1742376493',
+  'Vanilla':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/vanilla.jpg?v=1742376493',
+  'Leather':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/leather.jpg?v=1742383224',
+  'Agarwood':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/agarwood.jpg?v=1742376493',
+  'Rose':'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/rose_888124a9-9de1-4f31-95d9-61efab00f24a.webp?v=1782297808'
 }, OB.noteImages||{});
+/* real store photo per scent family — every note resolves to a real image, no SVG */
+var IB='https://cdn.shopify.com/s/files/1/0694/0478/6914/files/';
+var FAMIMG={
+  citrus:IB+'lemon.webp?v=1782296301', pepper:IB+'pepper.webp?v=1782294875',
+  spice:IB+'piecrec_Warm_spicy.webp?v=1742382749', wood:IB+'cedar.webp?v=1782294875',
+  moss:IB+'vetiver_8ce949bd-93da-4b6a-98be-6439e1d4116e.webp?v=1782294875',
+  oud:IB+'agarwood.jpg?v=1742376493', leather:IB+'leather.jpg?v=1742383224',
+  tobacco:IB+'Tobacco_Leaf.webp?v=1750158959', vanilla:IB+'vanilla.jpg?v=1742376493',
+  sugar:IB+'sugar.webp?v=1742376493', nut:IB+'almonds.webp?v=1782296301',
+  cacao:IB+'coffee.webp?v=1782296301', rose:IB+'rose_888124a9-9de1-4f31-95d9-61efab00f24a.webp?v=1782297808',
+  floral:IB+'Jasmin_2010a34c-0b81-48f2-9871-b05c4b50a00c.webp?v=1782293377',
+  amber:IB+'woody-amber.webp?v=1782298796', musk:IB+'benzoin_b41c289f-a5f0-4be4-b973-7a0d5464453d.webp?v=1782294875',
+  tea:IB+'sage.webp?v=1782297066', booze:IB+'istockphoto-1140849064-612x612.jpg?v=1750152974',
+  lavender:IB+'geranium.webp?v=1782297066'
+};
+function noteImg(n){ return NOTE_IMAGES[n] || FAMIMG[NF[n]||'wood'] || FAMIMG.wood; }
 
 var FAM={
  citrus:{bg:'#FBF2E0',d:'Cold-pressed peel. Sharp, sunny, gone in twenty minutes.',g:'<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="#E9A93B"/><circle cx="50" cy="50" r="27" fill="#F6CE79"/><g stroke="#FBF2E0" stroke-width="2"><line x1="50" y1="50" x2="50" y2="23"/><line x1="50" y1="50" x2="77" y2="50"/><line x1="50" y1="50" x2="50" y2="77"/><line x1="50" y1="50" x2="23" y2="50"/><line x1="50" y1="50" x2="69" y2="31"/><line x1="50" y1="50" x2="69" y2="69"/><line x1="50" y1="50" x2="31" y2="69"/><line x1="50" y1="50" x2="31" y2="31"/></g><circle cx="50" cy="50" r="4" fill="#FBF2E0"/></svg>'},
@@ -114,7 +140,7 @@ function strip(){
   $('stTab').style.setProperty('--sx',(stage*100)+'%');
   Array.prototype.forEach.call($('stTab').querySelectorAll('.st-b'),function(b){b.onclick=function(){stage=+b.dataset.s;pick=null;strip();};});
   var inSt=allNotes().filter(function(a){return a[1]===st.k;});
-  $('stDots').innerHTML=inSt.map(function(a){var n=a[0],f=FAM[NF[n]||'wood'],img=NOTE_IMAGES[n];return '<span class="nd lit '+(pick===n?'sel':'')+'" data-n="'+n+'" title="'+n+'" style="background:'+f.bg+'">'+(img?'<img src="'+img+'" alt="'+n+'">':f.g)+'</span>';}).join('');
+  $('stDots').innerHTML=inSt.map(function(a){var n=a[0],f=FAM[NF[n]||'wood'];return '<span class="nd lit '+(pick===n?'sel':'')+'" data-n="'+n+'" title="'+n+'" style="background:'+f.bg+'"><img src="'+noteImg(n)+'" alt="'+n+'" loading="lazy"></span>';}).join('');
   Array.prototype.forEach.call($('stDots').querySelectorAll('.nd'),function(d){d.onclick=function(){pick=pick===d.dataset.n?null:d.dataset.n;strip();};});
   if(pick){ $('stN').textContent=pick; $('stD').textContent=(FAM[NF[pick]||'wood']).d; }
   else{ $('stN').textContent=inSt.map(function(a){return a[0];}).join(' · '); $('stD').textContent=stage===0?'What people notice first, across a room.':stage===1?'The real scent, once the opening burns off.':'Close to the skin — still there tomorrow morning.'; }
