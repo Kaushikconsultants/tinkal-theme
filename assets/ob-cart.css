@@ -1,4 +1,5 @@
 /* Ombre Bliss — cart page (brand kit). Scoped under .obcart. */
+/* gift picker: fixed 44px box, centred text, whole box clickable (z-index) */
 .obcart{
   --plum:#55343B; --olive:#BFB500; --terra:#D88356; --butter:#E4DD86; --cream:#F3E6DA;
   --bg:#FCFAF7; --surf:#FFFFFF; --ink:#55343B;
