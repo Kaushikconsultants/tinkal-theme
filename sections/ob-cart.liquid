@@ -51,9 +51,14 @@ window.OB_CART = {
   freeShipAt: 1499,
   gifts: [
     { at:1499, label:"Free shipping", icon:"truck" },
-    { at:2499, label:"Free 25ml bottle", icon:"bottle", item:true },
+    { at:2499, label:"Free 25ml bottle", icon:"bottle", item:true, pick:'25' },
     { at:3999, label:"Luxury gift box", icon:"gift", item:true },
-    { at:5999, label:"Free 100ml bottle", icon:"crown", item:true }
+    { at:5999, label:"Free 100ml bottle", icon:"crown", item:true, pick:'100' }
+  ],
+  giftScents: [
+  {%- assign gcol = collections['premium-collection'] -%}
+  {%- assign first_g = true -%}
+  {%- for p in gcol.products -%}{%- unless first_g -%},{%- endunless -%}{%- assign first_g = false -%}{{ p.title | split: ' – ' | first | split: ' - ' | first | strip | json }}{%- endfor -%}
   ],
   scents: {
   {%- assign first_s = true -%}

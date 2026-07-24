@@ -35,6 +35,7 @@ var S=function(id){for(var i=0;i<SC.length;i++){if(SC[i].id===id)return SC[i];}r
 /* variantMap: variantId -> {scent,size,group}  (group c100/c25/cl100) */
 var VMAP=OB.variantMap||{};
 var GIFTS=OB.gifts||[{at:1499,label:'Free shipping',icon:'truck'},{at:2499,label:'Free 25ml travel spray',icon:'bottle'},{at:3999,label:'Luxury gift box',icon:'gift'},{at:5999,label:'Free 100ml bottle',icon:'crown'}];
+var GIFTScents=OB.giftScents||[]; var giftPicks={};
 var ICON={truck:'<svg viewBox="0 0 24 24"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.7"/><circle cx="17" cy="18" r="1.7"/></svg>',bottle:'<svg viewBox="0 0 24 24"><rect x="9" y="8" width="6" height="13" rx="1"/><path d="M10 8V5h4v3"/><path d="M14 3h3"/></svg>',gift:'<svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="11"/><path d="M3 13h18M12 9v11"/><path d="M12 9S9 4 7 5.5 9 9 12 9zM12 9s3-5 5-3.5S15 9 12 9z"/></svg>',crown:'<svg viewBox="0 0 24 24"><path d="M4 18h16l1-9-5 3-4-6-4 6-5-3z"/><path d="M4 21h16"/></svg>'};
 
 var CART={items:[],total:0,orig:0,discount:0,codes:[]};
@@ -97,13 +98,18 @@ function renderItems(){
       +(save>0?'<span class="it-tag">Save '+inr(save)+'</span>':'')+sw
       +'<div class="it-ct"><span class="qty"><button data-q="'+i+'|-1">−</button><span class="n">'+it.quantity+'</span><button data-q="'+i+'|1">+</button></span><button class="rm" data-rm="'+i+'">Remove</button></div></div>'
       +'<div class="it-p">'+(was>line?'<span class="b">'+inr(was)+'</span>':'')+'<span class="a">'+inr(line)+'</span>'+(it.quantity>1?'<div class="e">'+inr(line/it.quantity)+' each</div>':'')+'</div></div>';
-  }).join('') + GIFTS.filter(function(g){return g.item && (CART.orig>=g.at);}).map(function(g){return '<div class="it free"><div class="it-m"></div><div><div class="it-n">'+g.label+'</div><div class="it-v">Gift · unlocked at '+inr(g.at)+'</div><span class="it-tag">Added by our team</span></div><div class="it-p"><span class="a">Free</span></div></div>';}).join('');
+  }).join('') + GIFTS.filter(function(g){return g.item && (CART.orig>=g.at);}).map(function(g){
+    var extra='<span class="it-tag">Added by our team</span>';
+    if(g.pick && GIFTScents.length){ var curp=giftPicks[g.label]||GIFTScents[0]; extra='<div style="margin-top:8px"><span class="it-tag" style="margin:0 0 6px;display:inline-block">Pick your free scent</span><br><select class="gift-pick" data-gift="'+g.label+'">'+GIFTScents.map(function(n){return '<option'+(n===curp?' selected':'')+'>'+n+'</option>';}).join('')+'</select></div>'; }
+    return '<div class="it free"><div class="it-m"></div><div><div class="it-n">'+g.label+'</div><div class="it-v">Gift · unlocked at '+inr(g.at)+'</div>'+extra+'</div><div class="it-p"><span class="a">Free</span></div></div>';
+  }).join('');
+  Array.prototype.forEach.call($('items').querySelectorAll('.gift-pick'),function(sel){ sel.onchange=function(){ giftPicks[sel.dataset.gift]=sel.value; setGiftAttrs(); }; });
   Array.prototype.forEach.call($('items').querySelectorAll('[data-q]'),function(b){b.onclick=function(){var a=b.dataset.q.split('|');changeQty(+a[0],+a[1]);};});
   Array.prototype.forEach.call($('items').querySelectorAll('[data-rm]'),function(b){b.onclick=function(){removeLine(+b.dataset.rm);};});
   Array.prototype.forEach.call($('items').querySelectorAll('[data-sz]'),function(b){b.onclick=function(){var a=b.dataset.sz.split('|');switchSize(+a[0],a[1]);};});
 }
 var tiering=false;
-function setGiftAttrs(){ var g=GIFTS.filter(function(x){return x.item && (CART.orig>=x.at);}).map(function(x){return x.label;}); return fetch('/cart/update.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({attributes:{'Free gift (add manually)': g.length?g.join(' · '):''}})}).catch(function(){}); }
+function setGiftAttrs(){ var g=GIFTS.filter(function(x){return x.item && (CART.orig>=x.at);}).map(function(x){ if(x.pick && GIFTScents.length){ return x.label+': '+(giftPicks[x.label]||GIFTScents[0]); } return x.label; }); return fetch('/cart/update.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({attributes:{'Free gift (add manually)': g.length?g.join(' · '):''}})}).catch(function(){}); }
 function syncTier(){ if(tiering)return; tiering=true; applyTier().then(function(){return setGiftAttrs();}).then(getCart).then(function(c){ store(c); render(); tiering=false; }).catch(function(){tiering=false;}); }
 function changeQty(i,d){ if(busy)return; var it=CART.items[i]; var q=Math.max(0,it.quantity+d); busy=true;
   fetch('/cart/change.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:it.key,quantity:q})})
