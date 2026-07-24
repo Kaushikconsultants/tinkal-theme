@@ -143,56 +143,98 @@
     "watch_and_buy": {
       "type": "watch-and-buy",
       "blocks": {
-        "video_product_FXVTpf": {
+        "wb_1": {
           "type": "video_product",
           "settings": {
-            "video_url": "shopify://files/videos/Royale Tobacco sehafli.MOV",
-            "product": "royale-tobacco-perfume"
-          }
-        },
-        "watchbuy_excel_0": {
-          "type": "video_product",
-          "settings": {
-            "video_url": "shopify://files/videos/Ombre Bliss - Symphony.mp4",
+            "video_url": "",
+            "video_src": "https://cdn.shopify.com/videos/c/o/v/b39f1d045f5e4fddb1ef5ba61e8749d6.mp4",
             "product": "nawab-oud-perfume"
           }
         },
-        "watchbuy_excel_1": {
+        "wb_2": {
           "type": "video_product",
           "settings": {
-            "video_url": "shopify://files/videos/Ombre Bliss - Constellation.mp4",
+            "video_url": "",
+            "video_src": "https://cdn.shopify.com/videos/c/o/v/4b29f9771acd4c5f91334617faf8f60c.mp4",
             "product": "pistachio-pop-perfume"
           }
         },
-        "watchbuy_excel_2": {
+        "wb_3": {
           "type": "video_product",
           "settings": {
-            "video_url": "shopify://files/videos/whatmore_1080p_7c0c8076-8b19-4b47-86eb-69846f7e3bac.mp4",
+            "video_url": "",
+            "video_src": "https://cdn.shopify.com/videos/c/o/v/97d0d6c2c04246879f494d14a62d20f9.mp4",
             "product": "lush-candy-perfume"
           }
         },
-        "watchbuy_excel_3": {
+        "wb_4": {
           "type": "video_product",
           "settings": {
-            "video_url": "shopify://files/videos/whatmore_1080p_800e5041-b4a6-4066-a50a-1537512c7ae9.mp4",
+            "video_url": "",
+            "video_src": "https://cdn.shopify.com/videos/c/o/v/b4c89e2b4b7c416b8b80ca5fcf646f38.mp4",
             "product": "vanilla-kiss-perfume"
           }
         },
-        "watchbuy_excel_4": {
+        "wb_5": {
           "type": "video_product",
           "settings": {
-            "video_url": "shopify://files/videos/whatmore_1080p_0dc004ea-9bb4-4119-8e5a-c376cc9ba9b4.mp4",
+            "video_url": "",
+            "video_src": "https://cdn.shopify.com/videos/c/o/v/6bb2c162ed0e4cd8be57c335769c1ce4.mp4",
             "product": "smoky-rum"
+          }
+        },
+        "wb_6": {
+          "type": "video_product",
+          "settings": {
+            "video_url": "",
+            "video_src": "https://cdn.shopify.com/videos/c/o/v/ba261548e3024f14b140936a16577fcd.mov",
+            "product": "ombre-blu-perfume"
+          }
+        },
+        "wb_7": {
+          "type": "video_product",
+          "settings": {
+            "video_url": "",
+            "video_src": "https://cdn.shopify.com/videos/c/o/v/50558141aaa94cfda7dae767e693f9c9.mp4",
+            "product": "angel-perfume"
+          }
+        },
+        "wb_8": {
+          "type": "video_product",
+          "settings": {
+            "video_url": "",
+            "video_src": "https://cdn.shopify.com/videos/c/o/v/bd155b07c189499faa84392de2644c6b.mp4",
+            "product": "classical-leather-perfume"
+          }
+        },
+        "wb_9": {
+          "type": "video_product",
+          "settings": {
+            "video_url": "",
+            "video_src": "https://cdn.shopify.com/videos/c/o/v/086ed22917414cccb1dbb5b179b14d51.mov",
+            "product": "royale-tobacco-perfume"
+          }
+        },
+        "wb_10": {
+          "type": "video_product",
+          "settings": {
+            "video_url": "",
+            "video_src": "https://cdn.shopify.com/videos/c/o/v/396ab43a43124989a00a44dd5dbf83c8.mov",
+            "product": "amber-rose-unisex-perfume"
           }
         }
       },
       "block_order": [
-        "video_product_FXVTpf",
-        "watchbuy_excel_0",
-        "watchbuy_excel_1",
-        "watchbuy_excel_2",
-        "watchbuy_excel_3",
-        "watchbuy_excel_4"
+        "wb_1",
+        "wb_2",
+        "wb_3",
+        "wb_4",
+        "wb_5",
+        "wb_6",
+        "wb_7",
+        "wb_8",
+        "wb_9",
+        "wb_10"
       ],
       "disabled": true,
       "settings": {
