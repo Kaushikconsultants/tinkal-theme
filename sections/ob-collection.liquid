@@ -59,7 +59,7 @@
 <div class="obcol-toast" id="toast"></div>
 
 <script>
-window.OB_COL = { products: {
+window.OB_COL = { startTab: {{ section.settings.default_tab | default: 'all' | json }}, products: {
 {%- assign first_p = true -%}
 {%- for id in ids -%}
   {%- assign h = handles[forloop.index0] -%}
@@ -85,7 +85,15 @@ window.OB_COL = { products: {
   "tag": "section",
   "class": "ob-collection",
   "settings": [
-    { "type": "paragraph", "content": "Filterable brand-kit collection grid. Reads real variants, images and prices. Assign via a collection template." }
+    { "type": "paragraph", "content": "Filterable brand-kit collection grid. Reads real variants, images and prices. Assign via a collection template." },
+    { "type": "select", "id": "default_tab", "label": "Open on tab", "default": "all",
+      "options": [
+        { "value": "all", "label": "Shop All" },
+        { "value": "cou", "label": "Couture" },
+        { "value": "cla", "label": "Classic" },
+        { "value": "gift", "label": "Gift Sets" }
+      ],
+      "info": "Which line the page lands on. Visitors can still switch tabs." }
   ],
   "presets": [ { "name": "OB Collection" } ]
 }

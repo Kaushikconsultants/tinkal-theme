@@ -103,10 +103,8 @@ function renderItems(){
     if(g.pick && GIFTScents.length){ var curp=giftPicks[g.label]||GIFTScents[0]; extra='<div style="margin-top:8px"><span class="it-tag" style="margin:0 0 6px;display:inline-block">Pick your free scent</span><br><select class="gift-pick" data-gift="'+g.label+'">'+GIFTScents.map(function(n){return '<option'+(n===curp?' selected':'')+'>'+n+'</option>';}).join('')+'</select></div>'; }
     return '<div class="it free"><div class="it-m"></div><div><div class="it-n">'+g.label+'</div><div class="it-v">Gift · unlocked at '+inr(g.at)+'</div>'+extra+'</div><div class="it-p"><span class="a">Free</span></div></div>';
   }).join('');
-  Array.prototype.forEach.call($('items').querySelectorAll('.gift-pick'),function(sel){ sel.onchange=function(){ giftPicks[sel.dataset.gift]=sel.value; setGiftAttrs(); }; });
-  Array.prototype.forEach.call($('items').querySelectorAll('[data-q]'),function(b){b.onclick=function(){var a=b.dataset.q.split('|');changeQty(+a[0],+a[1]);};});
-  Array.prototype.forEach.call($('items').querySelectorAll('[data-rm]'),function(b){b.onclick=function(){removeLine(+b.dataset.rm);};});
-  Array.prototype.forEach.call($('items').querySelectorAll('[data-sz]'),function(b){b.onclick=function(){var a=b.dataset.sz.split('|');switchSize(+a[0],a[1]);};});
+  /* controls are wired once via delegation on #items (see bindItems) so they
+     survive every re-render and never go dead if a later render step throws */
 }
 var tiering=false;
 function setGiftAttrs(){ var g=GIFTS.filter(function(x){return x.item && (CART.orig>=x.at);}).map(function(x){ if(x.pick && GIFTScents.length){ return x.label+': '+(giftPicks[x.label]||GIFTScents[0]); } return x.label; }); return fetch('/cart/update.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({attributes:{'Free gift (add manually)': g.length?g.join(' · '):''}})}).catch(function(){}); }
@@ -190,6 +188,18 @@ var cpBtn=$('cpBtn'); if(cpBtn) cpBtn.onclick=function(){
 var cp=$('cp'); if(cp) cp.onkeydown=function(e){if(e.key==='Enter')cpBtn.click();};
 
 var tt; function toast(m,w){$('toast').textContent=m;$('toast').className='obcart-toast up'+(w?' win':'');clearTimeout(tt);tt=setTimeout(function(){$('toast').classList.remove('up');},w?3200:2200);}
+/* one-time event delegation for line controls + gift picker (resilient to re-renders) */
+(function bindItems(){
+  var box=$('items'); if(!box) return;
+  box.addEventListener('click',function(e){
+    var q=e.target.closest&&e.target.closest('[data-q]'); if(q){var a=q.dataset.q.split('|');changeQty(+a[0],+a[1]);return;}
+    var rm=e.target.closest&&e.target.closest('[data-rm]'); if(rm){removeLine(+rm.dataset.rm);return;}
+    var sz=e.target.closest&&e.target.closest('[data-sz]'); if(sz){var b=sz.dataset.sz.split('|');switchSize(+b[0],b[1]);return;}
+  });
+  box.addEventListener('change',function(e){
+    var g=e.target.closest&&e.target.closest('.gift-pick'); if(g){giftPicks[g.dataset.gift]=g.value; setGiftAttrs(); toast('Free scent set to '+g.value);}
+  });
+})();
 window.addEventListener('pageshow',function(){busy=false;refresh(false);});
 
 /* boot: apply the correct tier code once, then render */

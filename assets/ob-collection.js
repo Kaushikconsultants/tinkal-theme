@@ -45,7 +45,8 @@ var TABS=[
  {k:'gift',n:'Gift Sets',eye:'Four scents, boxed',h:'Gift Sets',p:'Four 25ml bottles in one box.'}
 ];
 
-var tab='all', F={gender:[],fam:[],occ:[]}, sort='pop';
+var startTab=OB.startTab||'all'; if(!TABS.some(function(t){return t.k===startTab;}))startTab='all';
+var tab=startTab, F={gender:[],fam:[],occ:[]}, sort='pop';
 var P=function(id){for(var i=0;i<PRODUCTS.length;i++){if(PRODUCTS[i].id===id)return PRODUCTS[i];}return null;};
 var sizesOf=function(p){return Object.keys(p.sizes);};
 var uniq=function(fn){var s={},o=[];PRODUCTS.forEach(function(p){[].concat(fn(p)).forEach(function(v){if(v&&!s[v]){s[v]=1;o.push(v);}});});return o;};
@@ -127,7 +128,7 @@ document.addEventListener('click',function(e){if(e.target.closest('[data-close]'
 $('clrAll').onclick=function(){F={gender:[],fam:[],occ:[]};renderSheet();render();};
 $('srt').onchange=function(e){sort=e.target.value;render();};
 var tt; function toast(m,w){$('toast').textContent=m;$('toast').className='obcol-toast up'+(w?' win':'');clearTimeout(tt);tt=setTimeout(function(){$('toast').classList.remove('up');},2200);}
-var t0=TABS[0];$('heroEye').textContent=t0.eye;$('heroH').textContent=t0.h;$('heroP').textContent=t0.p;
+var t0=TABS.filter(function(t){return t.k===tab;})[0]||TABS[0];$('heroEye').textContent=t0.eye;$('heroH').textContent=t0.h;$('heroP').textContent=t0.p;
 window.addEventListener('pageshow',function(){ render(); renderCart(); });
 renderTabs();renderSheet();render();renderCart();
 })();
