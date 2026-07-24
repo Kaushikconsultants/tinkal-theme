@@ -73,6 +73,8 @@
 .obcart .it.free{background:linear-gradient(90deg,rgba(228,221,134,.22),rgba(228,221,134,.05))}
 .obcart .it.free .it-m{background:var(--butter);border-color:rgba(191,181,0,.4)}
 .obcart .it.free .it-p .a{color:var(--ok)}
+.obcart .gift-pick{border:1px solid var(--line2);background:var(--surf);padding:8px 10px;font-size:12px;font-weight:600;color:var(--ink);max-width:220px;border-radius:0;margin-top:2px}
+.obcart .gift-pick:focus{outline:none;border-color:var(--plum)}
 .obcart .szsw{display:inline-flex;border:1px solid var(--line2);margin-top:10px;overflow:hidden}
 .obcart .szsw button{padding:7px 11px;font-size:10px;letter-spacing:.07em;font-weight:600;color:var(--i3);transition:.2s;white-space:nowrap;border-right:1px solid var(--line2)}
 .obcart .szsw button:last-child{border-right:none}
