@@ -162,7 +162,7 @@ function addonList(){
 }
 function renderFbt(){
   var pc=pctFor(size,qty);
-  var pAd=Math.round(499*(1-pc));
+  var pAd=499;
   var p=(PARTNER[cur.id]||['vanilla'])[0], why=(PARTNER[cur.id]||['vanilla',''])[1];
   var items=[{k:'this',lock:1,n:cur.name+' · '+cf().label,s:qty+' bottle'+(qty>1?'s':'')+(qty>1?' · mix any scents':''),p:priceFor(size,qty),was:qty*cf().mrp}];
   if(HAS25){ items.push({k:'layer',n:S(p).name+' · 25ml',s:'Layers with '+cur.name+' — <em>'+why+'</em>',p:pAd,was:599},{k:'travel',n:cur.name+' travel spray · 25ml',s:'The same scent, pocket sized',p:pAd,was:599}); }
@@ -181,7 +181,7 @@ function renderFbt(){
 }
 /* CALC */
 function calc(){
-  var pc=pctFor(size,qty), pAd=Math.round(499*(1-pc));
+  var pc=pctFor(size,qty), pAd=499;
   var nAd=(addons.layer?1:0)+(addons.travel?1:0);
   var sub=priceFor(size,qty)+nAd*pAd;
   var mrp=qty*cf().mrp+nAd*599;
