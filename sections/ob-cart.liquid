@@ -1,0 +1,99 @@
+{%- comment -%} Ombre Bliss — cart page (brand kit). Reads the real cart via JS; tier code applied silently. {%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{%- assign ob_fonts = 'https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@300;400;500;600;700&display=swap' -%}
+<link rel="preload" as="style" href="{{ ob_fonts }}" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ ob_fonts }}"></noscript>
+{{ 'ob-cart.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign ids = 'smoky,oud,leather,blu,tobacco,vanilla,amberrose,angel,pistachio,candy,marino,vicious,yakuza,honour,bouquet,obsessed,luna,pierce' | split: ','
+  assign handles = 'smoky-rum,nawab-oud-perfume,classical-leather-perfume,ombre-blu-perfume,royale-tobacco-perfume,vanilla-kiss-perfume,amber-rose-unisex-perfume,angel-perfume,pistachio-pop-perfume,lush-candy-perfume,marino-perfume-for-him,vicious-perfume-for-him,yazuka-perfume-for-him,honour-perfume-for-him,the-bouquet-perfume-for-her,obsessed-perfume-for-her,luna-perfume-for-her,pierce-perfume-for-her' | split: ','
+-%}
+
+<div class="obcart">
+<section class="gifts">
+  <div class="gifts-in">
+    <div class="gifts-hd"><div class="h" id="gH"></div><div class="s" id="gS"></div></div>
+    <div class="track"><div class="track-f" id="gFill"></div></div>
+    <div class="nodes" id="gNodes"></div>
+    <div class="gift-cta" id="gCta"></div>
+  </div>
+</section>
+
+<main class="wrap page">
+  <div>
+    <div class="card"><div class="card-h"><h1>Your cart</h1><span class="c" id="cCount"></span></div><div id="items"></div></div>
+    <div class="card" style="margin-top:16px" id="upsellCard"><div class="up-h"><div class="t" id="upT"></div><div class="s" id="upS"></div></div><div class="up-list" id="upList"></div></div>
+  </div>
+  <aside>
+    <div class="card sum">
+      <div class="card-h"><h2>Summary</h2></div>
+      <div class="sum-b" id="sumB"></div>
+      <details class="mini"><summary><span>Have a coupon?</span><span>+</span></summary><div class="mini-b"><div class="fld"><input id="cp" placeholder="Enter code" autocomplete="off"><button id="cpBtn">Apply</button></div><div class="msg" id="cpMsg"></div></div></details>
+      <div class="trust">
+        <div class="tr"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><div><b>100% authentic</b><span>Bottled in our own unit</span></div></div>
+        <div class="tr"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.7L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.7 5.7L4 16"/><path d="M4 20v-4h4"/></svg><div><b>7-day exchange</b><span>Swap the scent</span></div></div>
+        <div class="tr"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><div><b>Ships in 24 hrs</b><span>Tracked across India</span></div></div>
+        <div class="tr"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><div><b>256-bit SSL</b><span>Encrypted checkout</span></div></div>
+      </div>
+      <div class="pays"><span>UPI</span><span>GPay</span><span>PhonePe</span><span>Paytm</span><span>Visa</span><span>Mastercard</span><span>RuPay</span></div>
+    </div>
+  </aside>
+</main>
+</div>
+
+<div class="obcart-mbar"><div class="i"><div class="a" id="mA">₹0</div><div class="s" id="mS"></div></div><button id="mGo" disabled>Checkout</button></div>
+<div class="obcart-toast" id="toast"></div>
+
+<script>
+window.OB_CART = {
+  freeShipAt: 1499,
+  gifts: [
+    { at:1499, label:"Free shipping", icon:"truck" },
+    { at:2499, label:"Free 25ml travel spray", icon:"bottle" },
+    { at:3999, label:"Luxury gift box", icon:"gift" },
+    { at:5999, label:"Free 100ml bottle", icon:"crown" }
+  ],
+  scents: {
+  {%- assign first_s = true -%}
+  {%- for id in ids -%}
+    {%- assign pr = all_products[handles[forloop.index0]] -%}
+    {%- if pr != empty and pr.id -%}
+      {%- assign v100 = nil -%}{%- assign v25 = nil -%}
+      {%- for v in pr.variants -%}{%- if v.title contains '100' -%}{%- assign v100 = v -%}{%- elsif v.title contains '25' -%}{%- assign v25 = v -%}{%- endif -%}{%- endfor -%}
+      {%- if v100 == nil and v25 == nil -%}{%- assign v100 = pr.variants.first -%}{%- endif -%}
+      {%- unless first_s -%},{%- endunless -%}{%- assign first_s = false -%}
+      {{ id | json }}: { "v100": {{ v100.id | default: 'null' }}, "v25": {{ v25.id | default: 'null' }}, "img": {{ pr.featured_image | image_url: width: 300 | json }}, "url": {{ pr.url | json }} }
+    {%- endif -%}
+  {%- endfor -%}
+  },
+  variantMap: {
+  {%- assign first_m = true -%}
+  {%- for id in ids -%}
+    {%- assign pr = all_products[handles[forloop.index0]] -%}
+    {%- if pr != empty and pr.id -%}
+      {%- assign is_cou = false -%}{%- if forloop.index0 < 10 -%}{%- assign is_cou = true -%}{%- endif -%}
+      {%- assign v100 = nil -%}{%- assign v25 = nil -%}
+      {%- for v in pr.variants -%}{%- if v.title contains '100' -%}{%- assign v100 = v -%}{%- elsif v.title contains '25' -%}{%- assign v25 = v -%}{%- endif -%}{%- endfor -%}
+      {%- if v100 == nil and v25 == nil -%}{%- assign v100 = pr.variants.first -%}{%- endif -%}
+      {%- if v100 -%}{%- unless first_m -%},{%- endunless -%}{%- assign first_m = false -%}"{{ v100.id }}": { "scent": {{ id | json }}, "size": "100", "group": {% if is_cou %}"c100"{% else %}"cl100"{% endif %} }{%- endif -%}
+      {%- if v25 -%},"{{ v25.id }}": { "scent": {{ id | json }}, "size": "25", "group": "c25" }{%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  }
+};
+</script>
+<script src="{{ 'ob-cart.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "OB Cart",
+  "tag": "section",
+  "class": "ob-cart",
+  "settings": [
+    { "type": "paragraph", "content": "Brand-kit cart. Reads the live cart; applies the correct OBC tier code silently (never shown). Assign via a cart template." }
+  ],
+  "presets": [ { "name": "OB Cart" } ]
+}
+{% endschema %}
