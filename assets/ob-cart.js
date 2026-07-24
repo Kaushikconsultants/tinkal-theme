@@ -102,20 +102,22 @@ function renderItems(){
   Array.prototype.forEach.call($('items').querySelectorAll('[data-rm]'),function(b){b.onclick=function(){removeLine(+b.dataset.rm);};});
   Array.prototype.forEach.call($('items').querySelectorAll('[data-sz]'),function(b){b.onclick=function(){var a=b.dataset.sz.split('|');switchSize(+a[0],a[1]);};});
 }
-function changeQty(i,d){ if(busy)return; var it=CART.items[i]; var q=it.quantity+d; busy=true;
-  fetch('/cart/change.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:it.key,quantity:Math.max(0,q)})})
-    .then(function(r){return r.json();}).then(function(){ busy=false; refresh(true); }).catch(function(){busy=false;});
+var tiering=false;
+function syncTier(){ if(tiering)return; tiering=true; applyTier().then(getCart).then(function(c){ store(c); render(); tiering=false; }).catch(function(){tiering=false;}); }
+function changeQty(i,d){ if(busy)return; var it=CART.items[i]; var q=Math.max(0,it.quantity+d); busy=true;
+  fetch('/cart/change.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:it.key,quantity:q})})
+    .then(function(r){return r.json();}).then(function(c){ store(c); render(); busy=false; syncTier(); }).catch(function(){busy=false;});
 }
 function removeLine(i){ if(busy)return; var it=CART.items[i]; busy=true;
   fetch('/cart/change.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:it.key,quantity:0})})
-    .then(function(r){return r.json();}).then(function(){ busy=false; refresh(true); }).catch(function(){busy=false;});
+    .then(function(r){return r.json();}).then(function(c){ store(c); render(); busy=false; syncTier(); }).catch(function(){busy=false;});
 }
 function switchSize(i,z){ if(busy)return; var it=CART.items[i], m=metaFor(it), s=m.scent?S(m.scent):null; if(!s)return;
   var newVar = z==='100'?s.v100:s.v25; if(!newVar||newVar===it.variant_id){ return; }
   busy=true;
   fetch('/cart/change.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:it.key,quantity:0})})
     .then(function(){return fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:[{id:newVar,quantity:it.quantity}]})});})
-    .then(function(){ busy=false; toast('Switched to '+z+'ml'); refresh(true); }).catch(function(){busy=false;});
+    .then(function(r){return r.json();}).then(function(c){ store(c); render(); busy=false; toast('Switched to '+z+'ml'); syncTier(); }).catch(function(){busy=false;});
 }
 
 function renderGifts(){
@@ -132,21 +134,27 @@ function renderGifts(){
 }
 
 function renderUpsell(){
-  var have={}; CART.items.forEach(function(it){var m=metaFor(it);if(m.scent)have[m.scent]=1;});
-  var list=[];
-  CART.items.forEach(function(it){var m=metaFor(it),me=m.scent?S(m.scent):null;if(me&&me.pairs&&!have[me.pairs]&&!list.some(function(x){return x.id===me.pairs;})){var pr=S(me.pairs);if(pr&&pr.v25)list.push({id:me.pairs,why:'Layers with '+me.name+' — <em>'+me.reason+'</em>'});}});
-  var bs=SC.filter(function(p){return !have[p.id]&&!list.some(function(x){return x.id===p.id;})&&(p.v100||p.v25);})[0];
-  if(bs&&list.length<3)list.push({id:bs.id,why:'A bestseller people add most often'});
-  var show=list.slice(0,3);
+  var have={}; CART.items.forEach(function(it){var m=metaFor(it);if(m.scent)have[m.scent]=1;if(it.product_id)have['p'+it.product_id]=1;});
+  var show=[];
+  if(OB.upsell && OB.upsell.length){
+    show=OB.upsell.filter(function(p){return !have['p'+p.pid] && p.id;}).slice(0,3)
+      .map(function(p){return {vid:p.id,name:p.name,sub:p.family||'',img:p.img,price:p.price};});
+  } else {
+    var list=[];
+    CART.items.forEach(function(it){var m=metaFor(it),me=m.scent?S(m.scent):null;if(me&&me.pairs&&!have[me.pairs]&&!list.some(function(x){return x.id===me.pairs;})){var pr=S(me.pairs);if(pr&&(pr.v25||pr.v100))list.push({id:me.pairs,why:'Layers with '+me.name+' — <em>'+me.reason+'</em>'});}});
+    var bs=SC.filter(function(p){return !have[p.id]&&!list.some(function(x){return x.id===p.id;})&&(p.v100||p.v25);})[0];
+    if(bs&&list.length<3)list.push({id:bs.id,why:'A bestseller people add most often'});
+    show=list.slice(0,3).map(function(u){var p=S(u.id);return {vid:p.v25||p.v100,name:p.name+' · '+(p.v25?'25ml':'100ml'),sub:u.why,img:p.img,price:null};});
+  }
   if(!show.length){$('upsellCard').style.display='none';return;}
   $('upsellCard').style.display='block';
-  $('upT').textContent='Goes well with your order';
-  $('upS').innerHTML='Chosen to layer with what’s already in your cart.';
-  $('upList').innerHTML=show.map(function(u){var p=S(u.id);var v=p.v25||p.v100;var sz=p.v25?'25ml':'100ml';
-    return '<div class="up"><div class="up-m">'+(p.img?'<img src="'+p.img+'" loading="lazy" alt="">':'')+'</div><div class="up-i"><div class="up-n">'+p.name+' · '+sz+'</div><div class="up-s">'+u.why+'</div></div><div class="up-r"><button class="up-add" data-u="'+v+'">Add</button></div></div>';
+  $('upT').textContent=OB.upsellTitle||'Goes well with your order';
+  $('upS').innerHTML=OB.upsellSub||'Chosen to go with what’s already in your cart.';
+  $('upList').innerHTML=show.map(function(u){
+    return '<div class="up"><div class="up-m">'+(u.img?'<img src="'+u.img+'" loading="lazy" alt="">':'')+'</div><div class="up-i"><div class="up-n">'+u.name+'</div><div class="up-s">'+u.sub+'</div></div><div class="up-r">'+(u.price!=null?'<div class="up-pr"><span class="a">'+inr(u.price)+'</span></div>':'')+'<button class="up-add" data-u="'+u.vid+'">Add</button></div></div>';
   }).join('');
   Array.prototype.forEach.call($('upList').querySelectorAll('[data-u]'),function(b){b.onclick=function(){ if(busy)return; busy=true; b.textContent='✓ Added'; b.classList.add('done');
-    fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:[{id:+b.dataset.u,quantity:1}]})}).then(function(){busy=false;refresh(true);}).catch(function(){busy=false;});
+    fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:[{id:+b.dataset.u,quantity:1}]})}).then(function(r){return r.json();}).then(function(c){store(c);render();busy=false;syncTier();}).catch(function(){busy=false;});
   };});
 }
 

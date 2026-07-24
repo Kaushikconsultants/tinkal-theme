@@ -81,7 +81,17 @@ window.OB_CART = {
       {%- if v25 -%},"{{ v25.id }}": { "scent": {{ id | json }}, "size": "25", "group": "c25" }{%- endif -%}
     {%- endif -%}
   {%- endfor -%}
-  }
+  },
+  upsellTitle: {{ section.settings.upsell_title | default: 'Goes well with your order' | json }},
+  upsellSub: {{ section.settings.upsell_subtitle | default: 'Chosen to go with your order.' | json }},
+  upsell: [
+  {%- if section.settings.upsell_collection != blank -%}
+    {%- for p in section.settings.upsell_collection.products limit: 10 -%}
+      {%- assign vv = p.selected_or_first_available_variant | default: p.variants.first -%}
+      { "id": {{ vv.id | default: 'null' }}, "pid": {{ p.id }}, "name": {{ p.title | json }}, "family": {{ p.metafields.custom.scent_family.value | default: p.type | json }}, "img": {{ p.featured_image | image_url: width: 200 | json }}, "price": {{ vv.price | divided_by: 100.0 }} }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  {%- endif -%}
+  ]
 };
 </script>
 <script src="{{ 'ob-cart.js' | asset_url }}" defer></script>
@@ -92,7 +102,10 @@ window.OB_CART = {
   "tag": "section",
   "class": "ob-cart",
   "settings": [
-    { "type": "paragraph", "content": "Brand-kit cart. Reads the live cart; applies the correct OBC tier code silently (never shown). Assign via a cart template." }
+    { "type": "paragraph", "content": "Brand-kit cart. Reads the live cart; applies the correct OBC tier code silently (never shown). Assign via a cart template." },
+    { "type": "text", "id": "upsell_title", "label": "Upsell heading", "default": "Goes well with your order" },
+    { "type": "text", "id": "upsell_subtitle", "label": "Upsell subtext", "default": "Hand-picked to go with your order." },
+    { "type": "collection", "id": "upsell_collection", "label": "Upsell collection", "info": "Products shown under the upsell. Leave empty to auto-pick layering partners." }
   ],
   "presets": [ { "name": "OB Cart" } ]
 }
