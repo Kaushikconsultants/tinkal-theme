@@ -62,8 +62,8 @@ function applyTier(){ /* silent: clear codes, apply the one correct tier code */
 function refresh(applyCode){
   return getCart().then(function(c){
     store(c);
-    if(applyCode){ return applyTier().then(function(){return setGiftAttrs();}).then(getCart).then(function(c2){ store(c2); render(); }); }
-    render();
+    render();  /* paint the cart instantly from the first read — no waiting on the tier/gift chain */
+    if(applyCode){ return applyTier().then(function(){return setGiftAttrs();}).then(getCart).then(function(c2){ store(c2); renderTotals(); }).catch(function(){}); }
   });
 }
 function store(c){ CART.items=c.items; CART.total=c.total_price/100; CART.orig=c.original_total_price/100; CART.discount=c.total_discount/100; CART.codes=c.discount_codes||[]; }
@@ -74,6 +74,9 @@ function imgFor(it){ var m=metaFor(it); var s=m.scent?S(m.scent):null; return (s
 
 /* ── render ── */
 function render(){ renderItems(); renderGifts(); renderUpsell(); renderSum(); }
+/* totals-only: used by background tier/gift reconciles so #items (and a select the
+   user may be interacting with) is NEVER torn down and rebuilt underneath them */
+function renderTotals(){ renderGifts(); renderUpsell(); renderSum(); }
 
 function renderItems(){
   var n=CART.items.reduce(function(a,i){return a+i.quantity;},0);
@@ -108,7 +111,7 @@ function renderItems(){
 }
 var tiering=false;
 function setGiftAttrs(){ var g=GIFTS.filter(function(x){return x.item && (CART.orig>=x.at);}).map(function(x){ if(x.pick && GIFTScents.length){ return x.label+': '+(giftPicks[x.label]||GIFTScents[0]); } return x.label; }); return fetch('/cart/update.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({attributes:{'Free gift (add manually)': g.length?g.join(' · '):''}})}).catch(function(){}); }
-function syncTier(){ if(tiering)return; tiering=true; applyTier().then(function(){return setGiftAttrs();}).then(getCart).then(function(c){ store(c); render(); tiering=false; }).catch(function(){tiering=false;}); }
+function syncTier(){ if(tiering)return; tiering=true; applyTier().then(function(){return setGiftAttrs();}).then(getCart).then(function(c){ store(c); renderTotals(); tiering=false; }).catch(function(){tiering=false;}); }
 function changeQty(i,d){ if(busy)return; var it=CART.items[i]; var q=Math.max(0,it.quantity+d); busy=true;
   fetch('/cart/change.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:it.key,quantity:q})})
     .then(function(r){return r.json();}).then(function(c){ store(c); render(); busy=false; syncTier(); }).catch(function(){busy=false;});
