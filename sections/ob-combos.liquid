@@ -1,0 +1,90 @@
+{%- comment -%} Ombre Bliss — combos page (brand kit). Real variants + tier codes. {%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{%- assign ob_fonts = 'https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@300;400;500;600;700&display=swap' -%}
+<link rel="preload" as="style" href="{{ ob_fonts }}" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ ob_fonts }}"></noscript>
+{{ 'ob-combos.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign ids = 'smoky,oud,leather,blu,tobacco,vanilla,amberrose,angel,pistachio,candy,marino,vicious,yakuza,honour,bouquet,obsessed,luna,pierce' | split: ','
+  assign handles = 'smoky-rum,nawab-oud-perfume,classical-leather-perfume,ombre-blu-perfume,royale-tobacco-perfume,vanilla-kiss-perfume,amber-rose-unisex-perfume,angel-perfume,pistachio-pop-perfume,lush-candy-perfume,marino-perfume-for-him,vicious-perfume-for-him,yazuka-perfume-for-him,honour-perfume-for-him,the-bouquet-perfume-for-her,obsessed-perfume-for-her,luna-perfume-for-her,pierce-perfume-for-her' | split: ','
+-%}
+
+<div class="obcmb">
+<section class="hero">
+  <div class="wrap">
+    <span class="lbl">Combos &amp; boxes</span>
+    <h1>More than one.<br><em>Always cheaper.</em></h1>
+    <p>Build a box from any scent we make, or take one we’ve already put together.</p>
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-p="byo">Build your own box</button>
+      <button class="tab" data-p="pre">Ready-made combos</button>
+    </div>
+  </div>
+</section>
+
+<div class="pane on" id="paneByo">
+  <div class="wrap byo">
+    <div class="lines" id="lines"></div>
+    <div class="lad">
+      <div class="lad-h"><div><div class="t">Buy more, pay less per bottle</div><div class="s" id="ladSub"></div></div></div>
+      <div class="rungs" id="rungs"></div>
+      <div class="hook" id="hook"></div>
+    </div>
+    <div class="build">
+      <div><div class="lbl" style="margin-bottom:11px" id="pkH"></div><div class="pk" id="pk"></div></div>
+      <aside class="sum" id="sum"></aside>
+    </div>
+  </div>
+</div>
+
+<div class="pane" id="panePre">
+  <div class="wrap">
+    <div class="pills" id="pills"></div>
+    <div class="combos" id="combos"></div>
+  </div>
+</div>
+
+<div class="trust"><div class="trust-in">
+  <span>Extrait · up to 25% oil</span><span>Free gift box on every combo</span><span>Vegan &amp; cruelty free</span><span>Made in India</span>
+</div></div>
+</div>
+
+<div class="obcmb-mbar" id="mbar"><div class="mbar-in">
+  <div class="i"><div class="t" id="mT">₹0</div><div class="s" id="mS"></div></div>
+  <button id="mGo" disabled>Add box</button>
+</div></div>
+<div class="obcmb-toast" id="toast"></div>
+
+<script>
+window.OB_CMB = { variants: {
+{%- assign first_p = true -%}
+{%- for id in ids -%}
+  {%- assign h = handles[forloop.index0] -%}
+  {%- assign pr = all_products[h] -%}
+  {%- if pr != empty and pr.id -%}
+    {%- assign v100 = nil -%}{%- assign v25 = nil -%}
+    {%- for v in pr.variants -%}
+      {%- if v.title contains '100' -%}{%- assign v100 = v -%}{%- elsif v.title contains '25' -%}{%- assign v25 = v -%}{%- endif -%}
+    {%- endfor -%}
+    {%- if v100 == nil and v25 == nil -%}{%- assign v100 = pr.variants.first -%}{%- endif -%}
+    {%- unless first_p -%},{%- endunless -%}{%- assign first_p = false -%}
+    {{ id | json }}: { "v100": {{ v100.id | default: 'null' }}, "v25": {{ v25.id | default: 'null' }}, "img": {{ pr.featured_image | image_url: width: 300 | json }} }
+  {%- endif -%}
+{%- endfor -%}
+} };
+</script>
+<script src="{{ 'ob-combos.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "OB Combos",
+  "tag": "section",
+  "class": "ob-combos",
+  "settings": [
+    { "type": "paragraph", "content": "Combos & build-your-own-box page. Reads real variants and applies the ob tier codes (Couture 100/25 + Classic 100). Assign via a page template." }
+  ],
+  "presets": [ { "name": "OB Combos" } ]
+}
+{% endschema %}
