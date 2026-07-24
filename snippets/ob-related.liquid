@@ -1,0 +1,40 @@
+{%- comment -%} Ombre Bliss — "You may also like" carousel. Params: handles (comma list), heading. {%- endcomment -%}
+{%- assign rel_handles = handles | split: ',' -%}
+<style>
+  .obrel{--plum:#55343B;--cream:#F3E6DA;--line:rgba(85,52,59,.13);--i3:rgba(85,52,59,.46);--ok:#4A7C59;font-family:'Raleway',system-ui,sans-serif;color:var(--plum);border-top:1px solid var(--line);padding:34px 0 44px;background:#FCFAF7}
+  .obrel .wrap{max-width:1240px;margin:0 auto;padding:0 18px}
+  .obrel-h{font-family:'Cinzel Decorative',Georgia,serif;font-weight:400;font-size:24px;letter-spacing:.02em;margin:0 0 18px}
+  @media(max-width:600px){.obrel-h{font-size:20px}}
+  .obrel-track{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+  .obrel-track::-webkit-scrollbar{display:none}
+  .obrel-card{flex:0 0 190px;min-width:0;text-decoration:none;color:inherit;border:1px solid var(--line);background:#fff;transition:.22s}
+  .obrel-card:hover{border-color:rgba(85,52,59,.24);transform:translateY(-2px);box-shadow:0 8px 22px rgba(85,52,59,.07)}
+  @media(max-width:600px){.obrel-card{flex:0 0 150px}}
+  .obrel-img{aspect-ratio:1/1.05;overflow:hidden;background:var(--cream)}
+  .obrel-img img{width:100%;height:100%;object-fit:cover;display:block;transition:.35s}
+  .obrel-card:hover .obrel-img img{transform:scale(1.04)}
+  .obrel-b{padding:11px 12px}
+  .obrel-n{font-family:'Cinzel Decorative',serif;font-size:15px;line-height:1.2}
+  @media(max-width:600px){.obrel-n{font-size:13.5px}}
+  .obrel-p{margin-top:7px;font-size:14px;font-weight:700}
+  .obrel-p s{font-size:11px;color:var(--i3);font-weight:400;margin-left:5px}
+</style>
+<section class="obrel">
+  <div class="wrap">
+    <h2 class="obrel-h">{{ heading | default: 'You may also like' }}</h2>
+    <div class="obrel-track">
+      {%- for h in rel_handles -%}
+        {%- assign rp = all_products[h] -%}
+        {%- if rp != empty and rp.id -%}
+          <a class="obrel-card" href="{{ rp.url }}">
+            <div class="obrel-img"><img src="{{ rp.featured_image | image_url: width: 400 }}" width="380" height="399" loading="lazy" alt="{{ rp.title | escape }}"></div>
+            <div class="obrel-b">
+              <div class="obrel-n">{{ rp.title | split: ' – ' | first | split: ' - ' | first | split: ' | ' | first | strip }}</div>
+              <div class="obrel-p">{{ rp.price | money }}{%- if rp.compare_at_price > rp.price -%}<s>{{ rp.compare_at_price | money }}</s>{%- endif -%}</div>
+            </div>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
