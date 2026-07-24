@@ -1,0 +1,215 @@
+{%- comment -%} Ombre Bliss — Classic product page. Reuses the v12 engine/CSS with Classic data. {%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{%- assign ob_fonts = 'https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@300;400;500;600;700&display=swap' -%}
+<link rel="preload" as="style" href="{{ ob_fonts }}" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ ob_fonts }}"></noscript>
+{{ 'ob-v12.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sc_ids = 'marino,vicious,yakuza,honour,bouquet,obsessed,luna,pierce' | split: ','
+  assign sc_handles = 'marino-perfume-for-him,vicious-perfume-for-him,yazuka-perfume-for-him,honour-perfume-for-him,the-bouquet-perfume-for-her,obsessed-perfume-for-her,luna-perfume-for-her,pierce-perfume-for-her' | split: ','
+  assign cur_scent = 'marino'
+  for id in sc_ids
+    if sc_handles[forloop.index0] == product.handle
+      assign cur_scent = id
+    endif
+  endfor
+-%}
+
+<div class="obv12">
+<div class="wrap">
+<section class="pdp">
+  <div class="gal">
+    <div class="thumbs" id="thumbs"></div>
+    <div class="frame" id="frame">
+      <div class="gscale" id="gscale">100ml — shown to scale</div>
+      <img class="mainimg" id="mainImg" src="{{ product.featured_image | image_url: width: 900 }}" alt="{{ product.title | escape }}">
+    </div>
+  </div>
+
+  <div class="buy">
+    <div class="hd">
+      <div><div class="lbl">The Classic Collection</div><h1 id="pName">{{ product.title | escape }}</h1></div>
+      <div class="conc-tag">Eau de Parfum</div>
+    </div>
+    <p class="line1" id="pLine"></p>
+    <div class="rate"><span class="st">★★★★★</span><span style="font-weight:600">4.6</span><a href="#obv12-reviews">Reviews</a><span class="vb">✓ Verified buyers</span></div>
+
+    <div class="prof" id="prof"></div>
+
+    <div class="strip">
+      <div class="st-tab" id="stTab"></div>
+      <div class="st-body"><div class="st-dots" id="stDots"></div><div class="st-t"><div class="st-n" id="stN"></div><div class="st-d" id="stD"></div></div></div>
+    </div>
+
+    <div class="sec"><div class="sec-h"><div class="lbl">Choose your size</div></div><div class="sizes" id="sizes"></div></div>
+    <div class="sec"><div class="sec-h"><div class="lbl">Choose your scent</div><div class="lbl" id="famL"></div></div><div class="chips" id="chips"></div></div>
+
+    <div class="sec">
+      <div class="sec-h"><div class="lbl">How many</div><div class="lbl">Mix any scents</div></div>
+      <div id="tiers"></div>
+      <div class="bulk" id="bulk">
+        <button class="bulk-h" id="bulkH"><span class="bulk-plus" aria-hidden="true"><i></i><i></i></span><span class="bulk-txt"><span class="t">Buy more, pay less per bottle</span><span class="s" id="bulkSub"></span></span><span class="bulk-cta" id="bulkCta">Open</span></button>
+        <div class="bulk-b"><div class="bulk-in"><div class="bulk-hook" id="bulkHook"></div><div class="lad" id="lad"></div><div class="nudge" id="nudge"></div></div></div>
+      </div>
+      <div class="pick" id="pick"></div>
+      <div class="save" id="save" style="display:none"><span>You're saving</span><b id="saveAmt">₹0</b></div>
+    </div>
+
+    <div class="fbt">
+      <div class="fbt-h"><span class="lbl">Frequently bought together</span><span class="fbt-sv" id="fbtSv"></span></div>
+      <div class="fbt-list" id="fbtList"></div>
+      <div class="fbt-foot"><div class="fbt-tot"><span class="l">Total for <b id="fbtN">1</b> items</span><span class="r"><s id="fbtWas"></s><b id="fbtAmt">₹0</b></span></div><button class="fbt-btn" id="fbtBtn">Add all to cart</button></div>
+    </div>
+
+    <div class="tot"><span class="l">Total</span><span class="r"><span class="was" id="wasAmt"></span><span class="amt" id="totAmt">₹0</span></span></div>
+    <div class="ctas"><button class="cta" id="cta">Add to cart</button><button class="cta buy" id="ctaBuy">Buy now</button></div>
+    <div class="cta-n" id="ctaN"></div>
+
+    <div class="secure"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Secure checkout · 256-bit SSL encrypted</div>
+    <div class="pays"><span class="pay">UPI</span><span class="pay">GPay</span><span class="pay">PhonePe</span><span class="pay">Paytm</span><span class="pay">Visa</span><span class="pay">Mastercard</span><span class="pay">RuPay</span></div>
+    <div class="ship"><div class="ship-t"><div class="ship-f" id="shipF"></div></div><div class="ship-x" id="shipX"></div></div>
+
+    <div class="trust">
+      <div class="tr"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><b>100% authentic</b>Bottled in our own unit</div>
+      <div class="tr"><svg viewBox="0 0 24 24"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg><b>Eau de Parfum</b>Lighter, everyday wear</div>
+      <div class="tr"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.7L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.7 5.7L4 16"/><path d="M4 20v-4h4"/></svg><b>7-day exchange</b>Swap the scent, no fuss</div>
+      <div class="tr"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><b>Ships in 24 hrs</b>Tracked across India</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<section class="below" id="obv12-reviews">
+  <div class="wrap duo">
+    <div>
+      <div class="lbl">Verified purchases</div>
+      <h2 class="h2">What they said</h2>
+      <div class="rv-top">
+        <div class="rv-sc">4.6</div>
+        <div class="rv-bars">
+          <div class="rv-b"><span>5</span><span class="t"><i style="width:72%"></i></span><span>72%</span></div>
+          <div class="rv-b"><span>4</span><span class="t"><i style="width:19%"></i></span><span>19%</span></div>
+          <div class="rv-b"><span>3</span><span class="t"><i style="width:6%"></i></span><span>6%</span></div>
+          <div class="rv-b"><span>2</span><span class="t"><i style="width:2%"></i></span><span>2%</span></div>
+          <div class="rv-b"><span>1</span><span class="t"><i style="width:1%"></i></span><span>1%</span></div>
+        </div>
+      </div>
+      <div class="rv-stats">
+        <div class="rv-s"><div class="n">7 hrs</div><div class="l">Avg longevity</div></div>
+        <div class="rv-s"><div class="n">88%</div><div class="l">Got a compliment</div></div>
+        <div class="rv-s"><div class="n">₹699</div><div class="l">Best value EDP</div></div>
+      </div>
+      <div class="rev"><div class="s">★★★★★</div><div class="t">Perfect everyday scent, not overpowering. Lasts my whole workday.</div><div class="m"><span class="vb">✓ Verified</span> Rohit K.</div></div>
+      <div class="rev"><div class="s">★★★★★</div><div class="t">At this price, unbeatable. Smells far more expensive than it is.</div><div class="m"><span class="vb">✓ Verified</span> Meera D.</div></div>
+      <div class="rev"><div class="s">★★★★☆</div><div class="t">Great for office and daytime. Fresh and clean, gets compliments.</div><div class="m"><span class="vb">✓ Verified</span> Sameer P.</div></div>
+    </div>
+    <div>
+      <div class="lbl">Before you buy</div>
+      <h2 class="h2">Questions we get asked</h2>
+      <div class="faq" id="faq" style="margin-top:16px"></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="obv12-satc" id="satc">
+  <div class="satc-in">
+    <div class="satc-b"><span class="j" id="satcJ"></span></div>
+    <div class="satc-i"><div class="satc-n" id="satcN">{{ product.title | escape }}</div><div class="satc-m" id="satcM"></div></div>
+    <div class="satc-sv" id="satcSv"></div>
+    <div class="satc-p"><span class="w" id="satcW"></span><span class="a" id="satcA">₹0</span></div>
+    <div class="satc-btn"><button id="satcAdd">Add to cart</button><button class="buy" id="satcBuy">Buy now</button></div>
+  </div>
+</div>
+<div class="obv12-toast" id="toast"></div>
+
+<script>
+{%- assign B = 'https://cdn.shopify.com/s/files/1/0694/0478/6914/files/' -%}
+window.OB_V12 = {
+  currentScent: {{ cur_scent | json }},
+  codePrefix: 'OBCLA',
+  maxQ: 8,
+  sizes: {
+    '100':{ml:100,label:'100ml',role:'Full size · everyday',unit:699,mrp:1199,
+      px:[0,699,1299,1799,2249,2699,3099,3449,3799],
+      quick:[{q:1,n:'One bottle',s:'Your everyday'},{q:2,n:'Two bottles',s:'One to keep, one to gift',b:'Most popular'},{q:3,n:'Three bottles',s:'The full trio',b:'Best value',o:1}]}
+  },
+  scents: [
+   {id:'marino',name:'Marino',hex:'#3E7A9E',soft:'#EAF1F6',fam:'Fresh · Aquatic',lean:'For Him',short:'Cucumber | Mandarin | Sage',line:'Cool cucumber and melon over a clean aromatic heart. Inspired by Polo Blue.',top:['Cucumber','Melon'],mid:['Mandarin Orange','Geranium'],base:['Basil','Sage'],lg:7,sl:6,sw:2,s:{winter:2,summer:3,night:2,day:3},wear:'You show up early and everything about you is ironed.'},
+   {id:'vicious',name:'Vicious',hex:'#43342E',soft:'#F0ECE9',fam:'Oud · Leather',lean:'For Him',short:'Oud | Spice | Leather',line:'Dark oud and leather over a spiced, resinous base. Inspired by Ombre Nomade.',top:['Amber Oud'],mid:['Warm Spicy','Rose Fruity'],base:['Leather','Balsamic Woody'],lg:8,sl:8,sw:3,s:{winter:3,summer:1,night:3,day:1},wear:'You walk into a room slowly and it still turns.'},
+   {id:'yakuza',name:'Yakuza',hex:'#6B5230',soft:'#F4F0E8',fam:'Oud · Sweet',lean:'For Him',short:'Agarwood | Vanilla | Sandalwood',line:'Rich agarwood sweetened with vanilla and sandalwood. Smoky, smooth, serious.',top:['Agarwood'],mid:['Sugar','Vanilla'],base:['Sandalwood'],lg:8,sl:8,sw:5,s:{winter:3,summer:1,night:3,day:2},wear:"You'd rather be underestimated than announced."},
+   {id:'honour',name:'Honour',hex:'#8A7A4E',soft:'#F6F3E9',fam:'Woody · Citrus',lean:'For Him',short:'Citrus | Pepper | Cedar',line:'Bright citrus and pepper over dry cedar and vetiver. Inspired by Terre d’Hermès.',top:['Orange','Grapefruit'],mid:['Pepper','Cedar'],base:['Vetiver','Benzoin'],lg:7,sl:6,sw:2,s:{winter:2,summer:3,night:2,day:3},wear:'You own one good watch and wear it every single day.'},
+   {id:'bouquet',name:'The Bouquet',hex:'#C77B93',soft:'#FBEFF3',fam:'Floral · Fruity',lean:'For Her',short:'Pear | Gardenia | Jasmine',line:'Pear blossom and red berries under a full white-floral bloom. Inspired by Flora.',top:['Pear Blossom','Red Berries'],mid:['Italian Mandarin','Gardenia'],base:['Jasmine','Frangipani'],lg:7,sl:6,sw:6,s:{winter:2,summer:3,night:2,day:3},wear:'Soft on the outside, unforgettable on the way out.'},
+   {id:'obsessed',name:'Obsessed',hex:'#9B5B5B',soft:'#F8EEEE',fam:'Floral · Citrus',lean:'For Her',short:'Pear | Citrus | Rose',line:'Juicy pear and bright citrus over orange blossom and rose. Romantic, bold.',top:['Pear','Bergamot'],mid:['Grapefruit','Lemon'],base:['Orange Bloom','Rose'],lg:7,sl:7,sw:6,s:{winter:2,summer:3,night:3,day:3},wear:'Intensity, but make it charming.'},
+   {id:'luna',name:'Luna',hex:'#C29A6B',soft:'#F9F3EA',fam:'Gourmand · Warm',lean:'For Her',short:'Coffee | Almond | Rose',line:'Coffee and almond over orange blossom and rose. Sweet, warm, dangerous. Inspired by Good Girl.',top:['Lemon','Bergamot'],mid:['Almonds','Coffee'],base:['Orange Bloom','Bulgarian Rose'],lg:8,sl:7,sw:8,s:{winter:3,summer:2,night:3,day:2},wear:'People remember your hug before your face.'},
+   {id:'pierce',name:'Pierce',hex:'#7E9B86',soft:'#F0F5F1',fam:'Fresh · Aromatic',lean:'Unisex',short:'Aromatic | Coffee | Amber',line:'Aromatic freshness over coffee and woody amber. Sharp, clean, grounded.',top:['Aromatic'],mid:['Warm Spicy Soft Spicy','Coffee'],base:['Woody Amber','Patchouli'],lg:7,sl:6,sw:4,s:{winter:2,summer:3,night:2,day:3},wear:'Sharp freshness with a backbone.'}
+  ],
+  noteImages: {
+    'Cucumber':'{{ B }}cucumber_83dd9a4b-fee8-4e31-a50d-6110e25c5edc.webp?v=1782297066',
+    'Melon':'{{ B }}melon_55a3b1d8-26aa-47e2-bcc4-18e5284b2df1.webp?v=1782297067',
+    'Mandarin Orange':'{{ B }}mandarin-orange.webp?v=1782297066',
+    'Geranium':'{{ B }}geranium.webp?v=1782297066',
+    'Basil':'{{ B }}basil_274aa523-7ff0-4050-b77e-5ecf1c3eba42.webp?v=1782297066',
+    'Sage':'{{ B }}sage.webp?v=1782297066',
+    'Amber Oud':'{{ B }}amber_oud.webp?v=1742383224',
+    'Warm Spicy':'{{ B }}piecrec_Warm_spicy.webp?v=1742382749',
+    'Rose Fruity':'{{ B }}rose.jog.jpg?v=1742382344',
+    'Leather':'{{ B }}leather.jpg?v=1742383224',
+    'Balsamic Woody':'{{ B }}guaiac-wood.jpg?v=1742383224',
+    'Agarwood':'{{ B }}agarwood.jpg?v=1742376493',
+    'Sugar':'{{ B }}sugar.webp?v=1742376493',
+    'Vanilla':'{{ B }}vanilla.jpg?v=1742376493',
+    'Sandalwood':'{{ B }}sandal_wood.jpg?v=1742376493',
+    'Orange':'{{ B }}orange.webp?v=1782294875',
+    'Grapefruit':'{{ B }}grapefruit_229ec9fc-c428-483d-8493-5b7a12928e08.webp?v=1782297808',
+    'Pepper':'{{ B }}pepper.webp?v=1782294875',
+    'Cedar':'{{ B }}cedar.webp?v=1782294875',
+    'Vetiver':'{{ B }}vetiver_8ce949bd-93da-4b6a-98be-6439e1d4116e.webp?v=1782294875',
+    'Benzoin':'{{ B }}benzoin_b41c289f-a5f0-4be4-b973-7a0d5464453d.webp?v=1782294875',
+    'Pear Blossom':'{{ B }}pear_blossom_-_the_bouquet.webp?v=1782293377',
+    'Red Berries':'{{ B }}red_berries_-_theboquet_52bc2056-5600-4c3a-b912-088be6ad816c.webp?v=1782293377',
+    'Italian Mandarin':'{{ B }}Italian_mandarian_ce96489b-6eb4-420a-aa73-f3aa3cfbc681.webp?v=1782293377',
+    'Gardenia':'{{ B }}gardenia.webp?v=1782293376',
+    'Jasmine':'{{ B }}Jasmin_2010a34c-0b81-48f2-9871-b05c4b50a00c.webp?v=1782293377',
+    'Frangipani':'{{ B }}frangipani.webp?v=1782293377',
+    'Pear':'{{ B }}pear_85ff89d6-945d-4a3e-baa3-4ca0dc99e8ab.webp?v=1782297808',
+    'Bergamot':'{{ B }}bergamot.webp?v=1782296301',
+    'Lemon':'{{ B }}lemon.webp?v=1782296301',
+    'Orange Bloom':'{{ B }}orange-bloom.webp?v=1782296301',
+    'Rose':'{{ B }}rose_888124a9-9de1-4f31-95d9-61efab00f24a.webp?v=1782297808',
+    'Bulgarian Rose':'{{ B }}bulgarian-rose.webp?v=1782296301',
+    'Almonds':'{{ B }}almonds.webp?v=1782296301',
+    'Coffee':'{{ B }}coffee.webp?v=1782296301',
+    'Aromatic':'{{ B }}aromatic.webp?v=1782298796',
+    'Warm Spicy Soft Spicy':'{{ B }}warm-spicy.webp?v=1782298796',
+    'Woody Amber':'{{ B }}woody-amber.webp?v=1782298796',
+    'Patchouli':'{{ B }}patchouli_fbf193f2-0d6d-4975-836e-ff7d6426c05a.webp?v=1782298796'
+  },
+  variants: {
+  {%- assign first_v = true -%}
+  {%- for id in sc_ids -%}
+    {%- assign pr = all_products[sc_handles[forloop.index0]] -%}
+    {%- if pr != empty and pr.id -%}
+      {%- assign v100 = pr.selected_or_first_available_variant | default: pr.variants.first -%}
+      {%- unless first_v -%},{%- endunless -%}{%- assign first_v = false -%}
+      {{ id | json }}: { "v100": {{ v100.id | default: 'null' }}, "v25": null, "img100": {{ pr.featured_image | image_url: width: 800 | json }}, "img25": null, "imgs": [ {%- for im in pr.images limit: 6 -%}{{ im | image_url: width: 800 | json }}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%} ], "url": {{ pr.url | json }} }
+    {%- endif -%}
+  {%- endfor -%}
+  }
+};
+</script>
+<script src="{{ 'ob-v12.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "OB Product v12 Classic",
+  "tag": "section",
+  "class": "ob-product-v12c",
+  "settings": [
+    { "type": "paragraph", "content": "Classic-collection product page (₹699 EDP, single size). Reuses the v12 engine with Classic scents and the OBCLA tier codes. Assign via the 'v12c' product template." }
+  ],
+  "presets": [ { "name": "OB Product v12 Classic" } ]
+}
+{% endschema %}
